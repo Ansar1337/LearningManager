@@ -1,0 +1,1 @@
+# Educational coding platform (personal project)
