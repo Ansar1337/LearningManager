@@ -38,14 +38,16 @@ const studies = [
   <v-row>
     <v-col cols="8" offset="2">
       <div class="content-study">Areas of study</div>
-      <v-row class="mt-2">
-        <v-col v-for="study in studies" cols="3">
-          <v-card elevation="4">
-            <v-card-title>Title</v-card-title>
-            <v-card-text>Text</v-card-text>
+    </v-col>
+    <v-col cols="8" offset="2">
+      <v-sheet class="d-flex flex-wrap flex-back ">
+        <v-sheet v-for="study in studies" class="ma-2 pa-2 flex-back ">
+          <v-card height="200px" width="200px" elevation="4">
+            <v-card-title>{{ study.title }}</v-card-title>
+            <v-card-text>{{ study.description }}</v-card-text>
           </v-card>
-        </v-col>
-      </v-row>
+        </v-sheet>
+      </v-sheet>
     </v-col>
   </v-row>
 
@@ -114,7 +116,7 @@ const studies = [
   text-align: left;
 }
 
-.v-card {
-  background: linear-gradient(180deg, #FFFFFF 0%, rgba(243, 251, 255, 0.8) 100%);
+.flex-back {
+  background: #F5F5F5;
 }
 </style>
