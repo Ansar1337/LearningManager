@@ -3,22 +3,24 @@
 </script>
 
 <template>
-  <v-row class="header">
-    <v-col cols="2" offset="2" class="header-title">
+  <header>
+    <h1 class="header-title">
       AnsarCodes
-    </v-col>
-    <v-col cols="2" offset="4">
-      <v-btn color="#2D9CDB" class="float-right header-btn">
-        Login
-      </v-btn>
-    </v-col>
-  </v-row>
+    </h1>
+    <v-btn color="#2D9CDB" class="header-btn">
+      LogIn
+    </v-btn>
+  </header>
 </template>
 
 <style scoped>
-.header {
-  border-bottom: 1px solid #E0E0E0;
+header {
   background: #F5F5F5;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 40px;
+  align-content: center;
+  align-items: center;
 }
 
 .header-title {

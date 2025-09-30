@@ -4,25 +4,18 @@ import IconTelegram from "@/components/icons/IconTelegram.vue"
 </script>
 
 <template>
-  <v-row>
-    <v-col cols="8" offset="2">
-      <v-row>
-        <v-col cols="12" class="footer-title pb-0">
-          AnsarCodes
-        </v-col>
-      </v-row>
+  <footer>
+    <div class="footer-title pb-0">
+      AnsarCodes
+    </div>
 
-      <v-row class="footer-title-small">
-        <v-col cols="4">
-          Navigation
-        </v-col>
-        <v-col cols="4">
-          Contacts
-        </v-col>
-      </v-row>
+    <div class="sections">
 
-      <v-row class="footer-contact mt-0">
-        <v-col cols="4">
+      <section>
+        <div class="footer-title-small">
+          Courses
+        </div>
+        <div class="footer-contact mt-0">
           <div>
             <span>Java</span>
             <span class="pl-3">Python</span>
@@ -35,24 +28,48 @@ import IconTelegram from "@/components/icons/IconTelegram.vue"
             <span class="pl-3">JavaScript</span>
             <span class="pl-3">Basic</span>
           </div>
-        </v-col>
-        <v-col cols="4">
+        </div>
+      </section>
+
+      <section>
+        <div class="footer-title-small">
+          Contacts
+        </div>
+        <div class="footer-contact mt-0">
           <div>+7 (777) 777-77-77</div>
-          <div>ansarcodes@gmail.com</div>
-        </v-col>
-        <v-col cols="4">
+          <div>ansarshayekin1@gmail.com</div>
           <div>Social medias
             <IconInstagram/>
             <IconTelegram/>
           </div>
           <div>Feedback form</div>
-        </v-col>
-      </v-row>
-    </v-col>
-  </v-row>
+        </div>
+      </section>
+
+    </div>
+  </footer>
+
 </template>
 
 <style scoped>
+
+footer {
+  flex-direction: column;
+  background: #F5F5F5;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 40px;
+  align-content: center;
+}
+
+footer .sections {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 20px;
+  padding: 20px 0;
+}
+
 .footer-title {
   font-family: Montserrat, sans-serif;
   font-size: 32px;
@@ -71,6 +88,7 @@ import IconTelegram from "@/components/icons/IconTelegram.vue"
   letter-spacing: 0;
   text-align: left;
   color: #BDBDBD;
+  margin-bottom: 10px;
 }
 
 .footer-contact {
