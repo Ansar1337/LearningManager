@@ -38,6 +38,13 @@ import IconTelegram from "@/components/icons/IconTelegram.vue"
         <div class="footer-contact mt-0">
           <div>+7 (777) 777-77-77</div>
           <div>ansarshayekin1@gmail.com</div>
+        </div>
+      </section>
+
+      <section>
+        <div class="footer-title-small">
+        </div>
+        <div class="footer-contact mt-0">
           <div>Social medias
             <IconInstagram/>
             <IconTelegram/>
@@ -81,6 +88,7 @@ footer .sections {
 }
 
 .footer-title-small {
+  min-height: 20px;
   font-family: Montserrat, sans-serif;
   font-size: 16px;
   font-weight: 500;

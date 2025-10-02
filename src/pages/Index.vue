@@ -22,14 +22,18 @@ const studies = [
       </div>
       <section class="logo-phone"></section>
     </div>
+
     <h2 class="content-study">Areas of study</h2>
+
     <div class="cards-container">
       <v-card v-for="study in studies" elevation="4" class="card">
         <v-card-title>{{ study.title }}</v-card-title>
         <v-card-text>{{ study.description }}</v-card-text>
       </v-card>
     </div>
+
     Feedback
+
   </div>
 </template>
 
