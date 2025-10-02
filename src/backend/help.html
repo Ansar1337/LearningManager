@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Документация API Мок-Сервера</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            color: navy;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+        }
+
+        li {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Документация API Мок-Сервера</h1>
+
+<h2>Эндпоинты</h2>
+<p>API обрабатывает HTTP-запросы через один эндпоинт. URL эндпоинта - <code>https://rtlm.tableer.com</code></p>
+
+<h2>Методы запросов</h2>
+<ul>
+    <li><strong>POST</strong>: сервер игнорирует любые запросы, кроме POST-запросов.</li>
+    <li><strong>COOKIE</strong>: сервер может обрабатывать установленные клиентом COOKIE, сервер также устанавливает
+        собственные COOKIE для личных нужд.
+    </li>
+</ul>
+
+<h2>Формат данных</h2>
+<ul>
+    <li><strong>Входные данные</strong> передаются в теле запроса в формате
+        <code>application/x-www-form-urlencoded</code> или <code>multipart/form-data</code>.
+    </li>
+    <li><strong>Ответы</strong> отправляются в формате JSON(<a href="https://github.com/omniti-labs/jsend">JSend-структура</a>).
+    </li>
+</ul>
+<h2>Ошибки</h2>
+<p>При ошибке в поле <code>actor</code> будет возвращена ошибка:</p>
+<pre>{
+  "status": "error",
+  "data": "unknown actor"
+}</pre>
+<br>
+<p>При ошибке в поле <code>action</code>, специфичного для конкретного <code>actor</code> будет возвращена ошибка:</p>
+<pre>{
+  "status": "error",
+  "data": "unknown action"
+}</pre>
+<p>Это единственные ошибки на данном уровне, все остальные являются специфичными для отдельных <code>action</code> и
+    описаны ниже.</p>
+
+<h2>Параметры запроса</h2>
+<p><strong>actor</strong>: Указывает на обработчик запроса.</p>
+<p><strong>action</strong>: Определяет действие.
+<p><strong>data</strong>: JSON-объект с данными для обработки, опционально.</p>
+
+<h2>Доступные вызовы</h2>
+<h3>Actor: <code>sessionManager</code> - обслуживание сессии/состояния</h3>
+<ul>
+    <li>
+        <strong>Назначение:</strong><span> обслуживание сессии/состояния</span><br>
+        <strong>Доступные <code>actions</code>:</strong>
+        <ul>
+            <li>
+                <strong>getSession:</strong>
+                <ul>
+                    <li>Описание: Возвращает текущее состояние сессии.</li>
+                    <li>Параметры: Не требует дополнительных параметров.</li>
+                    <li>Структура ответа:
+                        <pre>{
+  "status": "success",
+  "data": {
+    "loggedIn": BOOLEAN, //флаг наличия сессии, по умолчанию 'false'
+    "userName": STRING, //имя пользователя, по умолчанию 'Guest'
+    "role": STRING //роль пользователя в системе, по умолчанию 'unknown'
+  }
+}</pre>
+                    </li>
+                    <li>Ошибки: Не предусмотрены.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>tryToLogOut:</strong>
+                <ul>
+                    <li>Описание: Очищает текущую сессию, отзывает аутентификацию.</li>
+                    <li>Параметры: Не требует дополнительных параметров.</li>
+                    <li>Структура ответа:
+                        <pre>{
+  "status": "success",
+  "data": "session flushed"
+}</pre>
+                    </li>
+                    <li>Ошибки: Не предусмотрены.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>tryToLogIn:</strong>
+                <ul>
+                    <li>Описание: Аутентификация пользователя.</li>
+                    <li>Параметры:
+                        <ul>
+                            <li><code>login</code>: Логин пользователя.</li>
+                            <li><code>password</code>: Пароль пользователя.</li>
+                        </ul>
+                    </li>
+                    <li>Структура ответа:
+                        <pre>{
+  "status": "success",
+  "data": "access granted"
+}</pre>
+                    </li>
+                    <li>Ошибки:
+                        <ul>
+                            <li>
+                                <strong>unknown user:</strong> Пользователь не найден.
+                                <pre>{
+  "status": "error",
+  "data": "unknown user"
+}</pre>
+                            </li>
+                            <li>
+                                <strong>corrupted data:</strong> Неполные или некорректные данные.
+                                <pre>{
+  "status": "error",
+  "data": "corrupted data"
+}</pre>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+</body>
+</html>
