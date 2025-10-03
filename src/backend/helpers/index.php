@@ -1,5 +1,9 @@
 <?php
 
+if (empty($_POST)) {
+    echo("I'm ready!");
+}
+
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 header("Access-Control-Allow-Origin: $origin");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");

@@ -109,7 +109,7 @@ export async function doRequest(actor, action, payload = {}) {
     payload.data.set("actor", actor);
     payload.data.set("action", action);
     payload = payload.finalize();
-    const url = "https://rtlm.tableer.com";
+    const url = import.meta.env.VITE_API_SERVER_URL || "https://rtlm.tableer.com";
 
     let response = await fetch(url, {
         method: 'POST',

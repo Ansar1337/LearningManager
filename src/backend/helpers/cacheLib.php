@@ -1,5 +1,5 @@
 <?php
-function open_cache_connection()
+function open_cache_connection(): Memcache|false
 {
     $memcache_obj = new Memcache;
     $connection = $memcache_obj->connect('localhost', 11211);
@@ -11,7 +11,7 @@ function open_cache_connection()
     }
 }
 
-function close_cache_connection(&$connect_handle)
+function close_cache_connection(&$connect_handle): void
 {
     if ($connect_handle instanceof Memcache) {
         $connect_handle->close();
@@ -20,7 +20,7 @@ function close_cache_connection(&$connect_handle)
     $connect_handle = null;
 }
 
-function check_cache_connection(&$connect_handle)
+function check_cache_connection(&$connect_handle): Memcache|false
 {
     if ((!$connect_handle) || (!$connect_handle->getVersion())) {
         $connect_handle = open_cache_connection();
@@ -28,7 +28,7 @@ function check_cache_connection(&$connect_handle)
     return $connect_handle;
 }
 
-function write_to_cache($key, $data, $expiration = 0, $unique_key = false, $memcache_flags = false)
+function write_to_cache($key, $data, $expiration = 0, $unique_key = false, $memcache_flags = false): bool
 {
     Global_scope::$memcache_connection = check_cache_connection(Global_scope::$memcache_connection);
 
@@ -60,7 +60,7 @@ function read_from_cache($key, callable $refresher = null, $expiration = false, 
     return $result;
 }
 
-function remove_from_cache($key)
+function remove_from_cache($key): bool
 {
     $result = false;
     Global_scope::$memcache_connection = check_cache_connection(Global_scope::$memcache_connection);
