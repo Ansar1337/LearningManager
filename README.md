@@ -18,7 +18,7 @@
    npm run build
    ```
 5. The frontend application will work over the remote backend server at `https://rtlm.tableer.com`.  
-   API reference can be found here: [https://rtlm.tableer.com/help.html](https://rtlm.tableer.com/help.html).
+   API reference can be found [here](./src/backend/help.md).
 
 ### How to run the Backend
 

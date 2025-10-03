@@ -4,6 +4,8 @@ import {doRequest} from "@/helpers/NetworkManager.js";
 import TestForm from "@/components/debug/TestForm.vue";
 import {ref} from "vue";
 
+const serverURL = ref(import.meta.env.VITE_API_SERVER_URL || "https://rtlm.tableer.com");
+
 const actions = {
   getSession: {
     result: ref(null),
@@ -75,6 +77,7 @@ const stores = {
 <template>
   <main>
     <h1>Дэшборд для теста API-хэндлов</h1>
+    <h2>Используемый сервер: {{ serverURL }}</h2>
     <TestForm
         :description="'Загружает данные сессии пользователя'"
         :actor="'sessionManager'"
