@@ -31,6 +31,7 @@ $result = [
 
 if (!isset($_SESSION['loggedIn'])) {
     $_SESSION = [
+        "userId" => -1,
         "loggedIn" => false,
         "userName" => "Guest",
         "role" => "unknown"
