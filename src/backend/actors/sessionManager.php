@@ -8,6 +8,7 @@ if ($_POST["action"] ?? false) {
         {
             $result["status"] = "success";
             $result["data"] = [
+                "userId" => $_SESSION["userId"],
                 "loggedIn" => $_SESSION["loggedIn"],
                 "userName" => $_SESSION["userName"],
                 "role" => $_SESSION["role"],
@@ -26,6 +27,13 @@ if ($_POST["action"] ?? false) {
         case "tryToLogIn":
         {
             $login = strtolower($_POST['data']['login'] ?? '');
+
+             if ($_SESSION["loggedIn"]) {
+                            $result["status"] = "error";
+                            $result["data"] = "already logged in";
+                            break;
+                        }
+
             if (($login !== '') && ($_POST["data"]["password"] ?? false)) {
                 $registeredLogins = read_from_cache("registeredLogins", function () {
                     return ['ansar', 'denis'];
@@ -35,6 +43,7 @@ if ($_POST["action"] ?? false) {
                 error_log(var_export($registeredLogins, true));
 
                 if (in_array($login, $registeredLogins)) {
+                    $_SESSION["userId"] = crc32($login);
                     $_SESSION["userName"] = ucfirst($login);
                     $_SESSION["role"] = (($login === "denis") ? ("teacher") : ("student"));
                     $_SESSION["loggedIn"] = true;
@@ -57,6 +66,12 @@ if ($_POST["action"] ?? false) {
         {
             $login = strtolower($_POST['data']['login'] ?? '');
             $_SESSION['reservedLogins'] = $_SESSION['reservedLogins'] ?? [];
+
+            if ($_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "already logged in";
+                break;
+            }
 
             if ($login !== '') {
                 $registeredLogins = read_from_cache("registeredLogins", function () {
@@ -92,6 +107,12 @@ if ($_POST["action"] ?? false) {
             $login = strtolower($_POST['data']['login'] ?? '');
             $password = $_POST['data']['login'] ?? false;
             $_SESSION['reservedLogins'] = $_SESSION['reservedLogins'] ?? [];
+
+            if ($_SESSION["loggedIn"]) {
+                            $result["status"] = "error";
+                            $result["data"] = "already logged in";
+                            break;
+                        }
 
             if (!$password) {
                 $result["status"] = "error";

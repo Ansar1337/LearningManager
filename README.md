@@ -2,6 +2,15 @@
 
 ## Clientside
 
+----
+
+### Docs
+
+1. [Backend API](./src/backend/help.md);
+2. [State managers](./src/stores/docs);
+
+----
+
 ### How to run the Frontend
 
 1. Clone the repo.

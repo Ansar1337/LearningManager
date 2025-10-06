@@ -8,10 +8,10 @@ if ($_POST["action"] ?? false) {
         {
             $result["status"] = "success";
             $result["data"] = [
-                ["title" => "Kotlin", "description" => "Разработка для устройств Android"],
-                ["title" => "Java", "description" => "Универсальный и практичный язык"],
-                ["title" => "Swift", "description" => "Разработка для устройств Apple"],
-                ["title" => "JavaScript", "description" => "Фронтенд для веб-приложений"],
+                 ["id" => "0", "title" => "Kotlin", "description" => "Разработка для устройств Android", "icon" => ""],
+                 ["id" => "1", "title" => "Java", "description" => "Универсальный и практичный язык", "icon" => ""],
+                 ["id" => "2", "title" => "Swift", "description" => "Разработка для устройств Apple", "icon" => ""],
+                 ["id" => "3", "title" => "JavaScript", "description" => "Фронтенд для веб-приложений", "icon" => ""],
             ];
             break;
         }
