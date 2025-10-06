@@ -4,6 +4,7 @@ import {doRequest} from "@/helpers/NetworkManager.js";
 
 export const useSessionStore = defineStore('session', () => {
     const state = ref({
+        userId: null,
         userName: null,
         loggedIn: null,
         role: null
@@ -25,7 +26,7 @@ export const useSessionStore = defineStore('session', () => {
         if (response.status === "success") {
             await checkSessionState();
         }
-        return response.status === "success";
+        return response;
     }
 
     async function tryToLogOut() {
@@ -34,8 +35,20 @@ export const useSessionStore = defineStore('session', () => {
         if (response.status === "success") {
             await checkSessionState();
         }
-        return response.status === "success";
+        return response;
     }
 
-    return {state, checkSessionState, tryToLogIn, tryToLogOut}
+    async function reserveLogin(login) {
+        return (await doRequest("sessionManager", "reserveLogin", {
+            login
+        }));
+    }
+
+    async function registerLogin(login, password) {
+        return (await doRequest("sessionManager", "registerLogin", {
+            login, password
+        }));
+    }
+
+    return {state, checkSessionState, reserveLogin, registerLogin, tryToLogIn, tryToLogOut};
 });

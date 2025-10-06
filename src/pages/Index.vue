@@ -1,14 +1,7 @@
 <script setup>
-const studies = [
-  {title: "IOS", description: "Development for Apple devices"},
-  {title: "Java", description: "Development for Apple devices"},
-  {title: "Android", description: "Development for Apple devices"},
-  {title: "Python", description: "Development for Apple devices"},
-  {title: "JavaScript", description: "Development for Apple devices"},
-  {title: "Frontend", description: "Development for Apple devices"},
-  {title: "C#", description: "Development for Apple devices"},
-  {title: "Basic", description: "Development for Apple devices"},
-]
+import {UseCoursesStore} from "@/stores/CoursesStore.js";
+
+const courses = UseCoursesStore();
 </script>
 
 <template>
@@ -26,9 +19,9 @@ const studies = [
     <h2 class="content-study">Areas of study</h2>
 
     <div class="cards-container">
-      <v-card v-for="study in studies" elevation="4" class="card">
-        <v-card-title>{{ study.title }}</v-card-title>
-        <v-card-text>{{ study.description }}</v-card-text>
+      <v-card v-for="course in courses.availableCourses" :key="course.id" elevation="4" class="card">
+        <v-card-title>{{ course.title }}</v-card-title>
+        <v-card-text>{{ course.description }}</v-card-text>
       </v-card>
     </div>
 
