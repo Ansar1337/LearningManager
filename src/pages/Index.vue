@@ -76,7 +76,6 @@ const courses = UseCoursesStore();
   box-shadow: 30px 0 0 #2D9CDB;
 }
 
-
 .content-study {
   font-family: Montserrat, sans-serif;
   font-size: 40px;
