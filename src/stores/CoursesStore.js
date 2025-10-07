@@ -27,20 +27,20 @@ export const UseCoursesStore = defineStore('courses', () => {
 
     function loadAvailableCourses() {
         doRequest("coursesManager", "getAvailableCourses").then(
-            (res) => {
-                if (res.status === "success") {
-                    for (let i = 0; i < res.data.length; i++) {
-                        res.data[i].details = computed(() => {
-                            state.value.courseDetails[res.data.id] = state.value.courseDetails[res.data.id] ?? {
+            (coursesResponse) => {
+                if (coursesResponse.status === "success") {
+                    for (let i = 0; i < coursesResponse.data.length; i++) {
+                        coursesResponse.data[i].details = computed(() => {
+                            state.value.courseDetails[coursesResponse.data[i].id] = state.value.courseDetails[coursesResponse.data[i].id] ?? {
                                 data: null,
                                 lastUpdate: Infinity
                             };
-                            const details = state.value.courseDetails[res.data.id];
+                            const details = state.value.courseDetails[coursesResponse.data[i].id];
                             if ((!details.data) || (details.lastUpdate - Date.now()) > 60000) {
-                                loadCourseInfo(res.data.id).then(
-                                    res => {
-                                        if (res.status === "success") {
-                                            details.data = res.data;
+                                loadCourseInfo(coursesResponse.data[i].id).then(
+                                    infoResponse => {
+                                        if (infoResponse.status === "success") {
+                                            details.data = infoResponse.data;
                                             details.lastUpdate = Date.now();
                                         }
                                     }
@@ -49,7 +49,7 @@ export const UseCoursesStore = defineStore('courses', () => {
                             return details.data;
                         });
                     }
-                    state.value.availableCourses.storage = res.data;
+                    state.value.availableCourses.storage = coursesResponse.data;
                     state.value.availableCourses.lastUpdate = Date.now();
                 }
             }
@@ -57,16 +57,9 @@ export const UseCoursesStore = defineStore('courses', () => {
     }
 
     async function loadCourseInfo(courseId) {
-        //заглушка
-        return {
-            status: "success",
-            data: {
-                date: 1,
-                timing: 2,
-                modules: 3,
-                longDescription: 4
-            }
-        };
+        return doRequest("coursesManager", "getCourseInfo", {
+            courseId
+        });
     }
 
     return {availableCourses, userCourses};

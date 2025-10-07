@@ -95,5 +95,6 @@ fieldset {
 
 pre {
   font-size: 13px;
+  white-space: pre-wrap;
 }
 </style>

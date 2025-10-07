@@ -5,7 +5,6 @@ import TestForm from "@/components/debug/TestForm.vue";
 import {ref} from "vue";
 
 const serverURL = ref(import.meta.env.VITE_API_SERVER_URL || "https://rtlm.tableer.com");
-
 const actions = {
   getSession: {
     result: ref(null),
@@ -65,6 +64,15 @@ const actions = {
         actions.getAvailableCourses.result.value = res;
       });
     }
+  },
+
+  getCourseInfo: {
+    result: ref(null),
+    perform: function (courseId) {
+      doRequest("coursesManager", "getCourseInfo", {courseId}).then((res) => {
+        actions.getCourseInfo.result.value = res;
+      });
+    }
   }
 }
 
@@ -78,6 +86,7 @@ const stores = {
   <main>
     <h1>Дэшборд для теста API-хэндлов</h1>
     <h2>Используемый сервер: {{ serverURL }}</h2>
+
     <TestForm
         :description="'Загружает данные сессии пользователя'"
         :actor="'sessionManager'"
@@ -139,6 +148,17 @@ const stores = {
         :passed-data="[]"
         :run-with="actions.getAvailableCourses.perform"
         :result="actions.getAvailableCourses.result.value"
+    />
+
+    <TestForm
+        :description="'Получение детальной информации о курсе'"
+        :actor="'coursesManager'"
+        :action="'getCourseInfo'"
+        :passed-data="[
+            {name:'ID курса (0-3)', type:'number', value:'1'},
+        ]"
+        :run-with="actions.getCourseInfo.perform"
+        :result="actions.getCourseInfo.result.value"
     />
   </main>
 </template>
