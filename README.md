@@ -1,4 +1,4 @@
-# Educational coding platform (personal project)
+# RuntimeLearningManager
 
 ## Clientside
 
@@ -26,8 +26,10 @@
    ```
    npm run build
    ```
-5. The frontend application will work over the remote backend server at `https://rtlm.tableer.com`.  
+5. The frontend application will work over the remote backend server at `https://rtlm.tableer.com`.
+
    API reference can be found [here](./src/backend/help.md).
+   API test dashboard can be found at `/api` page of the project.
 
 ### How to run the Backend
 
@@ -93,9 +95,9 @@ API+StateManagement:
     3. [x] Log in
     4. [x] Log out
 2. [ ] Courses management
-    1. [ ] Fetch available courses data
+    1. [x] Fetch available courses data
         1. [x] Metadata only (name, icon, short description)
-        2. [ ] Full description
+        2. [x] Full description
     2. [ ] Fetch User's courses
         1. [ ] Unread messages
         2. [ ] Metadata only
