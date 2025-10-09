@@ -6,6 +6,7 @@ import Footer from "@/components/Footer.vue";
 <template>
   <v-container fluid>
     <Header class="header-content"></Header>
+    <hr class="hr-line"/>
     <router-view class="main-content"></router-view>
     <Footer class="footer-content"></Footer>
   </v-container>
@@ -13,14 +14,19 @@ import Footer from "@/components/Footer.vue";
 
 <style>
 .header-content {
+}
 
+.hr-line {
+  border: 0;
+  background: #E0E0E0;
+  height: 1px;
 }
 
 .main-content {
   padding: 0 40px;
   flex-direction: column;
   align-items: center;
-  gap: 80px;
+  gap: 40px;
 }
 
 .footer-content {
@@ -28,7 +34,7 @@ import Footer from "@/components/Footer.vue";
 }
 
 .header-content, .main-content, .footer-content {
-  max-width: 1000px;
+  max-width: min(1920px, 85%);
   margin: 0 auto;
   display: flex;
 }

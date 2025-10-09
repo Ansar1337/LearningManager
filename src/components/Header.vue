@@ -15,7 +15,7 @@
 
 <style scoped>
 header {
-  background: #F5F5F5;
+  background: #FFFFFF;
   display: flex;
   justify-content: space-between;
   padding: 10px 40px;
