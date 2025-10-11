@@ -1,5 +1,5 @@
 <script setup>
-import {useSessionStore} from "@/stores/SessionStore.js";
+import {useUserStore} from "@/stores/UserStore.js";
 import {doRequest} from "@/helpers/NetworkManager.js";
 import TestForm from "@/components/debug/TestForm.vue";
 import {ref} from "vue";
@@ -69,15 +69,36 @@ const actions = {
   getCourseInfo: {
     result: ref(null),
     perform: function (courseId) {
-      doRequest("coursesManager", "getCourseInfo", {courseId}).then((res) => {
+      doRequest("coursesManager", "getCourseInfo", {
+        courseId
+      }).then((res) => {
         actions.getCourseInfo.result.value = res;
       });
     }
+  },
+
+  getUserCourses: {
+    result: ref(null),
+    perform: function () {
+      doRequest("coursesManager", "getUserCourses").then((res) => {
+        actions.getUserCourses.result.value = res;
+      });
+    }
+  },
+
+  getUserCourseModules: {
+    result: ref(null),
+    perform: function (courseId) {
+      doRequest("coursesManager", "getUserCourseModules", {courseId}).then((res) => {
+        actions.getUserCourseModules.result.value = res;
+      });
+    }
   }
+
 }
 
 const stores = {
-  session: useSessionStore()
+  session: useUserStore()
 };
 
 </script>
@@ -97,7 +118,7 @@ const stores = {
     />
 
     <TestForm
-        :description="'Проверка занятости логина'"
+        :description="'Проверка занятости/резервирование логина'"
         :actor="'sessionManager'"
         :action="'reserveLogin'"
         :passed-data="[
@@ -159,6 +180,26 @@ const stores = {
         ]"
         :run-with="actions.getCourseInfo.perform"
         :result="actions.getCourseInfo.result.value"
+    />
+
+    <TestForm
+        :description="'Получение списка курсов пользователя'"
+        :actor="'coursesManager'"
+        :action="'getUserCourses'"
+        :passed-data="[]"
+        :run-with="actions.getUserCourses.perform"
+        :result="actions.getUserCourses.result.value"
+    />
+
+    <TestForm
+        :description="'Получение информации о модулях по конкретному/студенту'"
+        :actor="'coursesManager'"
+        :action="'getUserCourseModules'"
+        :passed-data="[
+            {name:'ID курса (0-3)', type:'number', value:'1'},
+        ]"
+        :run-with="actions.getUserCourseModules.perform"
+        :result="actions.getUserCourseModules.result.value"
     />
   </main>
 </template>

@@ -3,10 +3,12 @@ import IconCircleLogo from "@/components/icons/logo/IconCircleLogo.vue";
 import IconTriangleLogo from "@/components/icons/logo/IconTriangleLogo.vue";
 import IconSquareLogo from "@/components/icons/logo/IconSquareLogo.vue";
 import IconPentadecagonLogo from "@/components/icons/logo/IconPentadecagonLogo.vue";
-import {UseCoursesStore} from "@/stores/CoursesStore.js";
+import {useCoursesStore} from "@/stores/CoursesStore.js";
 
-const courses = UseCoursesStore();
+
+const courses = useCoursesStore();
 const assetsUrl = new URL('@/assets', import.meta.url).href;
+
 </script>
 
 <template>
@@ -14,9 +16,9 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
     <section class="logo">
       <div class="logo-title">
         <p>AnsarCodes —</p>
-        <p>opening up prospects</p>
-        <p>through education and</p>
-        <p>training in IT</p>
+        <p>открытие перспектив</p>
+        <p>через обучение и</p>
+        <p>развитие в IT</p>
       </div>
       <section class="logo-image">
         <img src="@/assets/laptop-logo.png" alt="logo image">
@@ -29,7 +31,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
       </section>
     </section>
 
-    <h2 class="content-study">Areas of study</h2>
+    <h2 class="content-study">Направления обучения</h2>
 
     <section class="cards-container">
       <v-card v-for="course in courses.availableCourses" :key="course.id" elevation="4" class="card">
@@ -292,6 +294,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
   z-index: -1;
   position: absolute;
   right: min(100px, calc(1% + 30px));
+  transition: 0.3s ease;
 }
 
 .large-circle {
@@ -353,7 +356,9 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 
 @media only screen and (max-width: 758px) {
   .logo-image {
-    visibility: hidden;
+    transform: scale(0.5);
+    right: -30%;
+    bottom: -50%;
   }
 }
 </style>
