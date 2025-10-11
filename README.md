@@ -1,4 +1,4 @@
-# RuntimeLearningManager
+# LearningManager
 
 ## Clientside
 

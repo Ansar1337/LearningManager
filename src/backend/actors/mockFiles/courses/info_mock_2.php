@@ -3,7 +3,7 @@
 return [
     "dateStart" => "2024-03-15",
     "dateEnd" => "2024-11-15",
-    "timeEstimation" => 45,
+    "timeEstimation" => 45 * 144000000,
     "modules" => [
         "Основы Swift",
         "Разработка интерфейса в Xcode",

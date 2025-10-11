@@ -18,12 +18,11 @@ if ($_POST["action"] ?? false) {
 
         case "getCourseInfo":
         {
-
-            $courseFilePath = __DIR__ . "/compiledTemplates/courses/" . ($_POST["data"]["courseId"] ?? "") . ".php";
-
+            $mockFilePath = __DIR__ . "/mockFiles/courses/info_mock_" . ($_POST["data"]["courseId"] ?? "") . ".php";
+            error_log($mockFilePath);
             if ((!isset($_POST["data"])) ||
                 (!isset($_POST["data"]["courseId"])) ||
-                (!(file_exists($courseFilePath)))
+                (!(file_exists($mockFilePath)))
             ) {
                 $result["status"] = "error";
                 $result["data"] = "unknown courseId";
@@ -31,7 +30,52 @@ if ($_POST["action"] ?? false) {
             }
 
             $result["status"] = "success";
-            $result["data"] = include($courseFilePath);
+            $result["data"] = include($mockFilePath);
+            break;
+        }
+
+        case "getUserCourses":
+        {
+
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $mockFilePath = __DIR__ . "/mockFiles/userCourses/user_" . $_SESSION["userId"] . ".php";
+
+            $result["status"] = "success";
+            if (!(file_exists($mockFilePath))) {
+                $result["data"] = [];
+            } else {
+                $result["data"] = include($mockFilePath);
+            }
+
+            break;
+        }
+
+        case "getUserCourseModules":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $mockFilePath = __DIR__ . "/mockFiles/modules/module_mock_" . $_SESSION["userId"] . "_" . ($_POST["data"]["courseId"] ?? "") . ".php";
+
+            if ((!isset($_POST["data"])) ||
+                (!isset($_POST["data"]["courseId"])) ||
+                (!(file_exists($mockFilePath)))
+            ) {
+                $result["status"] = "error";
+                $result["data"] = "unknown courseId";
+                break;
+            }
+
+            $result["status"] = "success";
+            $result["data"] = include($mockFilePath);
             break;
         }
 

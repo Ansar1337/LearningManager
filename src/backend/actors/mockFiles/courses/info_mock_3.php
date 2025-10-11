@@ -3,7 +3,7 @@
 return [
     "dateStart" => "2024-04-10",
     "dateEnd" => "2024-12-10",
-    "timeEstimation" => 35,
+    "timeEstimation" => 35 * 144000000,
     "modules" => [
         "Основы JavaScript",
         "Работа с HTML/CSS и DOM",
