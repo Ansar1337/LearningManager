@@ -61,7 +61,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
     <!--TODO: расположить верстку по макету -->
     <section class="content-about">
       <div class="content-about-left">
-        <img src="@/assets/card-icon-1.png" width="314" alt="group of people" class="about-image">
+        <div class="back-holder group-of-people"></div>
         <div class="content-about-bold mt-5">Все наши преподаватели — практикующие разработчики</div>
         <div class="content-about-regular mt-3">Они обладают актуальными знаниями и опытом работы в индустрии. Это
           позволяет студентам получить навыки из первых рук и применять их на практике.
@@ -70,12 +70,12 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
       <div class="content-about-right">
         <div class="content-about-right-top">
           <div class="content-about-right-top-left">
-            <img src="@/assets/card-icon-2.png" width="180" alt="tick image" class="about-image">
+            <div class="back-holder checkbox-icon"></div>
             <div class="content-about-bold">В курсах нет лишней информации</div>
             <div class="content-about-regular mt-3">Обучение строится на основе практических заданий и проектов</div>
           </div>
           <div class="content-about-right-top-right">
-            <img src="@/assets/card-icon-3.png" width="180" alt="dots and heart like in messenger" class="about-image">
+            <div class="back-holder socials-icon"></div>
             <div class="content-about-bold">Вас сопровождает команда поддержки</div>
             <div class="content-about-regular mt-3">Готовая оказать помощь и ответить на ваши вопросы в любое время
             </div>
@@ -83,11 +83,13 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
         </div>
 
         <div class="content-about-right-bottom">
-          <img src="@/assets/card-icon-4.png" width="180" alt="blue lines in document like code lines"
-               class="about-image-left float-left">
-          <div class="content-about-bold">На курсах <span class="text-summer-sky">много практики</span></div>
-          <div class="content-about-regular mt-3">Это позволяет студентам не только усвоить знания, но и непосредственно
-            применить их в реальных проектах, углубляя свое понимание материала
+          <div class="back-holder calendar-icon"></div>
+          <div class="content-about-bottom">
+            <div class="content-about-bold">На курсах <span class="text-summer-sky">много практики</span></div>
+            <div class="content-about-regular mt-3">Это позволяет студентам не только усвоить знания, но и
+              непосредственно
+              применить их в реальных проектах, углубляя свое понимание материала
+            </div>
           </div>
         </div>
       </div>
@@ -109,6 +111,46 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 </template>
 
 <style scoped>
+
+.back-holder {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+.back-holder.group-of-people {
+  width: 314px;
+  height: 158px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-image: url("@/assets/card-icon-1.png");
+}
+
+.back-holder.checkbox-icon {
+  background-position: -5px center;
+  width: 180px;
+  height: 164px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-image: url("@/assets/card-icon-2.png");
+}
+
+.back-holder.socials-icon {
+  width: 180px;
+  height: 164px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-image: url("@/assets/card-icon-3.png");
+}
+
+.back-holder.calendar-icon {
+  flex-basis: 160px;
+  flex-shrink: 0;
+  height: 160px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-image: url("@/assets/card-icon-4.png");
+}
 
 /* logo */
 .logo {
@@ -249,7 +291,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 .content-about {
   display: flex;
   flex-flow: wrap;
-  gap: 20px;
+  column-gap: 20px;
 }
 
 .about-image {
@@ -275,7 +317,8 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 }
 
 .content-about-left {
-  max-width: 30%;
+  flex-basis: 30%;
+  flex-grow: 1;
   min-width: 344px;
   background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
   border-radius: 16px;
@@ -283,7 +326,8 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 }
 
 .content-about-right {
-  max-width: calc(70% - 21px);
+  flex-basis: calc(70% - 21px);
+  flex-grow: 1;
   min-width: 344px;
   display: flex;
   flex-flow: wrap;
@@ -297,7 +341,8 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 }
 
 .content-about-right-top-left {
-  max-width: 50%;
+  flex-basis: 50%;
+  flex-grow: 1;
   min-width: 344px;
   background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
   border-radius: 16px;
@@ -305,7 +350,8 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 }
 
 .content-about-right-top-right {
-  max-width: calc(50% - 21px);
+  flex-basis: calc(50% - 21px);
+  flex-grow: 1;
   min-width: 344px;
   background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
   border-radius: 16px;
@@ -313,11 +359,19 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 }
 
 .content-about-right-bottom {
-  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-basis: 100%;
+  flex-grow: 1;
   min-width: 344px;
   background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
   border-radius: 16px;
   padding: 10px 20px 10px 20px;
+}
+
+.content-about-bottom {
+  flex-basis: 600px;
 }
 
 /* feedback */
