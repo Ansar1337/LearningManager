@@ -127,6 +127,8 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 }
 
 .back-holder.checkbox-icon {
+  position: relative;
+  left: -20px;
   background-position: -5px center;
   width: 180px;
   height: 164px;
@@ -144,6 +146,8 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 }
 
 .back-holder.calendar-icon {
+  position: relative;
+  left: -20px;
   flex-basis: 160px;
   flex-shrink: 0;
   height: 160px;
@@ -341,7 +345,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 }
 
 .content-about-right-top-left {
-  flex-basis: 50%;
+  flex-basis: 45%;
   flex-grow: 1;
   min-width: 344px;
   background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
@@ -350,7 +354,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 }
 
 .content-about-right-top-right {
-  flex-basis: calc(50% - 21px);
+  flex-basis: 45%;
   flex-grow: 1;
   min-width: 344px;
   background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
