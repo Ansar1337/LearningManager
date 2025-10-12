@@ -4,18 +4,15 @@ import Footer from "@/components/Footer.vue";
 </script>
 
 <template>
-  <v-container fluid>
+  <div class="main">
     <Header class="header-content"></Header>
     <hr class="hr-line"/>
     <router-view class="main-content"></router-view>
     <Footer class="footer-content"></Footer>
-  </v-container>
+  </div>
 </template>
 
 <style>
-.header-content {
-}
-
 .hr-line {
   border: 0;
   background: #E0E0E0;
@@ -23,23 +20,16 @@ import Footer from "@/components/Footer.vue";
 }
 
 .main-content {
-  padding: 0 40px;
-  flex-direction: column;
-  align-items: center;
-  gap: 40px;
-}
-
-.footer-content {
-  gap: 10px;
-}
-
-.header-content, .main-content, .footer-content {
-  max-width: min(1920px, 85%);
   margin: 0 auto;
+  padding: 0 40px;
   display: flex;
+  max-width: min(1920px, 85%);
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
 }
 
-.main-content > * {
+.main, .main-content > * {
   width: 100%;
 }
 </style>

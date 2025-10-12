@@ -14,7 +14,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 <template>
   <div>
     <section class="logo">
-      <div class="logo-title">
+      <div class="logo-title text-white">
         <p>AnsarCodes —</p>
         <p>открытие перспектив</p>
         <p>через обучение и</p>
@@ -31,12 +31,13 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
       </section>
     </section>
 
-    <h2 class="content-study">Направления обучения</h2>
+    <div class="title-for-block">Направления обучения</div>
 
     <section class="cards-container">
       <v-card v-for="course in courses.availableCourses" :key="course.id" elevation="4" class="card">
         <v-card-title class="card-title mt-3">
           <img :src="`${assetsUrl}/${course.icon || 'java-logo.png'}`"
+               alt="language logotype"
                class="card-title-image">
           {{ course.title }}
         </v-card-title>
@@ -44,7 +45,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
           <div>
             {{ course.description }}
           </div>
-          <div class="card-text-arrow">
+          <div class="card-text-arrow text-summer-sky">
             ➔
           </div>
         </v-card-text>
@@ -52,47 +53,54 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
       </v-card>
     </section>
 
-    <h2 class="content-study">
-      <div>Главный принцип наших курсов —</div>
-      <div style="color: #2D9CDB">люди рядом</div>
-    </h2>
+    <div class="title-for-block">
+      <p>Главный принцип наших курсов —</p>
+      <p class="text-summer-sky">люди рядом</p>
+    </div>
 
     <!--TODO: расположить верстку по макету -->
     <section class="content-about">
-      <div class="content-about-1">
-        <img src="@/assets/card-icon-1.png" width="314">
+      <div class="content-about-left">
+        <img src="@/assets/card-icon-1.png" width="314" alt="group of people" class="about-image">
         <div class="content-about-bold mt-5">Все наши преподаватели — практикующие разработчики</div>
-        <div class="content-about-regular mt-5">Они обладают актуальными знаниями и опытом работы в индустрии. Это
+        <div class="content-about-regular mt-3">Они обладают актуальными знаниями и опытом работы в индустрии. Это
           позволяет студентам получить навыки из первых рук и применять их на практике.
         </div>
       </div>
-      <div class="content-about-2">
-        <img src="@/assets/card-icon-2.png" width="180">
-        <div class="content-about-bold">В курсах нет лишней информации</div>
-        <div class="content-about-regular mt-5">Обучение строится на основе практических заданий и проектов</div>
-      </div>
-      <div class="content-about-3">
-        <img src="@/assets/card-icon-3.png" width="180">
-        <div class="content-about-bold">Вас сопровождает команда поддержки</div>
-        <div class="content-about-regular mt-5">Готовая оказать помощь и ответить на ваши вопросы в любое время</div>
-      </div>
-      <div class="content-about-4 float-end">
-        <img src="@/assets/card-icon-4.png" width="180">
-        <div class="content-about-bold">На курсах <span style="color: #2D9CDB">много практики</span></div>
-        <div class="content-about-regular mt-5">Это позволяет студентам не только усвоить знания, но и непосредственно
-          применить их в реальных проектах, углубляя свое понимание материала
+      <div class="content-about-right">
+        <div class="content-about-right-top">
+          <div class="content-about-right-top-left">
+            <img src="@/assets/card-icon-2.png" width="180" alt="tick image" class="about-image">
+            <div class="content-about-bold">В курсах нет лишней информации</div>
+            <div class="content-about-regular mt-3">Обучение строится на основе практических заданий и проектов</div>
+          </div>
+          <div class="content-about-right-top-right">
+            <img src="@/assets/card-icon-3.png" width="180" alt="dots and heart like in messenger" class="about-image">
+            <div class="content-about-bold">Вас сопровождает команда поддержки</div>
+            <div class="content-about-regular mt-3">Готовая оказать помощь и ответить на ваши вопросы в любое время
+            </div>
+          </div>
+        </div>
+
+        <div class="content-about-right-bottom">
+          <img src="@/assets/card-icon-4.png" width="180" alt="blue lines in document like code lines"
+               class="about-image-left float-left">
+          <div class="content-about-bold">На курсах <span class="text-summer-sky">много практики</span></div>
+          <div class="content-about-regular mt-3">Это позволяет студентам не только усвоить знания, но и непосредственно
+            применить их в реальных проектах, углубляя свое понимание материала
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="feedback mb-5">
-      <div class="feedback-title mt-6">Остались вопросы?</div>
+    <section class="feedback bg-alice-blue mb-5">
+      <div class="feedback-title text-summer-sky mt-6">Остались вопросы?</div>
       <div class="feedback-text">Оставьте контакты — мы с вами свяжемся</div>
-      <form class="mt-6 mb-6">
-        <input type="text" placeholder="Имя" class="input">
-        <input type="text" placeholder="+7 (777) 777-77-77" class="input">
-        <input type="text" placeholder="Электронная почта" class="input">
-        <button type="submit" class="confirm">Получить консультацию</button>
+      <form class="mt-6">
+        <input type="text" placeholder="Имя" class="input mb-6">
+        <input type="text" placeholder="+7 (777) 777-77-77" class="input mb-6">
+        <input type="text" placeholder="Электронная почта" class="input mb-6">
+        <button type="submit" class="confirm bg-summer-sky text-white mb-6">Получить консультацию</button>
       </form>
       <div class="feedback-small mb-6">Нажимая кнопку, принимаю условия политики и пользовательского соглашения</div>
     </section>
@@ -102,167 +110,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 
 <style scoped>
 
-.feedback {
-  background: #F6F8F9;
-  border-radius: 16px;
-  padding: 10px 20px 10px 20px;
-}
-
-.feedback-title {
-  font-family: Montserrat, sans-serif;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 49px;
-  letter-spacing: 0em;
-  text-align: left;
-  color: #2D9CDB;
-}
-
-.feedback-small {
-  font-family: Montserrat, sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 15px;
-  letter-spacing: 0em;
-  text-align: left;
-}
-
-.feedback-text {
-  font-family: Montserrat, sans-serif;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 22px;
-  letter-spacing: 0em;
-  text-align: left;
-}
-
-.input {
-  border: 1px solid gray;
-  border-radius: 5px;
-  margin-right: 10px;
-  padding-left: 7px;
-}
-
-.confirm {
-  background: #2D9CDB;
-  border-radius: 5px;
-  padding: 2px 20px 2px 20px;
-  color: #FFFFFF;
-  font-family: Montserrat, sans-serif;
-  font-size: 16px;
-  line-height: 20px;
-  letter-spacing: 0em;
-  text-align: left;
-}
-
-.content-about {
-  display: flex;
-  flex-flow: wrap;
-  gap: 20px;
-}
-
-.content-about-bold {
-  font-family: Montserrat, sans-serif;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 24px;
-}
-
-.content-about-regular {
-  font-family: Montserrat, sans-serif;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 24px;
-}
-
-.content-about-1 {
-  min-width: 344px;
-  max-width: 40%;
-  background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
-  border-radius: 16px;
-  padding: 10px 20px 10px 20px;
-}
-
-.content-about-2 {
-  min-width: 250px;
-  max-width: 28%;
-  background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
-  border-radius: 16px;
-  padding: 10px 20px 10px 20px;
-}
-
-.content-about-3 {
-  min-width: 250px;
-  max-width: 28%;
-  background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
-  border-radius: 16px;
-  padding: 10px 20px 10px 20px;
-}
-
-.content-about-4 {
-  min-width: 250px;
-  max-width: 60%;
-  background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
-  border-radius: 16px;
-  padding: 10px 20px 10px 20px;
-}
-
-.card-title {
-  font-family: Montserrat, sans-serif;
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 39px;
-  letter-spacing: 0em;
-  text-align: left;
-}
-
-.card-title-image {
-  width: 31px;
-  height: 33px;
-  vertical-align: bottom;
-}
-
-.card-text {
-  font-family: Montserrat, sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 20px;
-  letter-spacing: 0em;
-  text-align: left;
-}
-
-.card-text-arrow {
-  font-family: Montserrat, sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 34px;
-  color: #2D9CDB;
-  margin: auto;
-}
-
-.course-card-circle {
-  width: 418px;
-  height: 282px;
-  position: absolute;
-  top: 20px;
-  z-index: -1;
-  left: 150px;
-  opacity: 10%;
-  border-radius: 50%;
-  background: linear-gradient(180deg, #7AAFFF 0%, rgba(208, 227, 255, 0) 100%);
-}
-
-.cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.cards-container .card {
-  background: linear-gradient(180deg, #FFFFFF 0%, rgba(243, 251, 255, 0.8) 100%);
-  min-height: 150px;
-}
-
+/* logo */
 .logo {
   height: 428px;
   position: relative;
@@ -272,13 +120,9 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 }
 
 .logo-title {
-  font-family: Montserrat, sans-serif;
   font-size: 36px;
   font-weight: 700;
   line-height: 44px;
-  letter-spacing: 0;
-  text-align: left;
-  color: #FFFFFF;
   position: absolute;
   top: 114px;
   margin-left: 60px;
@@ -345,13 +189,175 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
   right: -95px;
 }
 
-.content-study {
-  font-family: Montserrat, sans-serif;
+/* title for block */
+.title-for-block {
   font-size: 40px;
   font-weight: 600;
   line-height: 49px;
-  letter-spacing: 0;
-  text-align: left;
+}
+
+/* cards */
+.card-title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 39px;
+}
+
+.card-title-image {
+  width: 31px;
+  height: 33px;
+  vertical-align: bottom;
+}
+
+.card-text {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.card-text-arrow {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 34px;
+  margin: auto;
+}
+
+.course-card-circle {
+  width: 418px;
+  height: 282px;
+  position: absolute;
+  top: 20px;
+  z-index: -1;
+  left: 150px;
+  opacity: 10%;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #7AAFFF 0%, rgba(208, 227, 255, 0) 100%);
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.cards-container .card {
+  background: linear-gradient(180deg, #FFFFFF 0%, rgba(243, 251, 255, 0.8) 100%);
+  min-height: 150px;
+}
+
+/* about */
+.content-about {
+  display: flex;
+  flex-flow: wrap;
+  gap: 20px;
+}
+
+.about-image {
+  margin-bottom: -20px;
+  margin-left: -40px;
+}
+
+.about-image-left {
+  margin-top: -40px;
+  margin-left: -40px;
+}
+
+.content-about-bold {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.content-about-regular {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.content-about-left {
+  max-width: 30%;
+  min-width: 344px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
+  border-radius: 16px;
+  padding: 10px 20px 10px 20px;
+}
+
+.content-about-right {
+  max-width: calc(70% - 21px);
+  min-width: 344px;
+  display: flex;
+  flex-flow: wrap;
+  gap: 20px;
+}
+
+.content-about-right-top {
+  display: flex;
+  flex-flow: wrap;
+  gap: 20px;
+}
+
+.content-about-right-top-left {
+  max-width: 50%;
+  min-width: 344px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
+  border-radius: 16px;
+  padding: 10px 20px 10px 20px;
+}
+
+.content-about-right-top-right {
+  max-width: calc(50% - 21px);
+  min-width: 344px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
+  border-radius: 16px;
+  padding: 10px 20px 10px 20px;
+}
+
+.content-about-right-bottom {
+  max-width: 100%;
+  min-width: 344px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #EEF3F3 100%);
+  border-radius: 16px;
+  padding: 10px 20px 10px 20px;
+}
+
+/* feedback */
+.feedback {
+  border-radius: 16px;
+  padding: 10px 20px 10px 20px;
+}
+
+.feedback-title {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 49px;
+}
+
+.feedback-small {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+}
+
+.feedback-text {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 22px;
+}
+
+.input {
+  border: 1px solid gray;
+  border-radius: 5px;
+  margin-right: 10px;
+  padding-left: 7px;
+  height: 30px;
+}
+
+.confirm {
+  border-radius: 5px;
+  padding: 2px 20px 2px 20px;
+  font-size: 16px;
+  line-height: 20px;
+  height: 30px;
 }
 
 @media only screen and (max-width: 758px) {
