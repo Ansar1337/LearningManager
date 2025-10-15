@@ -93,8 +93,40 @@ const actions = {
         actions.getUserCourseModules.result.value = res;
       });
     }
-  }
+  },
 
+  getUserCourseModuleArticleTree: {
+    result: ref(null),
+    perform: function (courseId, moduleId) {
+      doRequest("coursesManager", "getUserCourseModuleArticleTree", {
+        courseId, moduleId
+      }).then((res) => {
+        actions.getUserCourseModuleArticleTree.result.value = res;
+      });
+    }
+  },
+
+  getUserCourseModuleArticle: {
+    result: ref(null),
+    perform: function (courseId, moduleId, articlePath) {
+      doRequest("coursesManager", "getUserCourseModuleArticle", {
+        courseId, moduleId, articlePath
+      }).then((res) => {
+        actions.getUserCourseModuleArticle.result.value = res;
+      });
+    }
+  },
+
+  markMaterialAsCompleted: {
+    result: ref(null),
+    perform: function (courseId, moduleId, articlePath, status) {
+      doRequest("coursesManager", "markMaterialAsCompleted", {
+        courseId, moduleId, articlePath, status
+      }).then((res) => {
+        actions.markMaterialAsCompleted.result.value = res;
+      });
+    }
+  },
 }
 
 const stores = {
@@ -201,6 +233,46 @@ const stores = {
         :run-with="actions.getUserCourseModules.perform"
         :result="actions.getUserCourseModules.result.value"
     />
+
+    <TestForm
+        :description="'Получение дерева материалов по конкретному модулю студента'"
+        :actor="'coursesManager'"
+        :action="'getUserCourseModuleArticleTree'"
+        :passed-data="[
+            {name:'ID курса (0-3)', type:'number', value:'0'},
+            {name:'ID модуля (0-3)', type:'number', value:'0'},
+        ]"
+        :run-with="actions.getUserCourseModuleArticleTree.perform"
+        :result="actions.getUserCourseModuleArticleTree.result.value"
+    />
+
+    <TestForm
+        :description="'Получение материала из дерева материалов'"
+        :actor="'coursesManager'"
+        :action="'getUserCourseModuleArticle'"
+        :passed-data="[
+            {name:'ID курса (0-3)', type:'number', value:'0'},
+            {name:'ID модуля (0-3)', type:'number', value:'0'},
+            {name:'Адрес узла дерева материала', type:'text', value:'0,1'},
+        ]"
+        :run-with="actions.getUserCourseModuleArticle.perform"
+        :result="actions.getUserCourseModuleArticle.result.value"
+    />
+
+    <TestForm
+        :description="'Обновление статуса материала из дерева материалов'"
+        :actor="'coursesManager'"
+        :action="'markMaterialAsCompleted'"
+        :passed-data="[
+            {name:'ID курса (0-3)', type:'number', value:'0'},
+            {name:'ID модуля (0-3)', type:'number', value:'0'},
+            {name:'Адрес узла дерева материала', type:'text', value:'0,1'},
+            {name:'Статус (true/false)', type:'checkbox', checked: false},
+        ]"
+        :run-with="actions.markMaterialAsCompleted.perform"
+        :result="actions.markMaterialAsCompleted.result.value"
+    />
+
   </main>
 </template>
 

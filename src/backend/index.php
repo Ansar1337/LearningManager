@@ -2,6 +2,7 @@
 
 if (empty($_POST)) {
     echo("I'm ready!");
+    exit;
 }
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';

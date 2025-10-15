@@ -18,7 +18,7 @@ if ($_POST["action"] ?? false) {
 
         case "getCourseInfo":
         {
-            $mockFilePath = __DIR__ . "/mockFiles/courses/info_mock_" . ($_POST["data"]["courseId"] ?? "") . ".php";
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/courses/info_mock_" . ($_POST["data"]["courseId"] ?? "") . ".php";
             error_log($mockFilePath);
             if ((!isset($_POST["data"])) ||
                 (!isset($_POST["data"]["courseId"])) ||
@@ -43,7 +43,7 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $mockFilePath = __DIR__ . "/mockFiles/userCourses/user_" . $_SESSION["userId"] . ".php";
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/userCourses/user_" . $_SESSION["userId"] . ".php";
 
             $result["status"] = "success";
             if (!(file_exists($mockFilePath))) {
@@ -63,7 +63,7 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $mockFilePath = __DIR__ . "/mockFiles/modules/module_mock_" . $_SESSION["userId"] . "_" . ($_POST["data"]["courseId"] ?? "") . ".php";
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/modules/module_mock_" . $_SESSION["userId"] . "_" . ($_POST["data"]["courseId"] ?? "") . ".php";
 
             if ((!isset($_POST["data"])) ||
                 (!isset($_POST["data"]["courseId"])) ||
@@ -78,6 +78,178 @@ if ($_POST["action"] ?? false) {
             $result["data"] = include($mockFilePath);
             break;
         }
+
+        case "getUserCourseModuleArticleTree":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/materials/trees/article_tree_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $moduleTree = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                return include($mockFilePath);
+            }, 600);
+
+
+            $treeWalker = function (&$node) use (&$treeWalker) {
+                $result = true;
+                foreach ($node as &$item) {
+                    if ($item["type"] === "group") {
+                        $item["completed"] = $treeWalker($item["content"]);
+                    }
+                    $result = $result && $item["completed"];
+                }
+                return $result;
+            };
+
+            $treeWalker($moduleTree);
+            $result["status"] = "success";
+            $result["data"] = $moduleTree;
+
+            break;
+        }
+
+        case "getUserCourseModuleArticle":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+            $articlePath = $data["articlePath"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            if (is_null($articlePath)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown article";
+                break;
+            }
+
+            $articlePath = implode('_',
+                array_merge([$courseId, $moduleId], explode(",", $articlePath))
+            );
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/materials/articles/article_mock_" . $articlePath . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "unknown article";
+                break;
+            }
+
+            $result["status"] = "success";
+            $result["data"] = include($mockFilePath);
+            break;
+        }
+
+        case "markMaterialAsCompleted":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+            $articlePath = $data["articlePath"] ?? null;
+            $status = $data["status"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            if (is_null($articlePath)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown article";
+                break;
+            }
+
+            if (is_null($status)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown status";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/materials/trees/article_tree_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "unknown article";
+                break;
+            }
+
+            $moduleTree = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                return include($mockFilePath);
+            }, 600);
+
+            $articlePath = explode(",", $articlePath);
+            $node = &$moduleTree;
+            for ($i = 0; $i < sizeof($articlePath); $i++) {
+                $node = &$node[intval($articlePath[$i])];
+                if ($node["type"] === "group") {
+                    $node = &$node["content"];
+                }
+            }
+
+            $node["completed"] = $status;
+
+            write_to_cache($mockFilePath, $moduleTree, 600);
+            $result["status"] = "success";
+            $result["data"] = "article state updated";
+            break;
+
+        }
+
 
         default:
         {

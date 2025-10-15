@@ -2,6 +2,7 @@
 
 return [
     [
+        'id' => 0,
         'name' => 'Основы JavaScript',
         'lessonsCompleted' => 5,
         'lessonsTotal' => 5,
@@ -10,6 +11,7 @@ return [
         'performance' => 100,
     ],
     [
+        'id' => 1,
         'name' => 'Работа с HTML/CSS и DOM',
         'lessonsCompleted' => 4,
         'lessonsTotal' => 4,
@@ -18,6 +20,7 @@ return [
         'performance' => 98,
     ],
     [
+        'id' => 2,
         'name' => 'Асинхронное программирование в JavaScript',
         'lessonsCompleted' => 6,
         'lessonsTotal' => 6,
@@ -26,6 +29,7 @@ return [
         'performance' => 97,
     ],
     [
+        'id' => 3,
         'name' => 'Фреймворки и библиотеки JavaScript (React, Vue)',
         'lessonsCompleted' => 8,
         'lessonsTotal' => 10,
@@ -34,6 +38,7 @@ return [
         'performance' => 94,
     ],
     [
+        'id' => 4,
         'name' => 'Node.js и серверная разработка',
         'lessonsCompleted' => 7,
         'lessonsTotal' => 9,
@@ -42,6 +47,7 @@ return [
         'performance' => 92,
     ],
     [
+        'id' => 5,
         'name' => 'Работа с базами данных в JavaScript',
         'lessonsCompleted' => 5,
         'lessonsTotal' => 5,
@@ -50,6 +56,7 @@ return [
         'performance' => 95,
     ],
     [
+        'id' => 6,
         'name' => 'Современные инструменты и практики в JavaScript',
         'lessonsCompleted' => 3,
         'lessonsTotal' => 4,
@@ -58,6 +65,7 @@ return [
         'performance' => 93,
     ],
     [
+        'id' => 7,
         'name' => 'Проектная работа и портфолио',
         'lessonsCompleted' => 10,
         'lessonsTotal' => 12,

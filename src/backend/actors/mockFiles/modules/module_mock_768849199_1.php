@@ -2,6 +2,7 @@
 
 return [
     [
+        'id' => 0,
         'name' => 'Регистрация в мессенджере Discord',
         'lessonsCompleted' => 1,
         'lessonsTotal' => 1,
@@ -10,6 +11,7 @@ return [
         'performance' => 100
     ],
     [
+        'id' => 1,
         'name' => 'Английский для программистов',
         'lessonsCompleted' => 3,
         'lessonsTotal' => 3,
@@ -18,6 +20,7 @@ return [
         'performance' => 96
     ],
     [
+        'id' => 2,
         'name' => 'Основы Java',
         'lessonsCompleted' => 11,
         'lessonsTotal' => 11,
@@ -26,6 +29,7 @@ return [
         'performance' => 98
     ],
     [
+        'id' => 3,
         'name' => 'Java Core',
         'lessonsCompleted' => 3,
         'lessonsTotal' => 23,
@@ -34,6 +38,7 @@ return [
         'performance' => 100
     ],
     [
+        'id' => 4,
         'name' => 'Git — система контроля версий',
         'lessonsCompleted' => 0,
         'lessonsTotal' => 1,
@@ -42,6 +47,7 @@ return [
         'performance' => 100
     ],
     [
+        'id' => 5,
         'name' => 'Многопоточное программирование',
         'lessonsCompleted' => 1,
         'lessonsTotal' => 6,

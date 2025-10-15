@@ -25,13 +25,16 @@ onMounted(() => {
     <section class="test">
       <fieldset>
         <legend>{{ description }}</legend>
+
         <label v-if="passedDataCopy.length" v-for="datum in passedDataCopy" :key="datum.name">
           {{ datum.name }}:
-          <input :type="datum.type" v-model=datum.value>
+          <input v-if="datum.type!=='checkbox'" :type="datum.type" v-model=datum.value>
+          <input v-else :type="datum.type" v-model=datum.checked>
         </label>
+
         <span v-else>Входящие данные не требуются</span>
 
-        <button @click="runWith(...passedDataCopy.map(datum => datum.value))">Тест</button>
+        <button @click="runWith(...passedDataCopy.map(datum => datum.value ?? datum.checked))">Тест</button>
       </fieldset>
       <fieldset>
         <legend>Результат</legend>

@@ -1,4 +1,4 @@
-?php
+<?php
 
 $result = $result ?? [];
 
@@ -28,19 +28,16 @@ if ($_POST["action"] ?? false) {
         {
             $login = strtolower($_POST['data']['login'] ?? '');
 
-             if ($_SESSION["loggedIn"]) {
-                            $result["status"] = "error";
-                            $result["data"] = "already logged in";
-                            break;
-                        }
+            if ($_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "already logged in";
+                break;
+            }
 
             if (($login !== '') && ($_POST["data"]["password"] ?? false)) {
                 $registeredLogins = read_from_cache("registeredLogins", function () {
                     return ['ansar', 'denis'];
                 }, 3600);
-
-                error_log(var_export($login, true));
-                error_log(var_export($registeredLogins, true));
 
                 if (in_array($login, $registeredLogins)) {
                     $_SESSION["userId"] = crc32($login);
@@ -109,10 +106,10 @@ if ($_POST["action"] ?? false) {
             $_SESSION['reservedLogins'] = $_SESSION['reservedLogins'] ?? [];
 
             if ($_SESSION["loggedIn"]) {
-                            $result["status"] = "error";
-                            $result["data"] = "already logged in";
-                            break;
-                        }
+                $result["status"] = "error";
+                $result["data"] = "already logged in";
+                break;
+            }
 
             if (!$password) {
                 $result["status"] = "error";

@@ -6,13 +6,10 @@ const userStore = useUserStore();
 const isShowLogin = ref(false);
 const dialogStep = ref(1);
 
-
 </script>
 
 <template>
   <header class="bg-white">
-    <div></div>
-
     <div class="header-container">
       <router-link to="/" class="link-none">
         <h1 class="header-title text-summer-sky">

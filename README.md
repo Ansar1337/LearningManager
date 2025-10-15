@@ -100,12 +100,12 @@ API+StateManagement:
         2. [x] Full description
     2. [ ] Fetch User's courses
         1. [ ] Unread messages
-        2. [ ] Metadata only
+        2. [x] Metadata only
         3. [ ] Modules by courseId
-            1. [ ] Metadata (timings, performance etc)
-            2. [ ] Materials + status
-                1. [ ] Article groups
-                    1. [ ] Articles + status
+            1. [x] Metadata (timings, performance etc)
+            2. [X] Materials + status
+                1. [X] Article groups
+                    1. [X] Articles + status
             3. [ ] Homework + status
                 1. [ ] Task
                 2. [ ] File upload

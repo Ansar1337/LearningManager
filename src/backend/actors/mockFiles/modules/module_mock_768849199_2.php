@@ -2,6 +2,7 @@
 
 return [
     [
+        'id' => 0,
         'name' => 'Основы Swift',
         'lessonsCompleted' => 3,
         'lessonsTotal' => 3,
@@ -10,6 +11,7 @@ return [
         'performance' => 100,
     ],
     [
+        'id' => 1,
         'name' => 'Разработка интерфейса в Xcode',
         'lessonsCompleted' => 5,
         'lessonsTotal' => 5,
@@ -18,6 +20,7 @@ return [
         'performance' => 95,
     ],
     [
+        'id' => 2,
         'name' => 'Swift и Objective-C: работа вместе',
         'lessonsCompleted' => 2,
         'lessonsTotal' => 2,
@@ -26,6 +29,7 @@ return [
         'performance' => 98,
     ],
     [
+        'id' => 3,
         'name' => 'Разработка iOS приложений с Swift',
         'lessonsCompleted' => 10,
         'lessonsTotal' => 12,
@@ -34,6 +38,7 @@ return [
         'performance' => 93,
     ],
     [
+        'id' => 4,
         'name' => 'Работа с базами данных и хранение данных в iOS',
         'lessonsCompleted' => 4,
         'lessonsTotal' => 4,
@@ -42,6 +47,7 @@ return [
         'performance' => 97,
     ],
     [
+        'id' => 5,
         'name' => 'SwiftUI и его возможности',
         'lessonsCompleted' => 6,
         'lessonsTotal' => 6,
@@ -50,6 +56,7 @@ return [
         'performance' => 90,
     ],
     [
+        'id' => 6,
         'name' => 'Разработка сетевых приложений на Swift',
         'lessonsCompleted' => 4,
         'lessonsTotal' => 5,
@@ -58,6 +65,7 @@ return [
         'performance' => 92,
     ],
     [
+        'id' => 7,
         'name' => 'Оптимизация и тестирование iOS приложений',
         'lessonsCompleted' => 3,
         'lessonsTotal' => 3,

@@ -18,7 +18,6 @@ export const useCoursesStore = defineStore('courses', () => {
         },
         courseDetails: {},
         courseModules: {},
-
     });
 
     const userCourses = computed(() => {
@@ -78,7 +77,6 @@ export const useCoursesStore = defineStore('courses', () => {
                 if (userCoursesResponse.status === "success") {
                     for (let i = 0; i < userCoursesResponse.data.length; i++) {
                         userCoursesResponse.data[i].modules = computed(() => {
-
                             state.value.courseModules[userCoursesResponse.data[i].id] = state.value.courseModules[userCoursesResponse.data[i].id] ?? {
                                 data: null,
                                 lastUpdate: Infinity

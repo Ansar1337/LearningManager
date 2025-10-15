@@ -2,6 +2,7 @@
 
 return [
     [
+        'id' => 0,
         'name' => 'Введение в Kotlin',
         'lessonsCompleted' => 2,
         'lessonsTotal' => 2,
@@ -10,6 +11,7 @@ return [
         'performance' => 100,
     ],
     [
+        'id' => 1,
         'name' => 'Работа с Android Studio',
         'lessonsCompleted' => 4,
         'lessonsTotal' => 4,
@@ -18,6 +20,7 @@ return [
         'performance' => 95,
     ],
     [
+        'id' => 2,
         'name' => 'Основы функционального программирования',
         'lessonsCompleted' => 3,
         'lessonsTotal' => 3,
@@ -26,6 +29,7 @@ return [
         'performance' => 98,
     ],
     [
+        'id' => 3,
         'name' => 'Разработка мобильных приложений на Kotlin',
         'lessonsCompleted' => 8,
         'lessonsTotal' => 10,
@@ -34,6 +38,7 @@ return [
         'performance' => 90,
     ],
     [
+        'id' => 4,
         'name' => 'Kotlin и интероперабельность с Java',
         'lessonsCompleted' => 2,
         'lessonsTotal' => 2,
@@ -42,6 +47,7 @@ return [
         'performance' => 97,
     ],
     [
+        'id' => 5,
         'name' => 'Работа с сетью и базами данных в Kotlin',
         'lessonsCompleted' => 5,
         'lessonsTotal' => 5,
@@ -50,6 +56,7 @@ return [
         'performance' => 93,
     ],
     [
+        'id' => 6,
         'name' => 'Разработка многоплатформенных приложений',
         'lessonsCompleted' => 3,
         'lessonsTotal' => 4,
