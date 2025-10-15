@@ -1,12 +1,12 @@
 import {defineStore} from 'pinia'
-import {ref, computed} from "vue";
+import {computed, ref, watch} from "vue";
 import {doRequest} from "@/helpers/NetworkManager.js";
 
 
 export const useCoursesStore = defineStore('courses', () => {
 
-    const updateRate = 60000;
-
+    // let eagerMode = ref(false);
+    let updateRate = 60000;
     const state = ref({
         availableCourses: {
             storage: [],
@@ -15,10 +15,9 @@ export const useCoursesStore = defineStore('courses', () => {
         userCourses: {
             storage: {},
             lastUpdate: Infinity
-        },
-        courseDetails: {},
-        courseModules: {},
+        }
     });
+    const promises = [];
 
     const userCourses = computed(() => {
         if ((state.value.userCourses.lastUpdate - Date.now()) > updateRate) {
@@ -34,35 +33,45 @@ export const useCoursesStore = defineStore('courses', () => {
         return state.value.availableCourses.storage;
     });
 
+    function getComputableNode(populateWithFunc, ...populateWithArgs) {
+        const realStorage = ref({
+            data: null,
+            lastUpdate: Infinity
+        });
+        const fullFiller = () => {
+            if ((realStorage.value.lastUpdate - Date.now()) > updateRate) {
+                promises.push(populateWithFunc.apply(this, populateWithArgs).then(
+                    infoResponse => {
+                        if (infoResponse.status === "success") {
+                            realStorage.value.data = infoResponse.data; //implement soft merging, not replacing
+                            realStorage.value.lastUpdate = Date.now();
+                        } else {
+                            console.log(`${populateWithFunc.name} called with ${populateWithArgs.join("|")} got error: <${infoResponse.data}>`);
+                        }
+                    }
+                ));
+            }
+            return realStorage.value.data;
+        }
+
+        return computed(fullFiller);
+    }
+
     function loadAvailableCourses() {
-        doRequest("coursesManager", "getAvailableCourses").then(
+        promises.push(doRequest("coursesManager", "getAvailableCourses").then(
             (coursesResponse) => {
                 if (coursesResponse.status === "success") {
                     for (let i = 0; i < coursesResponse.data.length; i++) {
-                        coursesResponse.data[i].details = computed(() => {
-                            state.value.courseDetails[coursesResponse.data[i].id] = state.value.courseDetails[coursesResponse.data[i].id] ?? {
-                                data: null,
-                                lastUpdate: Infinity
-                            };
-                            const details = state.value.courseDetails[coursesResponse.data[i].id];
-                            if ((details.lastUpdate - Date.now()) > updateRate) {
-                                loadCourseInfo(coursesResponse.data[i].id).then(
-                                    infoResponse => {
-                                        if (infoResponse.status === "success") {
-                                            details.data = infoResponse.data;
-                                            details.lastUpdate = Date.now();
-                                        }
-                                    }
-                                );
-                            }
-                            return details.data;
-                        });
+                        coursesResponse.data[i].details = getComputableNode(
+                            loadCourseInfo,
+                            coursesResponse.data[i].id
+                        );
                     }
                     state.value.availableCourses.storage = coursesResponse.data;
                     state.value.availableCourses.lastUpdate = Date.now();
                 }
             }
-        );
+        ));
     }
 
     async function loadCourseInfo(courseId) {
@@ -72,40 +81,99 @@ export const useCoursesStore = defineStore('courses', () => {
     }
 
     function loadUserCourses() {
-        doRequest("coursesManager", "getUserCourses").then(
+        promises.push(doRequest("coursesManager", "getUserCourses").then(
             (userCoursesResponse) => {
                 if (userCoursesResponse.status === "success") {
                     for (let i = 0; i < userCoursesResponse.data.length; i++) {
-                        userCoursesResponse.data[i].modules = computed(() => {
-                            state.value.courseModules[userCoursesResponse.data[i].id] = state.value.courseModules[userCoursesResponse.data[i].id] ?? {
-                                data: null,
-                                lastUpdate: Infinity
-                            };
-                            const modules = state.value.courseModules[userCoursesResponse.data[i].id];
-                            if ((modules.lastUpdate - Date.now()) > updateRate) {
-                                loadUserCourseModules(userCoursesResponse.data[i].id).then(
-                                    modulesResponse => {
-                                        if (modulesResponse.status === "success") {
-                                            modules.data = modulesResponse.data;
-                                            modules.lastUpdate = Date.now();
-                                        }
-                                    }
-                                );
-                            }
-                            return modules.data;
-                        });
+                        userCoursesResponse.data[i].modules = getComputableNode(
+                            loadUserCourseModules,
+                            userCoursesResponse.data[i].id
+                        );
                     }
                     state.value.userCourses.storage = userCoursesResponse.data;
                     state.value.userCourses.lastUpdate = Date.now();
                 }
             }
-        );
+        ));
     }
 
     async function loadUserCourseModules(courseId) {
-        return doRequest("coursesManager", "getUserCourseModules", {
+        const modules = await doRequest("coursesManager", "getUserCourseModules", {
             courseId
         });
+        if (modules.status === "success") {
+            for (let i = 0; i < modules.data.length; i++) {
+                modules.data[i].articles = getComputableNode(
+                    loadUserCourseModulesArticlesTree,
+                    courseId, modules.data[i].id
+                );
+            }
+        }
+        return modules;
+    }
+
+    async function loadUserCourseModulesArticlesTree(courseId, moduleId) {
+        const articlesTree = await doRequest("coursesManager", "getUserCourseModuleArticlesTree", {
+            courseId, moduleId
+        });
+
+        if (articlesTree.status === "success") {
+            const addComputableFields = function (treeNode, path = []) {
+                if (Array.isArray(treeNode)) {
+                    treeNode.forEach((item) => {
+                        addComputableFields(item);
+                    })
+                } else {
+
+                    switch (treeNode.type) {
+                        case "group": {
+                            treeNode.content = treeNode.content ?? [];
+                            for (let i = 0; i < treeNode.content.length; i++) {
+                                addComputableFields(treeNode.content[i], path.concat(treeNode.id));
+                            }
+                            break;
+                        }
+
+                        case "article": {
+
+                            treeNode.content = getComputableNode(
+                                loadUserCourseModuleArticle,
+                                courseId, moduleId, path.concat(treeNode.id).join(",")
+                            );
+                            break;
+                        }
+                    }
+
+                    treeNode.completed = ref(treeNode.completed);
+
+                    watch(treeNode.completed, (status) => {
+                        doRequest("coursesManager", "markMaterialAsCompleted", {
+                            courseId, moduleId, articlePath: (path.concat(treeNode.id).join(",")), status
+                        }).then(
+                            () => {
+                                treeNode.completed.value = status;
+                                loadUserCourses();
+                            }
+                        );
+                    });
+                }
+            }
+
+            addComputableFields(articlesTree.data);
+        }
+        return articlesTree;
+    }
+
+    async function loadUserCourseModuleArticle(courseId, moduleId, articlePath) {
+        return await doRequest("coursesManager", "getUserCourseModuleArticle", {
+            courseId, moduleId, articlePath
+        });
+    }
+
+    function eagerPreload() {
+        loadUserCourses();
+        loadAvailableCourses();
+        return Promise.all(promises);
     }
 
     return {availableCourses, userCourses};

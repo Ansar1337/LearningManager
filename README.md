@@ -1,15 +1,13 @@
 # LearningManager
 
-## Clientside
-
-----
-
-### Docs
+## Docs
 
 1. [Backend API](./src/backend/help.md);
 2. [State managers](./src/stores/docs);
 
 ----
+
+## Application
 
 ### How to run the Frontend
 
@@ -59,8 +57,9 @@ This repo also includes a backend part, so it's possible to launch it locally:
 
  ----
 
-Development checklist:
-Pages/UI:
+## Development checklist:
+
+### Pages/UI:
 
 1. [ ] Dialogs
     1. [ ] Login
@@ -85,7 +84,7 @@ Pages/UI:
     9. [ ] Profile settings -> Email page
     10. [ ] Performance Page
 
-API+StateManagement:
+### API+StateManagement:
 
 1. [x] Session Management
     1. [x] Check account state
@@ -111,9 +110,9 @@ API+StateManagement:
                 2. [ ] File upload
                 3. [ ] Status
                 4. [ ] Comments
-            4. Tests + status
+            4. [ ] Tests + status
                 1. [ ] Get questions
                 2. [ ] Check Questions
-        4. [ ] Profile data
-            1. [ ] Feed data
-            2. [ ] Update data
+    3. [ ] Profile data
+        1. [ ] Feed data
+        2. [ ] Update data

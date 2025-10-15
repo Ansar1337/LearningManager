@@ -95,13 +95,13 @@ const actions = {
     }
   },
 
-  getUserCourseModuleArticleTree: {
+  getUserCourseModuleArticlesTree: {
     result: ref(null),
     perform: function (courseId, moduleId) {
-      doRequest("coursesManager", "getUserCourseModuleArticleTree", {
+      doRequest("coursesManager", "getUserCourseModuleArticlesTree", {
         courseId, moduleId
       }).then((res) => {
-        actions.getUserCourseModuleArticleTree.result.value = res;
+        actions.getUserCourseModuleArticlesTree.result.value = res;
       });
     }
   },
@@ -237,13 +237,13 @@ const stores = {
     <TestForm
         :description="'Получение дерева материалов по конкретному модулю студента'"
         :actor="'coursesManager'"
-        :action="'getUserCourseModuleArticleTree'"
+        :action="'getUserCourseModuleArticlesTree'"
         :passed-data="[
             {name:'ID курса (0-3)', type:'number', value:'0'},
             {name:'ID модуля (0-3)', type:'number', value:'0'},
         ]"
-        :run-with="actions.getUserCourseModuleArticleTree.perform"
-        :result="actions.getUserCourseModuleArticleTree.result.value"
+        :run-with="actions.getUserCourseModuleArticlesTree.perform"
+        :result="actions.getUserCourseModuleArticlesTree.result.value"
     />
 
     <TestForm

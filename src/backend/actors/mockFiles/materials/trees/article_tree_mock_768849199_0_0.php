@@ -12,14 +12,14 @@ return [
                 "name" => "Тема 1",
                 "type" => "article",
                 "completed" => true,
-                "material" => ""
+                "content" => ""
             ],
             [
                 "id" => 1,
                 "name" => "Тема 2",
                 "type" => "article",
                 "completed" => true,
-                "material" => ""
+                "content" => ""
             ]
         ]
     ],
@@ -34,14 +34,14 @@ return [
                 "name" => "Тема 1",
                 "type" => "article",
                 "completed" => true,
-                "material" => ""
+                "content" => ""
             ],
             [
                 "id" => 1,
                 "name" => "Тема 2",
                 "type" => "article",
                 "completed" => false,
-                "material" => ""
+                "content" => ""
             ]
         ]
     ]

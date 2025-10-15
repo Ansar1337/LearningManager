@@ -2,12 +2,12 @@
 
 return [
     [
-        "id" => 1,
+        "id" => 0,
         "completeness" => 100,
         "modules" => []
     ],
     [
-        "id" => 0,
+        "id" => 1,
         "completeness" => 90,
         "modules" => []
     ],

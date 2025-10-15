@@ -9,6 +9,7 @@ return [
         'deadline' => '2024-04-17',
         'estimatedTime' => 7200000,
         'performance' => 100,
+        'articles' => []
     ],
     [
         'id' => 1,
@@ -18,6 +19,7 @@ return [
         'deadline' => '2024-04-24',
         'estimatedTime' => 7200000,
         'performance' => 98,
+        'articles' => []
     ],
     [
         'id' => 2,
@@ -27,6 +29,7 @@ return [
         'deadline' => '2024-05-01',
         'estimatedTime' => 10800000,
         'performance' => 97,
+        'articles' => []
     ],
     [
         'id' => 3,
@@ -36,6 +39,7 @@ return [
         'deadline' => '2024-05-15',
         'estimatedTime' => 14400000,
         'performance' => 94,
+        'articles' => []
     ],
     [
         'id' => 4,
@@ -45,6 +49,7 @@ return [
         'deadline' => '2024-05-29',
         'estimatedTime' => 12600000,
         'performance' => 92,
+        'articles' => []
     ],
     [
         'id' => 5,
@@ -54,6 +59,7 @@ return [
         'deadline' => '2024-06-05',
         'estimatedTime' => 9000000,
         'performance' => 95,
+        'articles' => []
     ],
     [
         'id' => 6,
@@ -63,6 +69,7 @@ return [
         'deadline' => '2024-06-12',
         'estimatedTime' => 5400000,
         'performance' => 93,
+        'articles' => []
     ],
     [
         'id' => 7,
@@ -72,5 +79,6 @@ return [
         'deadline' => '2024-06-26',
         'estimatedTime' => 18000000,
         'performance' => 90,
+        'articles' => []
     ]
 ];

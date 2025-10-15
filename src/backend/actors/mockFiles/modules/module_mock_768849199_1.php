@@ -8,7 +8,8 @@ return [
         'lessonsTotal' => 1,
         'deadline' => '2024-01-14',
         'estimatedTime' => 4800000,
-        'performance' => 100
+        'performance' => 100,
+        'articles' => []
     ],
     [
         'id' => 1,
@@ -17,7 +18,8 @@ return [
         'lessonsTotal' => 3,
         'deadline' => '2024-01-14',
         'estimatedTime' => 4800000,
-        'performance' => 96
+        'performance' => 96,
+        'articles' => []
     ],
     [
         'id' => 2,
@@ -26,7 +28,8 @@ return [
         'lessonsTotal' => 11,
         'deadline' => '2024-01-14',
         'estimatedTime' => 16200000,
-        'performance' => 98
+        'performance' => 98,
+        'articles' => []
     ],
     [
         'id' => 3,
@@ -35,7 +38,8 @@ return [
         'lessonsTotal' => 23,
         'deadline' => '2024-01-14',
         'estimatedTime' => 4800000,
-        'performance' => 100
+        'performance' => 100,
+        'articles' => []
     ],
     [
         'id' => 4,
@@ -44,7 +48,8 @@ return [
         'lessonsTotal' => 1,
         'deadline' => '2024-01-14',
         'estimatedTime' => 4800000,
-        'performance' => 100
+        'performance' => 100,
+        'articles' => []
     ],
     [
         'id' => 5,
@@ -53,6 +58,7 @@ return [
         'lessonsTotal' => 6,
         'deadline' => '2024-01-14',
         'estimatedTime' => 4800000,
-        'performance' => 100
+        'performance' => 100,
+        'articles' => []
     ]
 ];

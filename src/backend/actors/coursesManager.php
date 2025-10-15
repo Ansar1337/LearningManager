@@ -79,7 +79,7 @@ if ($_POST["action"] ?? false) {
             break;
         }
 
-        case "getUserCourseModuleArticleTree":
+        case "getUserCourseModuleArticlesTree":
         {
             if (!$_SESSION["loggedIn"]) {
                 $result["status"] = "error";

@@ -20,6 +20,7 @@ export const useUserStore = defineStore('user', () => {
             const response = await doRequest("sessionManager", "getSession",);
             if (response.status === "success") {
                 state.value.session = response.data;
+                state.value.session.lastUpdate = Date.now();
             }
         },
 
@@ -59,9 +60,7 @@ export const useUserStore = defineStore('user', () => {
 
     const session = computed(() => {
         if (state.value.session.lastUpdate - Date.now() > updateRate) {
-            sessionTools.checkSessionState().then(() => {
-                state.value.session.lastUpdate = Date.now();
-            });
+            sessionTools.checkSessionState().then();
         }
         return state.value.session;
     });
