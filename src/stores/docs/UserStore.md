@@ -14,6 +14,8 @@
     - `lastUpdate`: timestamp последнего обновления данных с сервера; TIMESTAMP
    ##### Особенности
     - Загружается и обновляется автоматически;
+        - Учитывайте, что до загрузки свойства могут быть равны undefined или null;
+        - Обращайтесь ко вложенным свойствам через `?.`, `val?.[index]?.attr`;
     - Если необходимо, можно запросить загрузку данных явно;
 
 2. `sessionTools` - небольшой тулсет для работы с сессией;
@@ -61,7 +63,7 @@
     await userStore.tryToLogOut();
     <script>
         <template>
-            <pre>{{userStore.session}}</pre>
+            <pre>{{userStore?.session}}</pre>
         </template>
 ```
 
