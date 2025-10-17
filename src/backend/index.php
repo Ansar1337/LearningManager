@@ -40,7 +40,7 @@ if (!isset($_SESSION['loggedIn'])) {
 }
 
 if ($_POST["data"] ?? false) {
-    $_POST["data"] = json_decode($_POST["data"], true);
+    $_POST["data"] = ((is_array($_POST["data"])) ? ($_POST["data"]) : (json_decode($_POST["data"], true)));
 } else {
     $_POST["data"] = [];
 }
@@ -56,5 +56,6 @@ if ($_POST["actor"] ?? false) {
 }
 
 error_log(var_export($result, true));
+header('Content-Type: application/json');
 echo(json_encode($result));
 session_write_close();

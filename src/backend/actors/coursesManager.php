@@ -250,6 +250,324 @@ if ($_POST["action"] ?? false) {
 
         }
 
+        case "getUserCourseModuleHomework":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/homework/trees/homework_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $homework = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                $registeredUsers = read_from_cache("registeredUsers", function () {
+                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
+                }, 3600);
+
+                $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
+                $homeworkData = include($mockFilePath);
+                foreach ($homeworkData["comments"] as &$comment) {
+                    $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
+                }
+
+                foreach ($homeworkData["submissions"] as $submission) {
+                    $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
+                    $fileContent = file_get_contents($HWFilePath);
+
+                    $file = [
+                        "name" => $submission["fileName"],
+                        "body" => $fileContent
+                    ];
+
+                    write_to_cache($mockFilePath . $submission["hash"], $file, 600);
+                }
+
+                return $homeworkData;
+            }, 600);
+
+            $result["status"] = "success";
+            $result["data"] = $homework;
+            break;
+        }
+//
+        case "addHomeworkComment":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+            $message = $data["message"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+
+            if (empty($message)) {
+                $result["status"] = "error";
+                $result["data"] = "empty message";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/homework/trees/homework_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $homework = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                $registeredUsers = read_from_cache("registeredUsers", function () {
+                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
+                }, 3600);
+
+                $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
+                $homeworkData = include($mockFilePath);
+                foreach ($homeworkData["comments"] as &$comment) {
+                    $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
+                }
+
+                foreach ($homeworkData["submissions"] as $submission) {
+                    $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
+                    $fileContent = file_get_contents($HWFilePath);
+
+                    $file = [
+                        "name" => $submission["fileName"],
+                        "body" => $fileContent
+                    ];
+
+                    write_to_cache($mockFilePath . $submission["hash"], $file, 600);
+                }
+
+                return $homeworkData;
+            }, 600);
+
+            $homework["comments"][] = [
+                "sender" => $_SESSION["userId"], //userId в системе
+                "dateTime" => gmdate("Y-m-d\TH:i:s\Z"),
+                "message" => $message
+            ];
+
+            write_to_cache($mockFilePath, $homework, 600);
+
+            $result["status"] = "success";
+            $result["data"] = "comment added";
+            break;
+        }
+
+        case "addHomeworkSubmissions":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+            $filePath = $_FILES['data']['tmp_name']['file'] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+
+            if (is_null($filePath)) {
+                $result["status"] = "error";
+                $result["data"] = "no file specified";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/homework/trees/homework_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $homework = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                $registeredUsers = read_from_cache("registeredUsers", function () {
+                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
+                }, 3600);
+
+                $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
+                $homeworkData = include($mockFilePath);
+                foreach ($homeworkData["comments"] as &$comment) {
+                    $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
+                }
+
+                foreach ($homeworkData["submissions"] as $submission) {
+                    $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
+                    $fileContent = file_get_contents($HWFilePath);
+
+                    $file = [
+                        "name" => $submission["fileName"],
+                        "body" => $fileContent
+                    ];
+
+                    write_to_cache($mockFilePath . $submission["hash"], $file, 600);
+                }
+
+                return $homeworkData;
+            }, 600);
+
+            $uploadedFileTempName = $_FILES['data']['tmp_name']['file'];
+            $uploadedFileName = $_FILES['data']['name']['file'];
+            $fileContent = file_get_contents($uploadedFileTempName);
+            $hash = md5(
+                "Homework.zip" .
+                gmdate("Y-m-d\TH:i:s\Z") .
+                $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId
+            );
+
+            $homework["submissions"][] =
+                [
+                    "date" => "2024-10-11T10:12:33",
+                    "fileName" => $uploadedFileName,
+                    "hash" => $hash,
+                    "status" => "Pending"
+                ];
+
+            $file = [
+                "name" => $uploadedFileName,
+                "body" => $fileContent
+            ];
+
+            write_to_cache($mockFilePath . $hash, $file, 600);
+            write_to_cache($mockFilePath, $homework, 600);
+
+            $result["status"] = "success";
+            $result["data"] = $hash;
+            break;
+        }
+
+        case "downloadHomeworkFile":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+            $fileHash = $data["fileHash"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+
+            if (is_null($fileHash)) {
+                $result["status"] = "error";
+                $result["data"] = "no file specified";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/homework/trees/homework_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $homework = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                $registeredUsers = read_from_cache("registeredUsers", function () {
+                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
+                }, 3600);
+
+                $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
+                $homeworkData = include($mockFilePath);
+                foreach ($homeworkData["comments"] as &$comment) {
+                    $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
+                }
+
+                foreach ($homeworkData["submissions"] as $submission) {
+                    $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
+                    $fileContent = file_get_contents($HWFilePath);
+
+                    $file = [
+                        "name" => $submission["fileName"],
+                        "body" => $fileContent
+                    ];
+
+                    write_to_cache($mockFilePath . $submission["hash"], $file, 600);
+                }
+
+                return $homeworkData;
+            }, 600);
+
+            $file = read_from_cache($mockFilePath . $fileHash);
+
+            if (!$file) {
+                $result["status"] = "error";
+                $result["data"] = "file not found";
+                break;
+            }
+
+            header('Access-Control-Expose-Headers: Content-Disposition');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $file["name"] . '"');
+            error_log("Sending file:" . $file["name"]);
+            exit($file["body"]);
+        }
 
         default:
         {

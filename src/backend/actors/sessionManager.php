@@ -6,6 +6,8 @@ if ($_POST["action"] ?? false) {
     switch ($_POST["action"]) {
         case "getSession":
         {
+            error_log(var_export($_SESSION, true));
+
             $result["status"] = "success";
             $result["data"] = [
                 "userId" => $_SESSION["userId"],
@@ -35,15 +37,20 @@ if ($_POST["action"] ?? false) {
             }
 
             if (($login !== '') && ($_POST["data"]["password"] ?? false)) {
-                $registeredLogins = read_from_cache("registeredLogins", function () {
-                    return ['ansar', 'denis'];
+                $registeredUsers = read_from_cache("registeredUsers", function () {
+                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
                 }, 3600);
 
-                if (in_array($login, $registeredLogins)) {
-                    $_SESSION["userId"] = crc32($login);
-                    $_SESSION["userName"] = ucfirst($login);
-                    $_SESSION["role"] = (($login === "denis") ? ("teacher") : ("student"));
-                    $_SESSION["loggedIn"] = true;
+                $registeredLogins = array_map(function ($item) {
+                    return strtolower($item);
+                }, array_column($registeredUsers, "userName"));
+
+                if (($userIndex = array_search($login, $registeredLogins)) !== false) {
+                    $registeredUsers[$userIndex]["loggedIn"] = true;
+                    $_SESSION = array_merge($_SESSION, $registeredUsers[$userIndex]);
+                    write_to_cache("registeredUsers", $registeredUsers, 3600);
+
+                    error_log(var_export($_SESSION, true));
 
                     $result["status"] = "success";
                     $result["data"] = "access granted";
@@ -71,9 +78,13 @@ if ($_POST["action"] ?? false) {
             }
 
             if ($login !== '') {
-                $registeredLogins = read_from_cache("registeredLogins", function () {
-                    return ['ansar', 'denis'];
+                $registeredUsers = read_from_cache("registeredUsers", function () {
+                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
                 }, 3600);
+
+                $registeredLogins = array_map(function ($item) {
+                    return strtolower($item);
+                }, array_column($registeredUsers, "userName"));
 
                 $reservedLogins = read_from_cache("reservedLogins", function () {
                     return [];
@@ -123,9 +134,13 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $registeredLogins = read_from_cache("registeredLogins", function () {
-                return ['ansar', 'denis'];
+            $registeredUsers = read_from_cache("registeredUsers", function () {
+                return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
             }, 3600);
+
+            $registeredLogins = array_map(function ($item) {
+                return strtolower($item);
+            }, array_column($registeredUsers, "userName"));
 
             $reservedLogins = read_from_cache("reservedLogins", function () {
                 return [];
@@ -139,9 +154,19 @@ if ($_POST["action"] ?? false) {
                 if (($key = array_search($login, $reservedLogins)) !== false) {
                     unset($reservedLogins[$key]);
                 }
-                $registeredLogins[] = $login;
+
+                $registeredUsers[] = [
+                    "userId" => crc32($login),
+                    "userName" => ucfirst($login),
+                    "role" => "student",
+                    "loggedIn" => false,
+                ];
+
+                error_log(var_export($registeredUsers, true));
+
                 write_to_cache("reservedLogins", array_unique($reservedLogins), 60);
-                write_to_cache("registeredLogins", array_unique($registeredLogins), 3600);
+                write_to_cache("registeredUsers", $registeredUsers, 3600);
+
                 $result["status"] = "success";
                 $result["data"] = "login registered";
             } else {
