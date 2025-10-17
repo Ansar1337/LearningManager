@@ -1,11 +1,10 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import {ref} from "vue";
 import {useUserStore} from "@/stores/UserStore.js";
+import AuthDialog from "@/components/dialogs/AuthDialog.vue";
 
 const userStore = useUserStore();
-const isShowLogin = ref(false);
-const dialogStep = ref(1);
-
+const showLoginDialog = ref(false);
 </script>
 
 <template>
@@ -17,49 +16,36 @@ const dialogStep = ref(1);
         </h1>
       </router-link>
 
-      <v-btn color="#2D9CDB" class="header-btn" text="Войти" @click="isShowLogin = true"/>
+      <div v-if="!userStore.session.loggedIn">
+        <v-btn color="#2D9CDB" class="header-btn" text="Войти" @click="showLoginDialog = true" elevation="0"/>
+      </div>
+      <div v-else>
+        <v-btn color="#F6F8F9" elevation="0" class="bell-btn">
+          <img src="@/assets/btn-bell.png" width="46" alt="bell icon">
+        </v-btn>
+
+        <v-btn color="#F6F8F9" class="header-btn text-none" text="Моё обучение" elevation="0"/>
+
+        <v-btn color="#F6F8F9" class="header-btn text-none" elevation="0">
+          Профиль
+          <v-menu activator="parent">
+            <v-list>
+              <v-list-item title="Учебная программа" :to="'/'" :active="false" class="list-item-space"/>
+              <v-list-item title="Успеваемость" :to="'/'" :active="false" class="list-item-space"/>
+              <v-divider/>
+              <v-list-item title="Настройки профиля" :to="'/'" :active="false" class="list-item-space"/>
+              <v-divider/>
+              <v-list-item title="Выйти" :active="false" class="list-item-space"
+                           @click="userStore.sessionTools.tryToLogOut"/>
+            </v-list>
+          </v-menu>
+        </v-btn>
+      </div>
     </div>
 
     <div></div>
+    <AuthDialog v-model:is-open="showLoginDialog"/>
   </header>
-
-  <!-- block in development -->
-  <v-dialog v-model="isShowLogin" width="auto">
-    <v-card>
-      <v-window v-model="dialogStep">
-        <v-window-item :value="1">
-          <v-card-text>
-            <div>Войдите в аккаунт, чтобы начать учиться</div>
-            <div>Почта</div>
-            <input type="text" style="border: 1px solid gray">
-            <div>Пароль</div>
-            <input type="text" style="border: 1px solid gray">
-            <div>Не помню пароль</div>
-          </v-card-text>
-          <v-card-actions style="flex-wrap: wrap">
-            <v-btn color="primary" block @click="() => {
-              userStore.sessionTools.tryToLogIn('ansar', '11111').then(result => console.log(result));
-            }">Войти
-            </v-btn>
-            <br/>
-            <v-btn color="primary" block @click="() => {
-              userStore.sessionTools.tryToLogOut();
-            }">Выйти
-            </v-btn>
-          </v-card-actions>
-        </v-window-item>
-
-        <v-window-item :value="2">
-          <v-card-text>
-            Lorem ipsum dolor sit amet 2.
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" block @click="isShowLogin = false">Close Dialog</v-btn>
-          </v-card-actions>
-        </v-window-item>
-      </v-window>
-    </v-card>
-  </v-dialog>
 </template>
 
 <style scoped>
@@ -84,8 +70,15 @@ const dialogStep = ref(1);
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 0;
+  margin-left: 20px;
 }
 
-/* login dialog */
+.bell-btn {
+  padding: 0;
+  min-width: 0;
+}
 
+.list-item-space {
+  min-height: 30px;
+}
 </style>
