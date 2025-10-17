@@ -7,42 +7,88 @@ const props = defineProps({
   actor: String,
   action: String,
   passedData: Array,
-  runWith: Function,
-  result: Object
+  runWith: Function
 })
 
+const result = ref(null);
+const inputsData = ref([]);
 const passedDataCopy = ref([]);
 
 onMounted(() => {
   passedDataCopy.value = JSON.parse(JSON.stringify(props.passedData));
+
+  passedDataCopy.value.forEach(datum => {
+    switch (datum?.type) {
+      case "checkbox": {
+        inputsData.value.push(datum?.checked);
+        break;
+      }
+
+      case "file": {
+        inputsData.value.push(ref({}));
+        break;
+      }
+
+      default: {
+        inputsData.value.push(datum?.value);
+      }
+    }
+  });
 });
+
+function handleFile(event) {
+  // this.selectedFile = event.target.files[0]; // Сохраняем выбранный файл
+}
+
+function runTest() {
+
+  const payload = inputsData.value.map((item) => {
+    let obj = item?.value ?? item;
+    if (Array.isArray(obj)) {
+      obj = obj[0];
+    }
+
+    if ((obj instanceof HTMLElement) && (obj?.type === "file")) {
+      return obj.files[0];
+    }
+
+    return obj;
+  });
+
+  props.runWith(...payload).then(res => {
+    result.value = res;
+  });
+}
 
 </script>
 
 <template>
-  <h2><code>{{ actor }}</code> / <code>{{ action }}</code></h2>
-  <section class="test-container">
-    <section class="test">
-      <fieldset>
-        <legend>{{ description }}</legend>
+  <div>
+    <h2><code>{{ actor }}</code> / <code>{{ action }}</code></h2>
+    <section class="test-container">
+      <section class="test">
+        <fieldset>
+          <legend>{{ description }}</legend>
+          <label v-if="passedDataCopy.length" v-for="(datum, index) in passedDataCopy" :key="datum.name">
+            {{ datum.name }}:
+            <input v-if="datum.type === 'checkbox'" :type="datum.type" v-model="inputsData[index]">
+            <input v-else-if="datum.type === 'file'" :type="datum.type" :ref="inputsData[index]" @change="handleFile">
+            <input v-else :type="datum.type" v-model="inputsData[index]">
+          </label>
 
-        <label v-if="passedDataCopy.length" v-for="datum in passedDataCopy" :key="datum.name">
-          {{ datum.name }}:
-          <input v-if="datum.type!=='checkbox'" :type="datum.type" v-model=datum.value>
-          <input v-else :type="datum.type" v-model=datum.checked>
-        </label>
+          <span v-else>Входящие данные не требуются</span>
 
-        <span v-else>Входящие данные не требуются</span>
-
-        <button @click="runWith(...passedDataCopy.map(datum => datum.value ?? datum.checked))">Тест</button>
-      </fieldset>
-      <fieldset>
-        <legend>Результат</legend>
-        <pre>{{ result || "Нет данных" }}</pre>
-      </fieldset>
+          <button @click="runTest()">Тест</button>
+        </fieldset>
+        <fieldset>
+          <legend>Результат</legend>
+          <pre>{{ result || "Нет данных" }}</pre>
+        </fieldset>
+      </section>
     </section>
-  </section>
-  <hr>
+    <br>
+    <hr>
+  </div>
 </template>
 
 <style scoped>

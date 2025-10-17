@@ -5,133 +5,208 @@ import TestForm from "@/components/debug/TestForm.vue";
 import {ref} from "vue";
 
 const serverURL = ref(import.meta.env.VITE_API_SERVER_URL || "https://rtlm.tableer.com");
-const actions = {
-  getSession: {
-    result: ref(null),
-    perform: function () {
-      doRequest("sessionManager", "getSession").then((res) => {
-        actions.getSession.result.value = res;
-      });
+
+const tests = [
+  {
+    actor: "sessionManager",
+    action: "getSession",
+    payloadTemplate: [],
+    description: "Загружает данные сессии пользователя",
+    runWith: function () {
+      return doRequest(this.actor, this.action);
     }
   },
-
-  reserveLogin: {
-    result: ref(null),
-    perform: function (login) {
-      doRequest("sessionManager", "reserveLogin", {
-        login
-      }).then((res) => {
-        actions.reserveLogin.result.value = res;
-      });
+  {
+    actor: "sessionManager",
+    action: "reserveLogin",
+    payloadTemplate: [
+      {name: "Логин", type: "text", value: "John Doe"},
+    ],
+    description: "Проверка занятости/резервирование логина",
+    runWith: function (login) {
+      return doRequest(this.actor, this.action, {login});
     }
   },
-
-  registerLogin: {
-    result: ref(null),
-    perform: function (login, password) {
-      doRequest("sessionManager", "registerLogin", {
-        login, password
-      }).then((res) => {
-        actions.registerLogin.result.value = res;
-      });
+  {
+    actor: "sessionManager",
+    action: "registerLogin",
+    payloadTemplate: [
+      {name: "Логин", type: "text", value: "John Doe"},
+      {name: "Пароль", type: "password", value: "Test"},
+    ],
+    description: "Регистрация логина",
+    runWith: function (login, password) {
+      return doRequest(this.actor, this.action, {login, password});
     }
   },
-
-  tryToLogIn: {
-    result: ref(null),
-    perform: function (login, password) {
-      doRequest("sessionManager", "tryToLogIn", {
-        login, password
-      }).then((res) => {
-        actions.tryToLogIn.result.value = res;
-      });
+  {
+    actor: "sessionManager",
+    action: "tryToLogIn",
+    payloadTemplate: [
+      {name: "Логин", type: "text", value: "Ansar"},
+      {name: "Пароль", type: "password", value: "Test"},
+    ],
+    description: "Запрос на вход",
+    runWith: function (login, password) {
+      return doRequest(this.actor, this.action, {login, password});
     }
   },
-
-  tryToLogOut: {
-    result: ref(null),
-    perform: function () {
-      doRequest("sessionManager", "tryToLogOut").then((res) => {
-        actions.tryToLogOut.result.value = res;
-      });
+  {
+    actor: "sessionManager",
+    action: "tryToLogOut",
+    payloadTemplate: [],
+    description: "Запрос на выход",
+    runWith: function () {
+      return doRequest(this.actor, this.action);
     }
   },
-
-  getAvailableCourses: {
-    result: ref(null),
-    perform: function () {
-      doRequest("coursesManager", "getAvailableCourses").then((res) => {
-        actions.getAvailableCourses.result.value = res;
-      });
+  {
+    actor: "coursesManager",
+    action: "getAvailableCourses",
+    payloadTemplate: [],
+    description: "Получение списка курсов",
+    runWith: function () {
+      return doRequest(this.actor, this.action);
     }
   },
-
-  getCourseInfo: {
-    result: ref(null),
-    perform: function (courseId) {
-      doRequest("coursesManager", "getCourseInfo", {
-        courseId
-      }).then((res) => {
-        actions.getCourseInfo.result.value = res;
-      });
+  {
+    actor: "coursesManager",
+    action: "getCourseInfo",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "1"},
+    ],
+    description: "Получение детальной информации о курсе",
+    runWith: function (courseId) {
+      return doRequest(this.actor, this.action, {courseId});
     }
   },
-
-  getUserCourses: {
-    result: ref(null),
-    perform: function () {
-      doRequest("coursesManager", "getUserCourses").then((res) => {
-        actions.getUserCourses.result.value = res;
-      });
+  {
+    actor: "coursesManager",
+    action: "getUserCourses",
+    payloadTemplate: [],
+    description: "Получение списка курсов пользователя",
+    runWith: function () {
+      return doRequest(this.actor, this.action);
     }
   },
-
-  getUserCourseModules: {
-    result: ref(null),
-    perform: function (courseId) {
-      doRequest("coursesManager", "getUserCourseModules", {courseId}).then((res) => {
-        actions.getUserCourseModules.result.value = res;
-      });
+  {
+    actor: "coursesManager",
+    action: "getUserCourseModules",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "1"},
+    ],
+    description: "Получение информации о модулях по конкретному курсу/студенту",
+    runWith: function (courseId) {
+      return doRequest(this.actor, this.action, {courseId});
     }
   },
-
-  getUserCourseModuleArticlesTree: {
-    result: ref(null),
-    perform: function (courseId, moduleId) {
-      doRequest("coursesManager", "getUserCourseModuleArticlesTree", {
-        courseId, moduleId
-      }).then((res) => {
-        actions.getUserCourseModuleArticlesTree.result.value = res;
-      });
+  {
+    actor: "coursesManager",
+    action: "getUserCourseModuleArticlesTree",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+    ],
+    description: "Получение дерева материалов по конкретному модулю студента",
+    runWith: function (courseId, moduleId) {
+      return doRequest(this.actor, this.action, {courseId, moduleId});
     }
   },
-
-  getUserCourseModuleArticle: {
-    result: ref(null),
-    perform: function (courseId, moduleId, articlePath) {
-      doRequest("coursesManager", "getUserCourseModuleArticle", {
+  {
+    actor: "coursesManager",
+    action: "getUserCourseModuleArticle",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+      {name: "Адрес узла дерева материала", type: "text", value: "0,1"},
+    ],
+    description: "Получение материала из дерева материалов",
+    runWith: function (courseId, moduleId, articlePath) {
+      return doRequest(this.actor, this.action, {
         courseId, moduleId, articlePath
-      }).then((res) => {
-        actions.getUserCourseModuleArticle.result.value = res;
       });
     }
   },
-
-  markMaterialAsCompleted: {
-    result: ref(null),
-    perform: function (courseId, moduleId, articlePath, status) {
-      doRequest("coursesManager", "markMaterialAsCompleted", {
+  {
+    actor: "coursesManager",
+    action: "markMaterialAsCompleted",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+      {name: "Адрес узла дерева материала", type: "text", value: "0,1"},
+      {name: "Статус (true/false)", type: "checkbox", checked: false},
+    ],
+    description: "Обновление статуса материала из дерева материалов",
+    runWith: function (courseId, moduleId, articlePath, status) {
+      return doRequest(this.actor, this.action, {
         courseId, moduleId, articlePath, status
-      }).then((res) => {
-        actions.markMaterialAsCompleted.result.value = res;
       });
     }
   },
-}
 
-const stores = {
-  session: useUserStore()
-};
+  {
+    actor: "coursesManager",
+    action: "getUserCourseModuleHomework",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+    ],
+    description: "Выгрузка данных о домашних заданиях в модуле",
+    runWith: function (courseId, moduleId) {
+      return doRequest(this.actor, this.action, {
+        courseId, moduleId
+      });
+    }
+  },
+
+  {
+    actor: "coursesManager",
+    action: "addHomeworkComment",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+      {name: "Сообщение", type: "text", value: ""},
+    ],
+    description: "Выгрузка данных о домашних заданиях в модуле",
+    runWith: function (courseId, moduleId, message) {
+      return doRequest(this.actor, this.action, {
+        courseId, moduleId, message
+      });
+    }
+  },
+
+  {
+    actor: "coursesManager",
+    action: "addHomeworkSubmissions",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+      {name: "Сообщение", type: "file"},
+    ],
+    description: "Выгрузка данных о домашних заданиях в модуле",
+    runWith: function (courseId, moduleId, file) {
+      return doRequest(this.actor, this.action, {
+        courseId, moduleId, file
+      });
+    }
+  },
+
+  {
+    actor: "coursesManager",
+    action: "downloadHomeworkFile",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+      {name: "Хэш файла", type: "text", value: "4b828daee3c2a4bf3ec375468a8d4fdf"},
+    ],
+    description: "Выгрузка данных о домашних заданиях в модуле",
+    runWith: function (courseId, moduleId, fileHash) {
+      return doRequest(this.actor, this.action, {
+        courseId, moduleId, fileHash
+      });
+    }
+  }
+];
 
 </script>
 
@@ -140,137 +215,12 @@ const stores = {
     <h1>Дэшборд для теста API-хэндлов</h1>
     <h2>Используемый сервер: {{ serverURL }}</h2>
 
-    <TestForm
-        :description="'Загружает данные сессии пользователя'"
-        :actor="'sessionManager'"
-        :action="'getSession'"
-        :passed-data="[]"
-        :run-with="actions.getSession.perform"
-        :result="actions.getSession.result.value"
-    />
-
-    <TestForm
-        :description="'Проверка занятости/резервирование логина'"
-        :actor="'sessionManager'"
-        :action="'reserveLogin'"
-        :passed-data="[
-            {name:'Логин', type:'text', value:'John Doe'},
-        ]"
-        :run-with="actions.reserveLogin.perform"
-        :result="actions.reserveLogin.result.value"
-    />
-
-    <TestForm
-        :description="'Регистрация логина'"
-        :actor="'sessionManager'"
-        :action="'registerLogin'"
-        :passed-data="[
-            {name:'Логин', type:'text', value:'John Doe'},
-            {name:'Пароль', type:'password', value: 'Test'},
-        ]"
-        :run-with="actions.registerLogin.perform"
-        :result="actions.registerLogin.result.value"
-    />
-
-    <TestForm
-        :description="'Запрос на вход'"
-        :actor="'sessionManager'"
-        :action="'tryToLogIn'"
-        :passed-data="[
-            {name:'Логин', type:'text', value:'Ansar'},
-            {name:'Пароль', type:'password', value: 'Test'},
-        ]"
-        :run-with="actions.tryToLogIn.perform"
-        :result="actions.tryToLogIn.result.value"
-    />
-
-    <TestForm
-        :description="'Запрос на выход'"
-        :actor="'sessionManager'"
-        :action="'tryToLogOut'"
-        :passed-data="[]"
-        :run-with="actions.tryToLogOut.perform"
-        :result="actions.tryToLogOut.result.value"
-    />
-
-
-    <TestForm
-        :description="'Получение списка курсов'"
-        :actor="'coursesManager'"
-        :action="'getAvailableCourses'"
-        :passed-data="[]"
-        :run-with="actions.getAvailableCourses.perform"
-        :result="actions.getAvailableCourses.result.value"
-    />
-
-    <TestForm
-        :description="'Получение детальной информации о курсе'"
-        :actor="'coursesManager'"
-        :action="'getCourseInfo'"
-        :passed-data="[
-            {name:'ID курса (0-3)', type:'number', value:'1'},
-        ]"
-        :run-with="actions.getCourseInfo.perform"
-        :result="actions.getCourseInfo.result.value"
-    />
-
-    <TestForm
-        :description="'Получение списка курсов пользователя'"
-        :actor="'coursesManager'"
-        :action="'getUserCourses'"
-        :passed-data="[]"
-        :run-with="actions.getUserCourses.perform"
-        :result="actions.getUserCourses.result.value"
-    />
-
-    <TestForm
-        :description="'Получение информации о модулях по конкретному/студенту'"
-        :actor="'coursesManager'"
-        :action="'getUserCourseModules'"
-        :passed-data="[
-            {name:'ID курса (0-3)', type:'number', value:'1'},
-        ]"
-        :run-with="actions.getUserCourseModules.perform"
-        :result="actions.getUserCourseModules.result.value"
-    />
-
-    <TestForm
-        :description="'Получение дерева материалов по конкретному модулю студента'"
-        :actor="'coursesManager'"
-        :action="'getUserCourseModuleArticlesTree'"
-        :passed-data="[
-            {name:'ID курса (0-3)', type:'number', value:'0'},
-            {name:'ID модуля (0-3)', type:'number', value:'0'},
-        ]"
-        :run-with="actions.getUserCourseModuleArticlesTree.perform"
-        :result="actions.getUserCourseModuleArticlesTree.result.value"
-    />
-
-    <TestForm
-        :description="'Получение материала из дерева материалов'"
-        :actor="'coursesManager'"
-        :action="'getUserCourseModuleArticle'"
-        :passed-data="[
-            {name:'ID курса (0-3)', type:'number', value:'0'},
-            {name:'ID модуля (0-3)', type:'number', value:'0'},
-            {name:'Адрес узла дерева материала', type:'text', value:'0,1'},
-        ]"
-        :run-with="actions.getUserCourseModuleArticle.perform"
-        :result="actions.getUserCourseModuleArticle.result.value"
-    />
-
-    <TestForm
-        :description="'Обновление статуса материала из дерева материалов'"
-        :actor="'coursesManager'"
-        :action="'markMaterialAsCompleted'"
-        :passed-data="[
-            {name:'ID курса (0-3)', type:'number', value:'0'},
-            {name:'ID модуля (0-3)', type:'number', value:'0'},
-            {name:'Адрес узла дерева материала', type:'text', value:'0,1'},
-            {name:'Статус (true/false)', type:'checkbox', checked: false},
-        ]"
-        :run-with="actions.markMaterialAsCompleted.perform"
-        :result="actions.markMaterialAsCompleted.result.value"
+    <TestForm v-for="(test, index) in tests" :key="index"
+              :description="test.description"
+              :actor="test.actor"
+              :action="test.action"
+              :passed-data="test.payloadTemplate"
+              :run-with="test.runWith"
     />
 
   </main>

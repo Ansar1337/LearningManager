@@ -170,11 +170,5 @@ export const useCoursesStore = defineStore('courses', () => {
         });
     }
 
-    function eagerPreload() {
-        loadUserCourses();
-        loadAvailableCourses();
-        return Promise.all(promises);
-    }
-
     return {availableCourses, userCourses};
 });
