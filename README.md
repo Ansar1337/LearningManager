@@ -1,4 +1,4 @@
-# LearningManager
+# earningManager
 
 ## Docs
 
@@ -62,15 +62,15 @@ This repo also includes a backend part, so it's possible to launch it locally:
 ### Pages/UI:
 
 1. [ ] Dialogs
-    1. [ ] Login
-    2. [ ] Registration
+    1. [x] Login
+    2. [x] Registration
     3. [ ] Feedback form
 2. [ ] Header menus/buttons
-    1. [ ] Login
+    1. [x] Login
     2. [ ] Notifications
     3. [ ] User's menu
-    4. [ ] Logout
-3. [ ] Homepage
+    4. [x] Logout
+3. [x] Homepage
 4. [ ] Courses' description page
 5. [ ] User's cabinet mainpage
     1. [ ] "My learning" page
