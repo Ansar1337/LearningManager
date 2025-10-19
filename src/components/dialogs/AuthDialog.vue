@@ -1,5 +1,5 @@
 <script setup>
-import {reactive, ref, watch} from "vue";
+import {reactive, watch} from "vue";
 import {useUserStore} from "@/stores/UserStore.js";
 
 const userStore = useUserStore();
