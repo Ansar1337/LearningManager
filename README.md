@@ -1,4 +1,4 @@
-# earningManager
+# LearningManager
 
 ## Docs
 
@@ -105,11 +105,11 @@ This repo also includes a backend part, so it's possible to launch it locally:
             2. [X] Materials + status
                 1. [X] Article groups
                     1. [X] Articles + status
-            3. [ ] Homework + status
-                1. [ ] Task
-                2. [ ] File upload
-                3. [ ] Status
-                4. [ ] Comments
+            3. [x] Homework + status
+                1. [x] Task
+                2. [x] File upload
+                3. [x] Status
+                4. [x] Comments
             4. [ ] Tests + status
                 1. [ ] Get questions
                 2. [ ] Check Questions
