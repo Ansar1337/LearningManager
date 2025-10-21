@@ -3,6 +3,7 @@ import {useUserStore} from "@/stores/UserStore.js";
 import {doRequest} from "@/helpers/NetworkManager.js";
 import TestForm from "@/components/debug/TestForm.vue";
 import {ref} from "vue";
+import {useCoursesStore} from "@/stores/CoursesStore.js";
 
 const serverURL = ref(import.meta.env.VITE_API_SERVER_URL || "https://rtlm.tableer.com");
 
@@ -12,10 +13,11 @@ const tests = [
     action: "getSession",
     payloadTemplate: [],
     description: "Загружает данные сессии пользователя",
-    runWith: function () {
+    run() {
       return doRequest(this.actor, this.action);
     }
   },
+
   {
     actor: "sessionManager",
     action: "reserveLogin",
@@ -23,10 +25,11 @@ const tests = [
       {name: "Логин", type: "text", value: "John Doe"},
     ],
     description: "Проверка занятости/резервирование логина",
-    runWith: function (login) {
+    run(login) {
       return doRequest(this.actor, this.action, {login});
     }
   },
+
   {
     actor: "sessionManager",
     action: "registerLogin",
@@ -35,10 +38,11 @@ const tests = [
       {name: "Пароль", type: "password", value: "Test"},
     ],
     description: "Регистрация логина",
-    runWith: function (login, password) {
+    run(login, password) {
       return doRequest(this.actor, this.action, {login, password});
     }
   },
+
   {
     actor: "sessionManager",
     action: "tryToLogIn",
@@ -47,28 +51,31 @@ const tests = [
       {name: "Пароль", type: "password", value: "Test"},
     ],
     description: "Запрос на вход",
-    runWith: function (login, password) {
+    run(login, password) {
       return doRequest(this.actor, this.action, {login, password});
     }
   },
+
   {
     actor: "sessionManager",
     action: "tryToLogOut",
     payloadTemplate: [],
     description: "Запрос на выход",
-    runWith: function () {
+    run() {
       return doRequest(this.actor, this.action);
     }
   },
+
   {
     actor: "coursesManager",
     action: "getAvailableCourses",
     payloadTemplate: [],
     description: "Получение списка курсов",
-    runWith: function () {
+    run() {
       return doRequest(this.actor, this.action);
     }
   },
+
   {
     actor: "coursesManager",
     action: "getCourseInfo",
@@ -76,19 +83,21 @@ const tests = [
       {name: "ID курса (0-3)", type: "number", value: "1"},
     ],
     description: "Получение детальной информации о курсе",
-    runWith: function (courseId) {
+    run(courseId) {
       return doRequest(this.actor, this.action, {courseId});
     }
   },
+
   {
     actor: "coursesManager",
     action: "getUserCourses",
     payloadTemplate: [],
     description: "Получение списка курсов пользователя",
-    runWith: function () {
+    run() {
       return doRequest(this.actor, this.action);
     }
   },
+
   {
     actor: "coursesManager",
     action: "getUserCourseModules",
@@ -96,10 +105,11 @@ const tests = [
       {name: "ID курса (0-3)", type: "number", value: "1"},
     ],
     description: "Получение информации о модулях по конкретному курсу/студенту",
-    runWith: function (courseId) {
+    run(courseId) {
       return doRequest(this.actor, this.action, {courseId});
     }
   },
+
   {
     actor: "coursesManager",
     action: "getUserCourseModuleArticlesTree",
@@ -108,10 +118,11 @@ const tests = [
       {name: "ID модуля (0-3)", type: "number", value: "0"},
     ],
     description: "Получение дерева материалов по конкретному модулю студента",
-    runWith: function (courseId, moduleId) {
+    run(courseId, moduleId) {
       return doRequest(this.actor, this.action, {courseId, moduleId});
     }
   },
+
   {
     actor: "coursesManager",
     action: "getUserCourseModuleArticle",
@@ -121,12 +132,13 @@ const tests = [
       {name: "Адрес узла дерева материала", type: "text", value: "0,1"},
     ],
     description: "Получение материала из дерева материалов",
-    runWith: function (courseId, moduleId, articlePath) {
+    run(courseId, moduleId, articlePath) {
       return doRequest(this.actor, this.action, {
         courseId, moduleId, articlePath
       });
     }
   },
+
   {
     actor: "coursesManager",
     action: "markMaterialAsCompleted",
@@ -137,7 +149,7 @@ const tests = [
       {name: "Статус (true/false)", type: "checkbox", checked: false},
     ],
     description: "Обновление статуса материала из дерева материалов",
-    runWith: function (courseId, moduleId, articlePath, status) {
+    run(courseId, moduleId, articlePath, status) {
       return doRequest(this.actor, this.action, {
         courseId, moduleId, articlePath, status
       });
@@ -152,7 +164,7 @@ const tests = [
       {name: "ID модуля (0-3)", type: "number", value: "0"},
     ],
     description: "Выгрузка данных о домашних заданиях в модуле",
-    runWith: function (courseId, moduleId) {
+    run(courseId, moduleId) {
       return doRequest(this.actor, this.action, {
         courseId, moduleId
       });
@@ -168,7 +180,7 @@ const tests = [
       {name: "Сообщение", type: "text", value: ""},
     ],
     description: "Выгрузка данных о домашних заданиях в модуле",
-    runWith: function (courseId, moduleId, message) {
+    run(courseId, moduleId, message) {
       return doRequest(this.actor, this.action, {
         courseId, moduleId, message
       });
@@ -177,14 +189,14 @@ const tests = [
 
   {
     actor: "coursesManager",
-    action: "addHomeworkSubmissions",
+    action: "addHomeworkSubmission",
     payloadTemplate: [
       {name: "ID курса (0-3)", type: "number", value: "0"},
       {name: "ID модуля (0-3)", type: "number", value: "0"},
       {name: "Сообщение", type: "file"},
     ],
     description: "Выгрузка данных о домашних заданиях в модуле",
-    runWith: function (courseId, moduleId, file) {
+    run(courseId, moduleId, file) {
       return doRequest(this.actor, this.action, {
         courseId, moduleId, file
       });
@@ -200,7 +212,7 @@ const tests = [
       {name: "Хэш файла", type: "text", value: "4b828daee3c2a4bf3ec375468a8d4fdf"},
     ],
     description: "Выгрузка данных о домашних заданиях в модуле",
-    runWith: function (courseId, moduleId, fileHash) {
+    run(courseId, moduleId, fileHash) {
       return doRequest(this.actor, this.action, {
         courseId, moduleId, fileHash
       });
@@ -208,6 +220,7 @@ const tests = [
   }
 ];
 
+const courses = useCoursesStore();
 </script>
 
 <template>
@@ -220,7 +233,7 @@ const tests = [
               :actor="test.actor"
               :action="test.action"
               :passed-data="test.payloadTemplate"
-              :run-with="test.runWith"
+              :run-with="test.run"
     />
 
   </main>

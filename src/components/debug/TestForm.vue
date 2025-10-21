@@ -36,12 +36,7 @@ onMounted(() => {
   });
 });
 
-function handleFile(event) {
-  // this.selectedFile = event.target.files[0]; // Сохраняем выбранный файл
-}
-
 function runTest() {
-
   const payload = inputsData.value.map((item) => {
     let obj = item?.value ?? item;
     if (Array.isArray(obj)) {
@@ -72,7 +67,7 @@ function runTest() {
           <label v-if="passedDataCopy.length" v-for="(datum, index) in passedDataCopy" :key="datum.name">
             {{ datum.name }}:
             <input v-if="datum.type === 'checkbox'" :type="datum.type" v-model="inputsData[index]">
-            <input v-else-if="datum.type === 'file'" :type="datum.type" :ref="inputsData[index]" @change="handleFile">
+            <input v-else-if="datum.type === 'file'" :type="datum.type" :ref="inputsData[index]">
             <input v-else :type="datum.type" v-model="inputsData[index]">
           </label>
 

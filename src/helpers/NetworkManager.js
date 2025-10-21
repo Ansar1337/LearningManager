@@ -150,5 +150,10 @@ export async function doRequest(actor, action, payload = {}) {
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
+
+        return {
+            status: "success",
+            data: "file received"
+        };
     }
 }
