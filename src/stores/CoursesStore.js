@@ -35,12 +35,12 @@ export const useCoursesStore = defineStore('courses', () => {
 
     function getComputableNode(populateWithFunc, ...populateWithArgs) {
         const realStorage = ref({
-            data: null,
+            data: [],
             lastUpdate: Infinity
         });
         const fullFiller = () => {
             if ((realStorage.value.lastUpdate - Date.now()) > updateRate) {
-                promises.push(populateWithFunc.apply(this, populateWithArgs).then(
+                promises.push(populateWithFunc.apply(this, populateWithArgs.concat(realStorage)).then(
                     infoResponse => {
                         if (infoResponse.status === "success") {
                             realStorage.value.data = infoResponse.data; //implement soft merging, not replacing
@@ -103,8 +103,14 @@ export const useCoursesStore = defineStore('courses', () => {
         });
         if (modules.status === "success") {
             for (let i = 0; i < modules.data.length; i++) {
-                modules.data[i].articles = getComputableNode(
+                modules.data[i].resources = modules.data[i]?.resources ?? [];
+
+                modules.data[i].resources.articles = getComputableNode(
                     loadUserCourseModulesArticlesTree,
+                    courseId, modules.data[i].id
+                );
+                modules.data[i].resources.homework = getComputableNode(
+                    loadUserCourseModuleHomework,
                     courseId, modules.data[i].id
                 );
             }
@@ -168,6 +174,46 @@ export const useCoursesStore = defineStore('courses', () => {
         return await doRequest("coursesManager", "getUserCourseModuleArticle", {
             courseId, moduleId, articlePath
         });
+    }
+
+    async function loadUserCourseModuleHomework(courseId, moduleId, storage) {
+        const response = await doRequest("coursesManager", "getUserCourseModuleHomework", {
+            courseId, moduleId
+        });
+
+        if (response.status === "success") {
+            response.data.tools = {
+                addComment(message) {
+                    doRequest("coursesManager", "addHomeworkComment", {
+                        courseId, moduleId, message
+                    }).then(res => {
+                        if (res.status === "success") {
+                            storage.value.data.comments = storage.value.data.comments ?? [];
+                            storage.value.data.comments.push(res.data);
+                        }
+                    });
+                },
+
+                uploadHomework(file) {
+                    doRequest("coursesManager", "addHomeworkSubmission", {
+                        courseId, moduleId, file
+                    }).then(res => {
+                        if (res.status === "success") {
+                            storage.value.data.submissions = storage.value.data.submissions ?? [];
+                            storage.value.data.submissions.push(res.data);
+                        }
+                    });
+                },
+
+                downloadHomework(fileHash) {
+                    doRequest("coursesManager", "downloadHomeworkFile", {
+                        courseId, moduleId, fileHash
+                    }).then(console.log);
+                },
+            };
+        }
+
+        return response;
     }
 
     return {availableCourses, userCourses};
