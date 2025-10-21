@@ -379,20 +379,21 @@ if ($_POST["action"] ?? false) {
                 return $homeworkData;
             }, 600);
 
-            $homework["comments"][] = [
+            $comment = [
                 "sender" => $_SESSION["userId"], //userId в системе
                 "dateTime" => gmdate("Y-m-d\TH:i:s\Z"),
                 "message" => $message
             ];
+            $homework["comments"][] = $comment;
 
             write_to_cache($mockFilePath, $homework, 600);
 
             $result["status"] = "success";
-            $result["data"] = "comment added";
+            $result["data"] = $comment;
             break;
         }
 
-        case "addHomeworkSubmissions":
+        case "addHomeworkSubmission":
         {
             if (!$_SESSION["loggedIn"]) {
                 $result["status"] = "error";
@@ -462,18 +463,19 @@ if ($_POST["action"] ?? false) {
             $uploadedFileName = $_FILES['data']['name']['file'];
             $fileContent = file_get_contents($uploadedFileTempName);
             $hash = md5(
-                "Homework.zip" .
+                $uploadedFileName .
                 gmdate("Y-m-d\TH:i:s\Z") .
                 $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId
             );
 
-            $homework["submissions"][] =
-                [
-                    "date" => "2024-10-11T10:12:33",
-                    "fileName" => $uploadedFileName,
-                    "hash" => $hash,
-                    "status" => "Pending"
-                ];
+            $submission = [
+                "date" => "2024-10-11T10:12:33",
+                "fileName" => $uploadedFileName,
+                "hash" => $hash,
+                "status" => "Pending"
+            ];
+
+            $homework["submissions"][] = $submission;
 
             $file = [
                 "name" => $uploadedFileName,
@@ -484,7 +486,7 @@ if ($_POST["action"] ?? false) {
             write_to_cache($mockFilePath, $homework, 600);
 
             $result["status"] = "success";
-            $result["data"] = $hash;
+            $result["data"] = $submission;
             break;
         }
 
@@ -564,7 +566,7 @@ if ($_POST["action"] ?? false) {
 
             header('Access-Control-Expose-Headers: Content-Disposition');
             header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename="' . $file["name"] . '"');
+            header('Content-Disposition: attachment; filename="' . $file["name"]);
             error_log("Sending file:" . $file["name"]);
             exit($file["body"]);
         }
