@@ -9,7 +9,11 @@ return [
         'deadline' => '2024-01-14',
         'estimatedTime' => 4800000,
         'performance' => 100,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ],
     [
         'id' => 1,
@@ -19,7 +23,11 @@ return [
         'deadline' => '2024-01-14',
         'estimatedTime' => 4800000,
         'performance' => 96,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ],
     [
         'id' => 2,
@@ -29,7 +37,11 @@ return [
         'deadline' => '2024-01-14',
         'estimatedTime' => 16200000,
         'performance' => 98,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ],
     [
         'id' => 3,
@@ -39,7 +51,11 @@ return [
         'deadline' => '2024-01-14',
         'estimatedTime' => 4800000,
         'performance' => 100,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ],
     [
         'id' => 4,
@@ -49,7 +65,11 @@ return [
         'deadline' => '2024-01-14',
         'estimatedTime' => 4800000,
         'performance' => 100,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ],
     [
         'id' => 5,
@@ -59,6 +79,10 @@ return [
         'deadline' => '2024-01-14',
         'estimatedTime' => 4800000,
         'performance' => 100,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ]
 ];

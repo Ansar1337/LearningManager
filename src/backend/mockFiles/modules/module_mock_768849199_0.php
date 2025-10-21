@@ -9,7 +9,11 @@ return [
         'deadline' => '2024-02-07',
         'estimatedTime' => 3600000,
         'performance' => 100,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ],
     [
         'id' => 1,
@@ -19,7 +23,11 @@ return [
         'deadline' => '2024-02-14',
         'estimatedTime' => 7200000,
         'performance' => 95,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ],
     [
         'id' => 2,
@@ -29,7 +37,11 @@ return [
         'deadline' => '2024-02-21',
         'estimatedTime' => 5400000,
         'performance' => 98,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ],
     [
         'id' => 3,
@@ -39,7 +51,11 @@ return [
         'deadline' => '2024-03-01',
         'estimatedTime' => 10800000,
         'performance' => 90,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ],
     [
         'id' => 4,
@@ -49,7 +65,11 @@ return [
         'deadline' => '2024-03-07',
         'estimatedTime' => 3600000,
         'performance' => 97,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ],
     [
         'id' => 5,
@@ -59,7 +79,11 @@ return [
         'deadline' => '2024-03-14',
         'estimatedTime' => 9000000,
         'performance' => 93,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ],
     [
         'id' => 6,
@@ -69,6 +93,10 @@ return [
         'deadline' => '2024-03-21',
         'estimatedTime' => 7200000,
         'performance' => 92,
-        'articles' => []
+        'resources' => [
+            'articles' => [],
+            'homework' => [],
+            'tests' => []
+        ]
     ]
 ];
