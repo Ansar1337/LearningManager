@@ -176,6 +176,28 @@ if ($_POST["action"] ?? false) {
             break;
         }
 
+        case "loadProfileData":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/profiles/user_" . $_SESSION["userId"] . "_profile.php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "unknown courseId";
+                break;
+            }
+
+            $result["status"] = "success";
+            $result["data"] = include $mockFilePath;
+
+            break;
+        }
+
         default:
         {
             $result["status"] = "error";

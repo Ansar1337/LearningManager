@@ -377,7 +377,8 @@ if ($_POST["action"] ?? false) {
             $comment = [
                 "sender" => $_SESSION["userId"], //userId в системе
                 "dateTime" => gmdate("Y-m-d\TH:i:s\Z"),
-                "message" => $message
+                "message" => $message,
+                "unread" => false,
             ];
             $homework["comments"][] = $comment;
 
