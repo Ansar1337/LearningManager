@@ -220,7 +220,6 @@ const tests = [
   }
 ];
 
-const courses = useCoursesStore();
 </script>
 
 <template>
@@ -235,7 +234,6 @@ const courses = useCoursesStore();
               :passed-data="test.payloadTemplate"
               :run-with="test.run"
     />
-
   </main>
 </template>
 

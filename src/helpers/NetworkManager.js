@@ -121,8 +121,8 @@ export async function doRequest(actor, action, payload = {}) {
 
     let response = await fetch(url, {
         method: 'POST',
-        body: payload.data,
-        credentials: "include"
+        credentials: "include",
+        body: payload.data
     });
 
     const contentType = response.headers.get('Content-Type');
@@ -150,10 +150,5 @@ export async function doRequest(actor, action, payload = {}) {
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
-
-        return {
-            status: "success",
-            data: "file received"
-        };
     }
 }

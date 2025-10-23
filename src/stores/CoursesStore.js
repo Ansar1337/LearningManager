@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {computed, ref, watch} from "vue";
+import {computed, isRef, ref, watch} from "vue";
 import {doRequest} from "@/helpers/NetworkManager.js";
 
 
@@ -7,71 +7,137 @@ export const useCoursesStore = defineStore('courses', () => {
 
     // let eagerMode = ref(false);
     let updateRate = 60000;
-    const state = ref({
-        availableCourses: {
-            storage: [],
-            lastUpdate: Infinity
-        },
-        userCourses: {
-            storage: {},
-            lastUpdate: Infinity
-        }
-    });
-    const promises = [];
 
-    const userCourses = computed(() => {
-        if ((state.value.userCourses.lastUpdate - Date.now()) > updateRate) {
-            loadUserCourses();
-        }
-        return state.value.userCourses.storage;
-    });
+    class ProxiedPrimitive {
+        constructor(value) {
+            this._value = value;
+            return new Proxy(this, {
+                get(target, prop, receiver) {
+                    if (prop === 'then') {
+                        return (onFulfilled, onRejected) => {
+                            return Promise.resolve(target._value).then(onFulfilled, onRejected);
+                        };
+                    }
 
-    const availableCourses = computed(() => {
-        if ((state.value.availableCourses.lastUpdate - Date.now()) > updateRate) {
-            loadAvailableCourses();
+                    if (prop === 'valueOf') {
+                        return () => target._value;
+                    } else if (prop === 'toString') {
+                        return () => String(target._value);
+                    }
+                    return Reflect.get(target, prop, receiver);
+                },
+                set(target, prop, value) {
+                    if (prop === '_value') {
+                        console.log(`Значение изменено с ${target._value} на ${value}`);
+                        target._value = value;
+                        return true;
+                    }
+                    return Reflect.set(target, prop, value);
+                }
+            });
         }
-        return state.value.availableCourses.storage;
-    });
+    }
+
+    function getWrappedValue(cleanValue, namespace = "") {
+        let resolvedData = undefined;
+        let promise = {};
+        let promises = {};
+
+        if (typeof cleanValue === "object") {
+            return new Proxy(cleanValue, {
+                get: (target, prop, receiver) => {
+                    namespace += String(prop);
+
+                    if (prop === '__v_isRef') {
+                        return target?.__v_isRef;
+                    }
+
+                    if (prop === 'then') {
+                        return (onFulfilled, onRejected) => {
+                            return Promise.resolve(target).then(onFulfilled, onRejected);
+                        };
+                    }
+
+                    if ((promises[namespace]?.[prop]) && (typeof promises[namespace]?.[prop] !== "function")) {
+                        return getWrappedValue(promises[namespace][prop], namespace);
+                    }
+
+                    if ((target instanceof Promise) && (!(promises[namespace]?.[prop]))) {
+                        promise = target.then(res => {
+                            resolvedData = res;
+                            if (res) {
+                                return getWrappedValue(res[prop] ?? res?.value?.[prop], namespace);
+                            }
+                        });
+                        promises[namespace] = promises[namespace] ?? {};
+                        promises[namespace][prop] = promises[namespace]?.[prop] ?? {};
+                        promises[namespace][prop] = promise;
+                        return getWrappedValue(promise, namespace);
+                    }
+
+                    return Reflect.get(target, prop, receiver);
+                }
+            });
+        } else {
+            return new ProxiedPrimitive(cleanValue);
+        }
+    }
 
     function getComputableNode(populateWithFunc, ...populateWithArgs) {
         const realStorage = ref({
-            data: [],
+            data: getWrappedValue([]),
+            promiseData: Promise.resolve(),
+            deferredValue: null,
             lastUpdate: Infinity
         });
         const fullFiller = () => {
             if ((realStorage.value.lastUpdate - Date.now()) > updateRate) {
-                promises.push(populateWithFunc.apply(this, populateWithArgs.concat(realStorage)).then(
+
+                realStorage.value.data = populateWithFunc.apply(this, populateWithArgs.concat(realStorage)).then(
                     infoResponse => {
                         if (infoResponse.status === "success") {
-                            realStorage.value.data = infoResponse.data; //implement soft merging, not replacing
+                            realStorage.value.data = getWrappedValue(infoResponse.data); //implement soft merging, not replacing
                             realStorage.value.lastUpdate = Date.now();
                         } else {
                             console.log(`${populateWithFunc.name} called with ${populateWithArgs.join("|")} got error: <${infoResponse.data}>`);
                         }
+                        return realStorage.value.data;
                     }
-                ));
+                );
             }
-            return realStorage.value.data;
+
+            return getWrappedValue(realStorage.value.data);
         }
 
-        return computed(fullFiller);
+        return computed(fullFiller) || Promise.resolve();
     }
 
-    function loadAvailableCourses() {
-        promises.push(doRequest("coursesManager", "getAvailableCourses").then(
-            (coursesResponse) => {
-                if (coursesResponse.status === "success") {
-                    for (let i = 0; i < coursesResponse.data.length; i++) {
-                        coursesResponse.data[i].details = getComputableNode(
-                            loadCourseInfo,
-                            coursesResponse.data[i].id
-                        );
-                    }
-                    state.value.availableCourses.storage = coursesResponse.data;
-                    state.value.availableCourses.lastUpdate = Date.now();
-                }
+    /*
+    new Proxy(infoResponse.data, {
+                                get: function (target, prop) {
+                                    if (prop === 'then' && !(prop in target)) {
+                                        return () => {
+                                            console.log("фейковый then");
+                                            return Promise.resolve(infoResponse.data);
+                                        };
+                                    }
+
+                                    return Reflect.get(...arguments);
+                                }
+                            })
+     */
+
+    async function loadAvailableCourses() {
+        const coursesResponse = await doRequest("coursesManager", "getAvailableCourses");
+        if (coursesResponse.status === "success") {
+            for (let i = 0; i < coursesResponse.data.length; i++) {
+                coursesResponse.data[i].details = getComputableNode(
+                    loadCourseInfo,
+                    coursesResponse.data[i].id
+                );
             }
-        ));
+        }
+        return coursesResponse;
     }
 
     async function loadCourseInfo(courseId) {
@@ -80,21 +146,17 @@ export const useCoursesStore = defineStore('courses', () => {
         });
     }
 
-    function loadUserCourses() {
-        promises.push(doRequest("coursesManager", "getUserCourses").then(
-            (userCoursesResponse) => {
-                if (userCoursesResponse.status === "success") {
-                    for (let i = 0; i < userCoursesResponse.data.length; i++) {
-                        userCoursesResponse.data[i].modules = getComputableNode(
-                            loadUserCourseModules,
-                            userCoursesResponse.data[i].id
-                        );
-                    }
-                    state.value.userCourses.storage = userCoursesResponse.data;
-                    state.value.userCourses.lastUpdate = Date.now();
-                }
+    async function loadUserCourses() {
+        const userCoursesResponse = await doRequest("coursesManager", "getUserCourses");
+        if (userCoursesResponse.status === "success") {
+            for (let i = 0; i < userCoursesResponse.data.length; i++) {
+                userCoursesResponse.data[i].modules = getComputableNode(
+                    loadUserCourseModules,
+                    userCoursesResponse.data[i].id
+                );
             }
-        ));
+        }
+        return userCoursesResponse;
     }
 
     async function loadUserCourseModules(courseId) {
@@ -103,7 +165,7 @@ export const useCoursesStore = defineStore('courses', () => {
         });
         if (modules.status === "success") {
             for (let i = 0; i < modules.data.length; i++) {
-                modules.data[i].resources = modules.data[i]?.resources ?? [];
+                modules.data[i].resources = modules.data[i].resources ?? [];
 
                 modules.data[i].resources.articles = getComputableNode(
                     loadUserCourseModulesArticlesTree,
@@ -216,5 +278,20 @@ export const useCoursesStore = defineStore('courses', () => {
         return response;
     }
 
-    return {availableCourses, userCourses};
+    function forceLoad() {
+
+    }
+
+    const availableCourses = getComputableNode(
+        loadAvailableCourses
+    );
+
+    const userCourses = getComputableNode(
+        loadUserCourses
+    );
+
+    return {
+        availableCourses,
+        userCourses
+    };
 });
