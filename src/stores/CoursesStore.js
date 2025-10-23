@@ -1,87 +1,13 @@
 import {defineStore} from 'pinia'
-import {computed, isRef, ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {doRequest} from "@/helpers/NetworkManager.js";
+import {getWrappedValue} from "@/helpers/SmartWrapper.js";
 
 
 export const useCoursesStore = defineStore('courses', () => {
 
     // let eagerMode = ref(false);
     let updateRate = 60000;
-
-    class ProxiedPrimitive {
-        constructor(value) {
-            this._value = value;
-            return new Proxy(this, {
-                get(target, prop, receiver) {
-                    if (prop === 'then') {
-                        return (onFulfilled, onRejected) => {
-                            return Promise.resolve(target._value).then(onFulfilled, onRejected);
-                        };
-                    }
-
-                    if (prop === 'valueOf') {
-                        return () => target._value;
-                    } else if (prop === 'toString') {
-                        return () => String(target._value);
-                    }
-                    return Reflect.get(target, prop, receiver);
-                },
-                set(target, prop, value) {
-                    if (prop === '_value') {
-                        console.log(`Значение изменено с ${target._value} на ${value}`);
-                        target._value = value;
-                        return true;
-                    }
-                    return Reflect.set(target, prop, value);
-                }
-            });
-        }
-    }
-
-    function getWrappedValue(cleanValue, namespace = "") {
-        let resolvedData = undefined;
-        let promise = {};
-        let promises = {};
-
-        if (typeof cleanValue === "object") {
-            return new Proxy(cleanValue, {
-                get: (target, prop, receiver) => {
-                    namespace += String(prop);
-
-                    if (prop === '__v_isRef') {
-                        return target?.__v_isRef;
-                    }
-
-                    if (prop === 'then') {
-                        return (onFulfilled, onRejected) => {
-                            return Promise.resolve(target).then(onFulfilled, onRejected);
-                        };
-                    }
-
-                    if ((promises[namespace]?.[prop]) && (typeof promises[namespace]?.[prop] !== "function")) {
-                        return getWrappedValue(promises[namespace][prop], namespace);
-                    }
-
-                    if ((target instanceof Promise) && (!(promises[namespace]?.[prop]))) {
-                        promise = target.then(res => {
-                            resolvedData = res;
-                            if (res) {
-                                return getWrappedValue(res[prop] ?? res?.value?.[prop], namespace);
-                            }
-                        });
-                        promises[namespace] = promises[namespace] ?? {};
-                        promises[namespace][prop] = promises[namespace]?.[prop] ?? {};
-                        promises[namespace][prop] = promise;
-                        return getWrappedValue(promise, namespace);
-                    }
-
-                    return Reflect.get(target, prop, receiver);
-                }
-            });
-        } else {
-            return new ProxiedPrimitive(cleanValue);
-        }
-    }
 
     function getComputableNode(populateWithFunc, ...populateWithArgs) {
         const realStorage = ref({
@@ -111,21 +37,6 @@ export const useCoursesStore = defineStore('courses', () => {
 
         return computed(fullFiller) || Promise.resolve();
     }
-
-    /*
-    new Proxy(infoResponse.data, {
-                                get: function (target, prop) {
-                                    if (prop === 'then' && !(prop in target)) {
-                                        return () => {
-                                            console.log("фейковый then");
-                                            return Promise.resolve(infoResponse.data);
-                                        };
-                                    }
-
-                                    return Reflect.get(...arguments);
-                                }
-                            })
-     */
 
     async function loadAvailableCourses() {
         const coursesResponse = await doRequest("coursesManager", "getAvailableCourses");
@@ -276,10 +187,6 @@ export const useCoursesStore = defineStore('courses', () => {
         }
 
         return response;
-    }
-
-    function forceLoad() {
-
     }
 
     const availableCourses = getComputableNode(

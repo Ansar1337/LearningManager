@@ -7,18 +7,13 @@ if ($_POST["action"] ?? false) {
         case "getAvailableCourses":
         {
             $result["status"] = "success";
-            $result["data"] = [
-                ["id" => "0", "title" => "Kotlin", "description" => "Разработка для устройств Android", "icon" => "kotlin-logo.png"],
-                ["id" => "1", "title" => "Java", "description" => "Универсальный и практичный язык", "icon" => "java-logo.png"],
-                ["id" => "2", "title" => "Swift", "description" => "Разработка для устройств Apple", "icon" => "swift-logo.png"],
-                ["id" => "3", "title" => "JavaScript", "description" => "Фронтенд для веб-приложений", "icon" => "js-logo.png"],
-            ];
+            $result["data"] = include dirname(__DIR__) . "/mockFiles/courses/course_list.php";
             break;
         }
 
         case "getCourseInfo":
         {
-            $mockFilePath = dirname(__DIR__) . "/mockFiles/courses/info_mock_" . ($_POST["data"]["courseId"] ?? "") . ".php";
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/courses/details/info_mock_" . ($_POST["data"]["courseId"] ?? "") . ".php";
             error_log($mockFilePath);
             if ((!isset($_POST["data"])) ||
                 (!isset($_POST["data"]["courseId"])) ||

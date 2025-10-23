@@ -220,10 +220,57 @@ const tests = [
   }
 ];
 
+const courses = useCoursesStore();
+let sd1 = ref(null);
+let sd2 = ref(null);
+let sd3 = ref(null);
+let sd4 = ref(null);
+// courses.availableCourses[0].details.value.longDescription.then(console.log);
+// courses.availableCourses[0]?.details.value.modules[0].then(r => sd2.value = r);
+
+// courses.availableCourses[0].details.value.then(r => sd2.value = r);
+// courses.availableCourses[0].details.value.modules[0].then(console.log);
+
+// courses.availableCourses[1].details.modules[0].then(console.log);
+// courses.availableCourses[1].details.value.modules.then(console.log);
+
+
+courses.availableCourses
+    .then(r => r[0])
+    .then(r => r.details)
+    .then(r => sd1.value = r);
+
+courses.availableCourses[0].details.value.then(r => sd2.value = r);
+
+
+setTimeout(() => {
+  courses.availableCourses[0].details.then(r => sd3.value = r);
+}, 1000);
+
+setTimeout(() => {
+  courses.availableCourses
+      .then(r => r[0])
+      .then(r => r.details)
+      .then(r => sd4.value = r);
+}, 2000);
+
 </script>
 
 <template>
   <main>
+        <pre>
+          1
+          {{ sd1 }}
+          2
+          {{ sd2 }}
+          3
+          {{ sd3 }}
+          4
+          {{ sd4 }}
+          <!--          auto-->
+          <!--          {{ courses?.availableCourses[0] }}-->
+        </pre>
+
     <h1>Дэшборд для теста API-хэндлов</h1>
     <h2>Используемый сервер: {{ serverURL }}</h2>
 
