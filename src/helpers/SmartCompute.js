@@ -1,4 +1,5 @@
 "use strict";
+import {computed, ref} from "vue";
 
 function getWrappedPrimitive(cleanValue) {
     let placeholder = {
@@ -77,4 +78,38 @@ function getWrappedValue(cleanValue, namespace = "") {
     } else {
         return getWrappedPrimitive(cleanValue);
     }
+}
+
+export function getComputableNode(updateRate, populateWithFunc, ...populateWithArgs) {
+    const realStorage = ref({
+        data: getWrappedValue(undefined),
+        promiseData: Promise.resolve(),
+        deferredValue: null,
+        lastUpdate: Infinity
+    });
+    const fullFiller = (refresh = false) => {
+        if ((refresh) || ((realStorage.value.lastUpdate - Date.now()) > updateRate)) {
+            const pendingData = populateWithFunc.apply(this, populateWithArgs.concat(realStorage)).then(
+                infoResponse => {
+                    if (infoResponse.status === "success") {
+                        realStorage.value.data = getWrappedValue(infoResponse.data); //implement soft merging, not replacing
+                        realStorage.value.lastUpdate = Date.now();
+                    } else {
+                        console.log(`${populateWithFunc.name} called with ${populateWithArgs.join("|")} got error: <${infoResponse.data}>`);
+                    }
+                    return realStorage.value.data;
+                }
+            );
+
+            if (!refresh) {
+                realStorage.value.data = pendingData;
+            }
+        }
+
+        return getWrappedValue(realStorage.value.data);
+    }
+
+    const result = computed(() => fullFiller()) || Promise.resolve();
+    result.__refresh = fullFiller.bind(this, true);
+    return result;
 }

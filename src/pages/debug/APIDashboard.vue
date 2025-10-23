@@ -1,9 +1,9 @@
 <script setup>
-import {useUserStore} from "@/stores/UserStore.js";
 import {doRequest} from "@/helpers/NetworkManager.js";
 import TestForm from "@/components/debug/TestForm.vue";
 import {ref} from "vue";
 import {useCoursesStore} from "@/stores/CoursesStore.js";
+import {useUserStore} from "@/stores/UserStore.js";
 
 const serverURL = ref(import.meta.env.VITE_API_SERVER_URL || "https://rtlm.tableer.com");
 
@@ -220,6 +220,7 @@ const tests = [
   }
 ];
 
+const user = useUserStore();
 const courses = useCoursesStore();
 let sd1 = ref(null);
 let sd2 = ref(null);
@@ -259,6 +260,9 @@ setTimeout(() => {
 <template>
   <main>
         <pre>
+          <button @click="user.sessionTools.tryToLogIn('ansar', '123')">ТЫЦ</button>
+          <button @click="user.sessionTools.tryToLogOut()">антЫЦ</button>
+          {{ user.session }}
           1
           {{ sd1 }}
           2
@@ -267,8 +271,8 @@ setTimeout(() => {
           {{ sd3 }}
           4
           {{ sd4 }}
-          <!--          auto-->
-          <!--          {{ courses?.availableCourses[0] }}-->
+                    auto
+                    {{ courses?.availableCourses[0] }}
         </pre>
 
     <h1>Дэшборд для теста API-хэндлов</h1>

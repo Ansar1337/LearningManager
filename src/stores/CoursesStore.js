@@ -1,48 +1,19 @@
 import {defineStore} from 'pinia'
-import {computed, ref, watch} from "vue";
+import {ref, watch} from "vue";
 import {doRequest} from "@/helpers/NetworkManager.js";
-import {getWrappedValue} from "@/helpers/SmartWrapper.js";
-
+import {getComputableNode} from "@/helpers/SmartCompute.js";
 
 export const useCoursesStore = defineStore('courses', () => {
 
     // let eagerMode = ref(false);
     let updateRate = 60000;
 
-    function getComputableNode(populateWithFunc, ...populateWithArgs) {
-        const realStorage = ref({
-            data: getWrappedValue([]),
-            promiseData: Promise.resolve(),
-            deferredValue: null,
-            lastUpdate: Infinity
-        });
-        const fullFiller = () => {
-            if ((realStorage.value.lastUpdate - Date.now()) > updateRate) {
-
-                realStorage.value.data = populateWithFunc.apply(this, populateWithArgs.concat(realStorage)).then(
-                    infoResponse => {
-                        if (infoResponse.status === "success") {
-                            realStorage.value.data = getWrappedValue(infoResponse.data); //implement soft merging, not replacing
-                            realStorage.value.lastUpdate = Date.now();
-                        } else {
-                            console.log(`${populateWithFunc.name} called with ${populateWithArgs.join("|")} got error: <${infoResponse.data}>`);
-                        }
-                        return realStorage.value.data;
-                    }
-                );
-            }
-
-            return getWrappedValue(realStorage.value.data);
-        }
-
-        return computed(fullFiller) || Promise.resolve();
-    }
-
     async function loadAvailableCourses() {
         const coursesResponse = await doRequest("coursesManager", "getAvailableCourses");
         if (coursesResponse.status === "success") {
             for (let i = 0; i < coursesResponse.data.length; i++) {
                 coursesResponse.data[i].details = getComputableNode(
+                    updateRate,
                     loadCourseInfo,
                     coursesResponse.data[i].id
                 );
@@ -62,6 +33,7 @@ export const useCoursesStore = defineStore('courses', () => {
         if (userCoursesResponse.status === "success") {
             for (let i = 0; i < userCoursesResponse.data.length; i++) {
                 userCoursesResponse.data[i].modules = getComputableNode(
+                    updateRate,
                     loadUserCourseModules,
                     userCoursesResponse.data[i].id
                 );
@@ -79,10 +51,12 @@ export const useCoursesStore = defineStore('courses', () => {
                 modules.data[i].resources = modules.data[i].resources ?? [];
 
                 modules.data[i].resources.articles = getComputableNode(
+                    updateRate,
                     loadUserCourseModulesArticlesTree,
                     courseId, modules.data[i].id
                 );
                 modules.data[i].resources.homework = getComputableNode(
+                    updateRate,
                     loadUserCourseModuleHomework,
                     courseId, modules.data[i].id
                 );
@@ -116,6 +90,7 @@ export const useCoursesStore = defineStore('courses', () => {
                         case "article": {
 
                             treeNode.content = getComputableNode(
+                                updateRate,
                                 loadUserCourseModuleArticle,
                                 courseId, moduleId, path.concat(treeNode.id).join(",")
                             );
@@ -190,10 +165,12 @@ export const useCoursesStore = defineStore('courses', () => {
     }
 
     const availableCourses = getComputableNode(
+        updateRate,
         loadAvailableCourses
     );
 
     const userCourses = getComputableNode(
+        updateRate,
         loadUserCourses
     );
 
