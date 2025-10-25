@@ -23,13 +23,15 @@ const showLoginDialog = ref(false);
         <v-btn color="#F6F8F9" elevation="0" class="bell-btn">
         </v-btn>
 
-        <v-btn color="#F6F8F9" class="header-btn text-none" text="Моё обучение" elevation="0"/>
+        <v-btn color="#F6F8F9" class="header-btn text-none" :to="{name: 'myEducation'}" text="Моё обучение"
+               elevation="0"/>
 
         <v-btn color="#F6F8F9" class="header-btn text-none" elevation="0">
           Профиль
           <v-menu activator="parent">
             <v-list>
-              <v-list-item title="Учебная программа" :to="'/'" :active="false" class="list-item-space"/>
+              <v-list-item title="Учебная программа" :to="{name: 'myEducation'}" :active="false"
+                           class="list-item-space"/>
               <v-list-item title="Успеваемость" :to="'/'" :active="false" class="list-item-space"/>
               <v-divider/>
               <v-list-item title="Настройки профиля" :to="'/'" :active="false" class="list-item-space"/>

@@ -12,6 +12,8 @@
       <input type="text" placeholder="Электронная почта" class="input mb-6">
       <button type="submit" class="confirm bg-summer-sky text-white mb-6">Получить консультацию</button>
     </form>
+
+    <!-- TODO: добавить ссылки на страницы "условия политики" и "пользовательского соглашения" -->
     <div class="feedback-small mb-6">Нажимая кнопку, принимаю условия политики и пользовательского соглашения</div>
   </section>
 </template>

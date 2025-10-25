@@ -141,6 +141,7 @@ function registrationComplete() {
               <input id="password" name="password" type="password" class="input" v-model="data.password">
               <div class="error-text" v-if="data.passwordError !== ''">{{ data.passwordError }}</div>
 
+              <!-- TODO: доделать функционал кнопки  -->
               <div class="text-summer-sky password-reset mt-2">Не помню пароль</div>
             </div>
 
