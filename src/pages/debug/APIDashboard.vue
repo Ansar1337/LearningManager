@@ -9,7 +9,7 @@ const serverURL = ref(import.meta.env.VITE_API_SERVER_URL || "https://rtlm.table
 
 const tests = [
   {
-    actor: "sessionManager",
+    actor: "userManager",
     action: "getSession",
     payloadTemplate: [],
     description: "Загружает данные сессии пользователя",
@@ -19,7 +19,7 @@ const tests = [
   },
 
   {
-    actor: "sessionManager",
+    actor: "userManager",
     action: "reserveLogin",
     payloadTemplate: [
       {name: "Логин", type: "text", value: "John Doe"},
@@ -31,7 +31,7 @@ const tests = [
   },
 
   {
-    actor: "sessionManager",
+    actor: "userManager",
     action: "registerLogin",
     payloadTemplate: [
       {name: "Логин", type: "text", value: "John Doe"},
@@ -44,7 +44,7 @@ const tests = [
   },
 
   {
-    actor: "sessionManager",
+    actor: "userManager",
     action: "tryToLogIn",
     payloadTemplate: [
       {name: "Логин", type: "text", value: "Ansar"},
@@ -57,7 +57,7 @@ const tests = [
   },
 
   {
-    actor: "sessionManager",
+    actor: "userManager",
     action: "tryToLogOut",
     payloadTemplate: [],
     description: "Запрос на выход",
@@ -179,7 +179,7 @@ const tests = [
       {name: "ID модуля (0-3)", type: "number", value: "0"},
       {name: "Сообщение", type: "text", value: ""},
     ],
-    description: "Выгрузка данных о домашних заданиях в модуле",
+    description: "Добавление комментария к домашнему заданию",
     run(courseId, moduleId, message) {
       return doRequest(this.actor, this.action, {
         courseId, moduleId, message
@@ -195,7 +195,7 @@ const tests = [
       {name: "ID модуля (0-3)", type: "number", value: "0"},
       {name: "Сообщение", type: "file"},
     ],
-    description: "Выгрузка данных о домашних заданиях в модуле",
+    description: "Загрузка файла ДЗ на сервер",
     run(courseId, moduleId, file) {
       return doRequest(this.actor, this.action, {
         courseId, moduleId, file
@@ -211,13 +211,27 @@ const tests = [
       {name: "ID модуля (0-3)", type: "number", value: "0"},
       {name: "Хэш файла", type: "text", value: "4b828daee3c2a4bf3ec375468a8d4fdf"},
     ],
-    description: "Выгрузка данных о домашних заданиях в модуле",
+    description: "Скачивание файла ДЗ с сервера",
     run(courseId, moduleId, fileHash) {
       return doRequest(this.actor, this.action, {
         courseId, moduleId, fileHash
       });
     }
-  }
+  },
+
+  {
+    actor: "userManager",
+    action: "loadProfileData",
+    payloadTemplate: [],
+    description: "Загрузка данных профиля пользователя",
+    run(courseId, moduleId, fileHash) {
+      return doRequest(this.actor, this.action, {
+        courseId, moduleId, fileHash
+      });
+    }
+  },
+
+
 ];
 
 const user = useUserStore();
@@ -236,44 +250,44 @@ let sd4 = ref(null);
 // courses.availableCourses[1].details.value.modules.then(console.log);
 
 
-courses.availableCourses
-    .then(r => r[0])
-    .then(r => r.details)
-    .then(r => sd1.value = r);
-
-courses.availableCourses[0].details.value.then(r => sd2.value = r);
-
-
-setTimeout(() => {
-  courses.availableCourses[0].details.then(r => sd3.value = r);
-}, 1000);
-
-setTimeout(() => {
-  courses.availableCourses
-      .then(r => r[0])
-      .then(r => r.details)
-      .then(r => sd4.value = r);
-}, 2000);
+// courses.availableCourses
+//     .then(r => r[0])
+//     .then(r => r.details)
+//     .then(r => sd1.value = r);
+//
+// courses.availableCourses[0].details.value.then(r => sd2.value = r);
+//
+//
+// setTimeout(() => {
+//   courses.availableCourses[0].details.then(r => sd3.value = r);
+// }, 1000);
+//
+// setTimeout(() => {
+//   courses.availableCourses
+//       .then(r => r[0])
+//       .then(r => r.details)
+//       .then(r => sd4.value = r);
+// }, 2000);
 
 </script>
 
 <template>
   <main>
-        <pre>
-          <button @click="user.sessionTools.tryToLogIn('ansar', '123')">ТЫЦ</button>
-          <button @click="user.sessionTools.tryToLogOut()">антЫЦ</button>
-          {{ user.session }}
-          1
-          {{ sd1 }}
-          2
-          {{ sd2 }}
-          3
-          {{ sd3 }}
-          4
-          {{ sd4 }}
-                    auto
-                    {{ courses?.availableCourses[0] }}
-        </pre>
+    <!--        <pre>-->
+    <!--          <button @click="user.sessionTools.tryToLogIn('ansar', '123')">ТЫЦ</button>-->
+    <!--          <button @click="user.sessionTools.tryToLogOut()">антЫЦ</button>-->
+    <!--          {{ user.session }}-->
+    <!--          1-->
+    <!--          {{ sd1 }}-->
+    <!--          2-->
+    <!--          {{ sd2 }}-->
+    <!--          3-->
+    <!--          {{ sd3 }}-->
+    <!--          4-->
+    <!--          {{ sd4 }}-->
+    <!--                    auto-->
+    <!--                    {{ courses?.availableCourses[0] }}-->
+    <!--        </pre>-->
 
     <h1>Дэшборд для теста API-хэндлов</h1>
     <h2>Используемый сервер: {{ serverURL }}</h2>

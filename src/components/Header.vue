@@ -19,9 +19,8 @@ const showLoginDialog = ref(false);
       <div v-if="!userStore.session.loggedIn">
         <v-btn color="#2D9CDB" class="header-btn" text="Войти" @click="showLoginDialog = true" elevation="0"/>
       </div>
-      <div v-else>
+      <div v-else class="user-panel">
         <v-btn color="#F6F8F9" elevation="0" class="bell-btn">
-          <img src="@/assets/btn-bell.png" width="46" alt="bell icon">
         </v-btn>
 
         <v-btn color="#F6F8F9" class="header-btn text-none" text="Моё обучение" elevation="0"/>
@@ -64,21 +63,37 @@ const showLoginDialog = ref(false);
   align-content: center;
   align-items: center;
   justify-content: space-between;
+  transition: 0.3s ease;
 }
 
 .header-btn {
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 0;
-  margin-left: 20px;
 }
 
 .bell-btn {
   padding: 0;
   min-width: 0;
+  width: 46px;
+  height: 37px;
+  background-image: url("@/assets/btn-bell.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 
 .list-item-space {
   min-height: 30px;
+}
+
+.user-panel {
+  display: flex;
+  column-gap: 20px;
+}
+
+@media only screen and (max-width: 758px) {
+  .header-container {
+    padding: 10px 0;
+  }
 }
 </style>

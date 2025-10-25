@@ -13,7 +13,21 @@
      "userName": "STRING // Имя пользователя",
      "loggedIn": "BOOLEAN // Статус входа в систему",
      "role": "STRING // Роль пользователя",
-     "lastUpdate": "TIMESTAMP // timestamp последнего обновления данных с сервера"
+     "lastUpdate": "TIMESTAMP // timestamp последнего обновления данных с сервера",
+     "profile": {
+       "firstName": "STRING // Имя пользователя",
+       "lastName": "STRING // Фамилия пользователя",
+       "birthDate": "STRING // Дата рождения в формате YYYY-MM-DD",
+       "gender": "STRING // Пол пользователя, например 'male' или 'female'",
+       "phone": "STRING // Телефонный номер в формате '+7XXXXXXXXXX'",
+       "email": "STRING // Электронная почта",
+       "mailingSettings": {
+         "digest": "BOOLEAN // Настройки рассылки: дайджесты",
+         "eventsAgenda": "BOOLEAN // Настройки рассылки: агенда мероприятий",
+         "educationalMaterials": "BOOLEAN // Настройки рассылки: учебные материалы",
+         "submissionDeadlines": "BOOLEAN // Настройки рассылки: сроки сдачи работ"
+       }
+     }
    }
    ```
    ##### Особенности
@@ -24,7 +38,7 @@
 
 2. `sessionTools` - небольшой тулсет для работы с сессией;
    ##### Структура тулсета
-    - `async checkSessionState()`: Асинхронный метод для проверки состояния текущей сессии.  
+    - `async loadSessionState()`: Асинхронный метод для проверки состояния текущей сессии.  
       Обновляет состояние сессии данными из ответа сервера.
 
     - `async tryToLogIn(login, password)`: Асинхронный метод для попытки входа в систему.      
@@ -58,7 +72,7 @@
     const userStore = useUserStore();
 
     // Проверка состояния сессии
-    await userStore.checkSessionState();
+    await userStore.loadSessionState();
 
     // Вход в систему
     await userStore.tryToLogIn("user_login", "user_password");

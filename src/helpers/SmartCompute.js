@@ -22,7 +22,6 @@ function getWrappedPrimitive(cleanValue) {
         },
         set(target, prop, value) {
             if (prop === '_value') {
-                console.log(`Значение изменено с ${target._value} на ${value}`);
                 target._value = value;
                 return true;
             }
@@ -87,6 +86,10 @@ export function getComputableNode(updateRate, populateWithFunc, ...populateWithA
         deferredValue: null,
         lastUpdate: Infinity
     });
+
+    if ((!populateWithFunc) || (typeof populateWithFunc !== "function")) {
+        throw new Error("populateWithFunc should be a function!");
+    }
     const fullFiller = (refresh = false) => {
         if ((refresh) || ((realStorage.value.lastUpdate - Date.now()) > updateRate)) {
             const pendingData = populateWithFunc.apply(this, populateWithArgs.concat(realStorage)).then(
@@ -109,7 +112,7 @@ export function getComputableNode(updateRate, populateWithFunc, ...populateWithA
         return getWrappedValue(realStorage.value.data);
     }
 
-    const result = computed(() => fullFiller()) || Promise.resolve();
+    const result = computed(() => fullFiller()) || Promise.resolve() || {__refresh: null};
     result.__refresh = fullFiller.bind(this, true);
     return result;
 }

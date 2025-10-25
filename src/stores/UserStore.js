@@ -6,60 +6,53 @@ import {getComputableNode} from "@/helpers/SmartCompute.js";
 export const useUserStore = defineStore('user', () => {
     const updateRate = 60000;
 
-    // const state = ref({
-    //     session: {
-    //         userId: null,
-    //         userName: null,
-    //         loggedIn: null,
-    //         role: null,
-    //         lastUpdate: Infinity
-    //     }
-    // });
+    async function loadUserProfile() {
+        return await doRequest("userManager", "loadProfileData");
+    }
 
     const sessionTools = {
-        // async checkSessionState() {
-        //     const response = await doRequest("sessionManager", "getSession",);
-        //     if (response.status === "success") {
-        //         state.value.session = response.data;
-        //         state.value.session.lastUpdate = Date.now();
-        //     }
-        // },
+        async loadSessionState() {
+            const sessionData = await doRequest("userManager", "getSession",);
 
-        async checkSessionState() {
-            return await doRequest("sessionManager", "getSession",);
+            if (sessionData.status === "success") {
+                sessionData.data.profile = getComputableNode(
+                    updateRate,
+                    loadUserProfile
+                );
+            }
+
+            return sessionData;
         },
 
         async tryToLogIn(login, password) {
-            const response = (await doRequest("sessionManager", "tryToLogIn", {
+            const response = (await doRequest("userManager", "tryToLogIn", {
                 login,
                 password
             }));
 
             if (response.status === "success") {
-                // await sessionTools.checkSessionState();
                 session.__refresh();
             }
             return response;
         },
 
         async tryToLogOut() {
-            const response = (await doRequest("sessionManager", "tryToLogOut"));
+            const response = (await doRequest("userManager", "tryToLogOut"));
 
             if (response.status === "success") {
-                // await sessionTools.checkSessionState();
                 session.__refresh();
             }
             return response;
         },
 
         async reserveLogin(login) {
-            return (await doRequest("sessionManager", "reserveLogin", {
+            return (await doRequest("userManager", "reserveLogin", {
                 login
             }));
         },
 
         async registerLogin(login, password) {
-            return (await doRequest("sessionManager", "registerLogin", {
+            return (await doRequest("userManager", "registerLogin", {
                 login, password
             }));
         }
@@ -67,15 +60,7 @@ export const useUserStore = defineStore('user', () => {
 
     const session = getComputableNode(
         updateRate,
-        sessionTools.checkSessionState);
-
-
-    // const session = computed(() => {
-    //     if (state.value.session.lastUpdate - Date.now() > updateRate) {
-    //         sessionTools.checkSessionState().then();
-    //     }
-    //     return state.value.session;
-    // });
+        sessionTools.loadSessionState);
 
     return {session, sessionTools};
 });
