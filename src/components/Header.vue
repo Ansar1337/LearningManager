@@ -36,6 +36,8 @@ const showLoginDialog = ref(false);
               <v-divider/>
               <v-list-item title="Настройки профиля" :to="'/'" :active="false" class="list-item-space"/>
               <v-divider/>
+
+              <!-- TODO: редирект на главную -->
               <v-list-item title="Выйти" :active="false" class="list-item-space"
                            @click="userStore.sessionTools.tryToLogOut"/>
             </v-list>
