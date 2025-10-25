@@ -112,7 +112,7 @@ export function getComputableNode(updateRate, populateWithFunc, ...populateWithA
         return getWrappedValue(realStorage.value.data);
     }
 
-    const result = computed(() => fullFiller()) || Promise.resolve() || {__refresh: null};
+    const result = computed(() => fullFiller());
     result.__refresh = fullFiller.bind(this, true);
-    return result;
+    return result || {__refresh: null} || Promise.resolve();
 }

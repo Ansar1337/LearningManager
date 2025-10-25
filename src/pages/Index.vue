@@ -4,10 +4,13 @@ import IconTriangleLogo from "@/components/icons/logo/IconTriangleLogo.vue";
 import IconSquareLogo from "@/components/icons/logo/IconSquareLogo.vue";
 import IconPentadecagonLogo from "@/components/icons/logo/IconPentadecagonLogo.vue";
 import {useCoursesStore} from "@/stores/CoursesStore.js";
-import Feedback from "@/components/Feedback.vue";
+import {ref} from "vue";
 
 
 const courses = useCoursesStore();
+const coursesAreReady = ref(false);
+courses.availableCourses.then(r => coursesAreReady.value = true);
+
 const assetsUrl = new URL('@/assets', import.meta.url).href;
 
 </script>
@@ -35,27 +38,24 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
     <div class="title-for-block">Направления обучения</div>
 
     <section class="cards-container">
-      <template v-for="course in courses.availableCourses">
-        <router-link :to="{name: 'courseAbout', params: { id :  course.id}}" class="link-none">
-          <v-card :key="course.id" elevation="4" class="card">
-            <v-card-title class="card-title mt-3">
-              <img :src="`${assetsUrl}/${course.icon || 'java-logo.png'}`"
-                   alt="language logotype"
-                   class="card-title-image">
-              {{ course.title }}
-            </v-card-title>
-            <v-card-text class="card-text mt-12 d-flex flex-row">
-              <div>
-                {{ course.description }}
-              </div>
-              <div class="card-text-arrow text-summer-sky">
-                ➔
-              </div>
-            </v-card-text>
-            <div class="course-card-circle"></div>
-          </v-card>
-        </router-link>
-      </template>
+      <v-card v-if="coursesAreReady" v-for="course in courses.availableCourses" :key="course.id" elevation="4"
+              class="card">
+        <v-card-title class="card-title mt-3">
+          <img :src="`${assetsUrl}/${course.icon || 'java-logo.png'}`"
+               alt="language logotype"
+               class="card-title-image">
+          {{ course.title }}
+        </v-card-title>
+        <v-card-text class="card-text mt-12 d-flex flex-row">
+          <div>
+            {{ course.description }}
+          </div>
+          <div class="card-text-arrow text-summer-sky">
+            ➔
+          </div>
+        </v-card-text>
+        <div class="course-card-circle"></div>
+      </v-card>
     </section>
 
     <div class="title-for-block">
@@ -63,6 +63,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
       <p class="text-summer-sky">люди рядом</p>
     </div>
 
+    <!--TODO: расположить верстку по макету -->
     <section class="content-about">
       <div class="content-about-left">
         <div class="back-holder group-of-people"></div>
@@ -99,7 +100,17 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
       </div>
     </section>
 
-    <Feedback/>
+    <section class="feedback bg-alice-blue mb-5">
+      <div class="feedback-title text-summer-sky mt-6">Остались вопросы?</div>
+      <div class="feedback-text">Оставьте контакты — мы с вами свяжемся</div>
+      <form class="mt-6">
+        <input type="text" placeholder="Имя" class="input mb-6">
+        <input type="text" placeholder="+7 (777) 777-77-77" class="input mb-6">
+        <input type="text" placeholder="Электронная почта" class="input mb-6">
+        <button type="submit" class="confirm bg-summer-sky text-white mb-6">Получить консультацию</button>
+      </form>
+      <div class="feedback-small mb-6">Нажимая кнопку, принимаю условия политики и пользовательского соглашения</div>
+    </section>
 
   </div>
 </template>
@@ -370,6 +381,46 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 
 .content-about-bottom {
   flex-basis: 600px;
+}
+
+/* feedback */
+.feedback {
+  border-radius: 16px;
+  padding: 10px 20px 10px 20px;
+}
+
+.feedback-title {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 49px;
+}
+
+.feedback-small {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+}
+
+.feedback-text {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 22px;
+}
+
+.input {
+  border: 1px solid gray;
+  border-radius: 5px;
+  margin-right: 10px;
+  padding-left: 7px;
+  height: 30px;
+}
+
+.confirm {
+  border-radius: 5px;
+  padding: 2px 20px 2px 20px;
+  font-size: 16px;
+  line-height: 20px;
+  height: 30px;
 }
 
 @media only screen and (max-width: 758px) {
