@@ -23,14 +23,13 @@ function isUserCourse(id) {
 function formatDate(date) {
   return date
       ? new Date(date)
-          .toLocaleString("ru-RU", {year: "numeric", month: "long", day: "numeric"})
+          .toLocaleString("ru-RU", {year: "numeric", month: "short", day: "numeric"})
           .replace(" г.", "")
       : "";
 }
 
 function getCompleteness(id) {
-  // TODO: проблемы типов, id string и number в разных частях
-  return coursesStore.userCourses.find(uc => uc.id + '' === id).completeness
+  return coursesStore.userCourses.find(uc => parseInt(uc.id) === parseInt(id)).completeness
 }
 
 </script>
@@ -47,19 +46,25 @@ function getCompleteness(id) {
           <v-card elevation="0" color="#F6F8F9" :key="course.id" class="pt-2 pb-2">
             <v-card-text class="card-content">
 
-              <div>
+              <div class="logo-holder">
                 <!-- TODO: нет больших картинок для языков -->
                 <img src="@/assets/java-big-logo.png" alt="language logo" class="card-image">
               </div>
 
               <div class="card-content-info">
-                <div>
+                <div class="card-content-text">
                   <div class="card-title">{{ course.title }}-разработчик</div>
                   <div class="time-schedule">
                     <div>{{ formatDate(course?.details?.dateStart) }}</div>
-                    <div> —</div>
+                    <div class="separator"></div>
                     <div>{{ formatDate(course?.details?.dateEnd) }}</div>
                   </div>
+                </div>
+                <div v-if="isUserCourse(course.id)" class="card-content-progress">
+                  <v-progress-circular color="#6FCF97" :model-value="getCompleteness(course.id)" :size="55"
+                                       :width="10"/>
+                </div>
+                <div class="card-content-open-button">
                   <div class="mt-2">
                     <v-btn v-if="isUserCourse(course.id)"
                            color="#2D9CDB"
@@ -72,11 +77,6 @@ function getCompleteness(id) {
                       Начать обучение
                     </v-btn>
                   </div>
-                </div>
-
-                <div v-if="isUserCourse(course.id)">
-                  <v-progress-circular color="#6FCF97" :model-value="getCompleteness(course.id)" :size="55"
-                                       :width="10"/>
                 </div>
               </div>
 
@@ -95,6 +95,7 @@ function getCompleteness(id) {
 </template>
 
 <style scoped>
+
 .title {
   font-size: 40px;
   font-weight: 600;
@@ -122,7 +123,7 @@ function getCompleteness(id) {
 }
 
 .card-title {
-  font-size: 36px;
+  font-size: min(36px, 4vw);
   font-weight: 600;
   line-height: 44px;
   letter-spacing: 0;
@@ -132,7 +133,7 @@ function getCompleteness(id) {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  font-size: 24px;
+  font-size: min(24px, 3vw);
   font-weight: 500;
   line-height: 29px;
   letter-spacing: 0;
@@ -140,19 +141,68 @@ function getCompleteness(id) {
 
 .card-content {
   display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  padding-left: 0;
 }
 
 .card-content-info {
   display: flex;
-  gap: 40px;
+  column-gap: 15px;
+  row-gap: 15px;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-grow: 1;
+  align-items: center;
 }
 
 .card-image {
-  width: 100px;
+  width: min(100px, 7vw);
+  min-width: 50px;
+  height: fit-content;
 }
+
+.logo-holder {
+  min-width: 85px;
+  max-width: 290px;
+  width: 20%;
+  display: flex;
+  justify-content: center;
+}
+
+.card-content-text {
+  flex-basis: max(375px, 80%);
+  margin-right: auto;
+}
+
+.card-content-progress > div {
+  min-width: 35px !important;
+  width: 7vw !important;
+  aspect-ratio: 1 !important;
+}
+
+.card-content-open-button {
+
+}
+
+.card-content-open-button .mt-2 {
+  margin: 0 !important;
+}
+
+.separator::before {
+  content: "—";
+}
+
+@media only screen and (max-width: 758px) {
+  .separator::before {
+    content: "/";
+  }
+
+  .card-content-info,
+  .card-content-text,
+  .time-schedule {
+    flex-basis: fit-content;
+  }
+}
+
+
 </style>

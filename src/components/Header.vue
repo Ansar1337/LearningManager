@@ -99,5 +99,10 @@ const showLoginDialog = ref(false);
   .header-container {
     padding: 10px 0;
   }
+
+  .user-panel {
+    display: flex;
+    column-gap: 5px;
+  }
 }
 </style>
