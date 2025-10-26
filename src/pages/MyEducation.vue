@@ -197,12 +197,16 @@ function getCompleteness(id) {
     content: "/";
   }
 
+  .v-btn.start-btn {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   .card-content-info,
   .card-content-text,
   .time-schedule {
     flex-basis: fit-content;
   }
 }
-
 
 </style>

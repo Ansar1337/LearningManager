@@ -21,12 +21,13 @@ import Footer from "@/components/Footer.vue";
 
 .main-content {
   margin: 0 auto;
-  padding: 0 40px;
+  /* padding: 0 40px; */
   display: flex;
   max-width: min(1920px, 85%);
   flex-direction: column;
   gap: 40px;
   align-items: center;
+  box-sizing: content-box;
 }
 
 .main, .main-content > * {

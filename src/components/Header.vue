@@ -22,7 +22,6 @@ const showLoginDialog = ref(false);
       <div v-else class="user-panel">
         <v-btn color="#F6F8F9" elevation="0" class="bell-btn">
         </v-btn>
-
         <v-btn color="#F6F8F9" class="header-btn text-none" :to="{name: 'myEducation'}" text="Моё обучение"
                elevation="0"/>
 
@@ -98,6 +97,7 @@ const showLoginDialog = ref(false);
 @media only screen and (max-width: 758px) {
   .header-container {
     padding: 10px 0;
+    flex-wrap: wrap;
   }
 
   .user-panel {
