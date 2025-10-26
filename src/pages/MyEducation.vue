@@ -16,7 +16,7 @@ coursesStore.availableCourses.then(courses => {
 coursesStore.userCourses.then(_ => courseDetails.value = true);
 
 function isUserCourse(id) {
-  // TODO: type problem, id number and id string
+  // TODO: проблемы типов, id string и number в разных частях
   return coursesStore.userCourses.map(c => c.id + '').includes(id + '');
 }
 
@@ -29,9 +29,10 @@ function formatDate(date) {
 }
 
 function getCompleteness(id) {
-  // TODO: type problem, id number and id string
+  // TODO: проблемы типов, id string и number в разных частях
   return coursesStore.userCourses.find(uc => uc.id + '' === id).completeness
 }
+
 </script>
 
 <template>
@@ -47,7 +48,7 @@ function getCompleteness(id) {
             <v-card-text class="card-content">
 
               <div>
-                <!-- TODO: no big image for languages in data -->
+                <!-- TODO: нет больших картинок для языков -->
                 <img src="@/assets/java-big-logo.png" alt="language logo" class="card-image">
               </div>
 
@@ -60,9 +61,16 @@ function getCompleteness(id) {
                     <div>{{ formatDate(course?.details?.dateEnd) }}</div>
                   </div>
                   <div class="mt-2">
-                    <button class="start-btn bg-summer-sky text-white mt-2">
-                      {{ isUserCourse(course.id) ? 'Продолжить обучение' : 'Начать обучение' }}
-                    </button>
+                    <v-btn v-if="isUserCourse(course.id)"
+                           color="#2D9CDB"
+                           class="start-btn bg-summer-sky text-white mt-2 text-none"
+                           :to="{name: 'coursePage', params: { id :  course.id}}">
+                      Продолжить обучение
+                    </v-btn>
+                    <v-btn color="#2D9CDB" v-else class="start-btn bg-summer-sky text-white mt-2 text-none">
+                      <!-- TODO: начать обучение, не ясно, что делать при нажатии -->
+                      Начать обучение
+                    </v-btn>
                   </div>
                 </div>
 
@@ -79,9 +87,9 @@ function getCompleteness(id) {
     </div>
 
     <div class="text-right">
-      <button class="start-btn border-summer-sky text-summer-sky mt-2" @click="showAll = !showAll">
-        {{ showAll ? 'Показать мои курсы' : 'Посмотреть все курсы' }}
-      </button>
+      <v-btn class="start-btn border-summer-sky mt-2 text-none" elevation="0" @click="showAll = !showAll">
+        <span class="text-summer-sky">{{ showAll ? 'Показать мои курсы' : 'Посмотреть все курсы' }}</span>
+      </v-btn>
     </div>
   </div>
 </template>
@@ -91,6 +99,7 @@ function getCompleteness(id) {
   font-size: 40px;
   font-weight: 600;
   line-height: 49px;
+  letter-spacing: 0;
 }
 
 .course-card-list {
@@ -103,8 +112,9 @@ function getCompleteness(id) {
   border-radius: 5px;
   padding: 2px 20px 2px 20px;
   font-size: 16px;
+  font-weight: 600;
   line-height: 20px;
-  height: 30px;
+  letter-spacing: 0;
 }
 
 .border-summer-sky {
@@ -115,6 +125,7 @@ function getCompleteness(id) {
   font-size: 36px;
   font-weight: 600;
   line-height: 44px;
+  letter-spacing: 0;
 }
 
 .time-schedule {
@@ -124,6 +135,7 @@ function getCompleteness(id) {
   font-size: 24px;
   font-weight: 500;
   line-height: 29px;
+  letter-spacing: 0;
 }
 
 .card-content {

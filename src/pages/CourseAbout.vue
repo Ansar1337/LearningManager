@@ -45,7 +45,8 @@ function formatEstimate(estimate) {
     <div class="mt-5">
       <router-link to="/" class="link-none">
         <div class="link-none backward">
-          <img src="@/assets/arrow-backward.png" alt="arrow backward" class="arrow-backward"> На главную
+          <div class="arrow-backward"></div>
+          На главную
         </div>
       </router-link>
     </div>
@@ -88,6 +89,7 @@ function formatEstimate(estimate) {
                   <div>{{ formatEstimate(details?.timeEstimation) }}</div>
                 </div>
               </div>
+              <!-- TODO: неясно, что делать при нажатии на кнопку и должна ли изменяться, если курс уже проходится -->
               <button class="start-btn bg-summer-sky text-white mt-2">Начать обучение</button>
             </v-card-text>
           </v-card>
@@ -128,6 +130,11 @@ function formatEstimate(estimate) {
 
 .arrow-backward {
   width: 34px;
+  height: 15px;
+  background-image: url("@/assets/arrow-backward.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  display: inline-block;
 }
 
 .title {

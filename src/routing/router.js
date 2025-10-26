@@ -3,6 +3,7 @@ import Index from "@/pages/Index.vue"
 import APIDashboard from "@/pages/debug/APIDashboard.vue";
 import CourseAbout from "@/pages/CourseAbout.vue";
 import MyEducation from "@/pages/MyEducation.vue";
+import CourseDetails from "@/pages/CourseDetails.vue";
 
 const routes = [
     {path: '/', component: Index},
@@ -10,7 +11,8 @@ const routes = [
     {path: '/main', component: Index},
     {path: '/api', component: APIDashboard},
     {path: '/course/about/:id', name: 'courseAbout', component: CourseAbout},
-    {path: '/courses', name: 'myEducation', component: MyEducation}
+    {path: '/courses', name: 'myEducation', component: MyEducation},
+    {path: '/course/:id', name: 'coursePage', component: CourseDetails}
 ]
 
 const router = VueRouter.createRouter({
