@@ -110,7 +110,7 @@ This repo also includes a backend part, so it's possible to launch it locally:
                 3. [x] Status
                 4. [x] Comments
             4. [ ] Tests + status
-                1. [ ] Get questions
+                1. [x] Get questions
                 2. [ ] Check Questions
     3. [x] Profile data
         1. [x] Feed data

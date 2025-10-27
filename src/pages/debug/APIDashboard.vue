@@ -67,6 +67,36 @@ const tests = [
   },
 
   {
+    actor: "userManager",
+    action: "loadProfileData",
+    payloadTemplate: [],
+    description: "Загрузка данных профиля пользователя",
+    run(courseId, moduleId, fileHash) {
+      return doRequest(this.actor, this.action, {
+        courseId, moduleId, fileHash
+      });
+    }
+  },
+
+  {
+    actor: "userManager",
+    action: "saveProfileData",
+    payloadTemplate: [
+      {
+        name: "Патч для профиля",
+        type: "text",
+        value: "{\"firstName\":\"John\",\"lastName\":\"Doe\",\"mailingSettings\":{\"digest\":false}}"
+      },
+    ],
+    description: "Обновляет переданные поля профиля",
+    run(newProfile) {
+      return doRequest(this.actor, this.action, {
+        newProfile
+      });
+    }
+  },
+
+  {
     actor: "coursesManager",
     action: "getAvailableCourses",
     payloadTemplate: [],
@@ -220,94 +250,32 @@ const tests = [
   },
 
   {
-    actor: "userManager",
-    action: "loadProfileData",
-    payloadTemplate: [],
-    description: "Загрузка данных профиля пользователя",
-    run(courseId, moduleId, fileHash) {
+    actor: "coursesManager",
+    action: "getUserCourseModuleTest",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+    ],
+    description: "Загрузка тестов",
+    run(courseId, moduleId) {
       return doRequest(this.actor, this.action, {
-        courseId, moduleId, fileHash
+        courseId, moduleId
       });
     }
   },
-
 
 ];
 
 const user = useUserStore();
 const courses = useCoursesStore();
-let sd1 = ref(null);
-let sd2 = ref(null);
-let sd3 = ref(null);
-let sd4 = ref(null);
-// courses.availableCourses[0].details.value.longDescription.then(console.log);
-// courses.availableCourses[0]?.details.value.modules[0].then(r => sd2.value = r);
-
-// courses.availableCourses[0].details.value.then(r => sd2.value = r);
-// courses.availableCourses[0].details.value.modules[0].then(console.log);
-
-// courses.availableCourses[1].details.modules[0].then(console.log);
-// courses.availableCourses[1].details.value.modules.then(console.log);
-
-
-courses.availableCourses
-    .then(r => r[0])
-    .then(r => r.details)
-    .then(r => sd1.value = r);
-
-courses.availableCourses[0].details.value.then(r => sd2.value = r);
-
-
-setTimeout(() => {
-  courses.availableCourses[0].details.then(r => sd3.value = r);
-}, 1000);
-
-setTimeout(() => {
-  courses.availableCourses
-      .then(r => r[0])
-      .then(r => r.details)
-      .then(r => sd4.value = r);
-}, 2000);
-
-function updateProfile() {
-  user.session.profile.updateWith({
-        "firstName": "Денис",
-        "lastName": "Калинин",
-        "birthDate": "1990-07-30",
-        "gender": "male",
-        "phone": "+71234567890",
-        "email": "ansar@example.com",
-        "mailingSettings": {
-          "digest": false,
-          "eventsAgenda": false,
-          "educationalMaterials": false,
-          "submissionDeadlines": false
-        }
-      }
-  );
-  console.log(user.session);
-}
 </script>
 
 <template>
   <main>
-    <!--    <pre>-->
-    <!--&lt;!&ndash;    <button @click="user.sessionTools.tryToLogIn('ansar', '123')">ВХОД</button>&ndash;&gt;-->
-    <!--      &lt;!&ndash;    <button @click="user.sessionTools.tryToLogOut()">ВЫХОД</button>&ndash;&gt;-->
-    <!--      &lt;!&ndash;    {{ user.session.profile }}&ndash;&gt;-->
-    <!--      &lt;!&ndash;    <button @click="updateProfile">ОБНОВИТЬ ПРОФИЛЬ</button>&ndash;&gt;-->
-
-    <!--                1-->
-    <!--                {{ sd1 }}-->
-    <!--                2-->
-    <!--                {{ sd2 }}-->
-    <!--                3-->
-    <!--                {{ sd3 }}-->
-    <!--                4-->
-    <!--                {{ sd4 }}-->
-    <!--                auto-->
-    <!--                {{ courses?.availableCourses[0].details }}-->
-    <!--    </pre>-->
+    <button @click="courses.userCourses[0].modules[0].resources.test.questions[0].options['Один']=true">ТЫЦ</button>
+    <pre>
+          {{ courses.userCourses[0].modules[0].resources.test.questions }}
+        </pre>
 
     <h1>Дэшборд для теста API-хэндлов</h1>
     <h2>Используемый сервер: {{ serverURL }}</h2>

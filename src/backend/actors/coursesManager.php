@@ -577,6 +577,92 @@ if ($_POST["action"] ?? false) {
             exit($file["body"]);
         }
 
+        case "getUserCourseModuleTest":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "test not found";
+                break;
+            }
+
+            $test = include($mockFilePath);
+
+            array_walk($test["questions"], function (&$item) {
+                $item["options"] = array_fill_keys(array_keys($item["options"]), false);
+            });
+
+            $result["status"] = "success";
+            $result["data"] = $test;
+            break;
+        }
+
+        case "reviewUserCourseModuleTest":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "test not found";
+                break;
+            }
+
+            $test = include($mockFilePath);
+
+            array_walk($test["questions"], function (&$item) {
+                $item["options"] = array_keys($item["options"]);
+            });
+
+            $result["status"] = "success";
+            $result["data"] = $test;
+            break;
+        }
+
         default:
         {
             $result["status"] = "error";

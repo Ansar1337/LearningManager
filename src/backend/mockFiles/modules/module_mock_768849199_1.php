@@ -12,7 +12,7 @@ return [
         'resources' => [
             'articles' => [],
             'homework' => [],
-            'tests' => []
+            'test' => []
         ]
     ],
     [
@@ -26,7 +26,7 @@ return [
         'resources' => [
             'articles' => [],
             'homework' => [],
-            'tests' => []
+            'test' => []
         ]
     ],
     [
@@ -40,7 +40,7 @@ return [
         'resources' => [
             'articles' => [],
             'homework' => [],
-            'tests' => []
+            'test' => []
         ]
     ],
     [
@@ -54,7 +54,7 @@ return [
         'resources' => [
             'articles' => [],
             'homework' => [],
-            'tests' => []
+            'test' => []
         ]
     ],
     [
@@ -68,7 +68,7 @@ return [
         'resources' => [
             'articles' => [],
             'homework' => [],
-            'tests' => []
+            'test' => []
         ]
     ],
     [
@@ -82,7 +82,7 @@ return [
         'resources' => [
             'articles' => [],
             'homework' => [],
-            'tests' => []
+            'test' => []
         ]
     ]
 ];

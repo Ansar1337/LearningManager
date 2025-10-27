@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {ref, watch} from "vue";
+import {reactive, ref, watch} from "vue";
 import {doRequest} from "@/helpers/NetworkManager.js";
 import {getComputableNode} from "@/helpers/SmartCompute.js";
 
@@ -58,6 +58,12 @@ export const useCoursesStore = defineStore('courses', () => {
                 modules.data[i].resources.homework = getComputableNode(
                     updateRate,
                     loadUserCourseModuleHomework,
+                    courseId, modules.data[i].id
+                );
+
+                modules.data[i].resources.test = getComputableNode(
+                    updateRate,
+                    loadUserCourseModuleTest,
                     courseId, modules.data[i].id
                 );
             }
@@ -159,6 +165,31 @@ export const useCoursesStore = defineStore('courses', () => {
                     }).then(console.log);
                 },
             };
+        }
+
+        return response;
+    }
+
+
+    async function loadUserCourseModuleTest(courseId, moduleId, storage) {
+        const response = await doRequest("coursesManager", "getUserCourseModuleTest", {
+            courseId, moduleId
+        });
+
+        if (response.status === "success") {
+            response.data.tools = {
+                //submit
+                //restore
+                //cancel
+            };
+
+            response.data.questions = response.data.questions ?? [];
+            response.data.questions = reactive(response.data.questions);
+            response.data.questions.forEach((item, index) => {
+                watch(item.options, (status) => {
+
+                });
+            });
         }
 
         return response;
