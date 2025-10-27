@@ -108,7 +108,7 @@ if ($_POST["action"] ?? false) {
 
             $moduleTree = read_from_cache($mockFilePath, function () use ($mockFilePath) {
                 return include($mockFilePath);
-            }, 600);
+            }, 3600);
 
 
             $treeWalker = function (&$node) use (&$treeWalker) {
@@ -235,7 +235,7 @@ if ($_POST["action"] ?? false) {
 
             $moduleTree = read_from_cache($mockFilePath, function () use ($mockFilePath) {
                 return include($mockFilePath);
-            }, 600);
+            }, 3600);
 
             $articlePath = explode(",", $articlePath);
             $node = &$moduleTree;
@@ -248,7 +248,7 @@ if ($_POST["action"] ?? false) {
 
             $node["completed"] = $status;
 
-            write_to_cache($mockFilePath, $moduleTree, 600);
+            write_to_cache($mockFilePath, $moduleTree, 3600);
             $result["status"] = "success";
             $result["data"] = "article state updated";
             break;
@@ -307,17 +307,17 @@ if ($_POST["action"] ?? false) {
                         "body" => $fileContent
                     ];
 
-                    write_to_cache($mockFilePath . $submission["hash"], $file, 600);
+                    write_to_cache($mockFilePath . $submission["hash"], $file, 3600);
                 }
 
                 return $homeworkData;
-            }, 600);
+            }, 3600);
 
             $result["status"] = "success";
             $result["data"] = $homework;
             break;
         }
-//
+
         case "addHomeworkComment":
         {
             if (!$_SESSION["loggedIn"]) {
@@ -329,7 +329,7 @@ if ($_POST["action"] ?? false) {
             $data = $_POST["data"] ?? [];
             $courseId = $data["courseId"] ?? null;
             $moduleId = $data["moduleId"] ?? null;
-            $message = $data["message"] ?? null;
+            $messageList = $data["message"] ?? null;
 
             if (is_null($courseId)) {
                 $result["status"] = "error";
@@ -344,7 +344,7 @@ if ($_POST["action"] ?? false) {
             }
 
 
-            if (empty($message)) {
+            if (empty($messageList)) {
                 $result["status"] = "error";
                 $result["data"] = "empty message";
                 break;
@@ -378,21 +378,21 @@ if ($_POST["action"] ?? false) {
                         "body" => $fileContent
                     ];
 
-                    write_to_cache($mockFilePath . $submission["hash"], $file, 600);
+                    write_to_cache($mockFilePath . $submission["hash"], $file, 3600);
                 }
 
                 return $homeworkData;
-            }, 600);
+            }, 3600);
 
             $comment = [
                 "sender" => $_SESSION["userId"], //userId в системе
                 "dateTime" => gmdate("Y-m-d\TH:i:s\Z"),
-                "message" => $message,
+                "message" => $messageList,
                 "unread" => false,
             ];
             $homework["comments"][] = $comment;
 
-            write_to_cache($mockFilePath, $homework, 600);
+            write_to_cache($mockFilePath, $homework, 3600);
 
             $result["status"] = "success";
             $result["data"] = $comment;
@@ -459,11 +459,11 @@ if ($_POST["action"] ?? false) {
                         "body" => $fileContent
                     ];
 
-                    write_to_cache($mockFilePath . $submission["hash"], $file, 600);
+                    write_to_cache($mockFilePath . $submission["hash"], $file, 3600);
                 }
 
                 return $homeworkData;
-            }, 600);
+            }, 3600);
 
             $uploadedFileTempName = $_FILES['data']['tmp_name']['file'];
             $uploadedFileName = $_FILES['data']['name']['file'];
@@ -488,8 +488,8 @@ if ($_POST["action"] ?? false) {
                 "body" => $fileContent
             ];
 
-            write_to_cache($mockFilePath . $hash, $file, 600);
-            write_to_cache($mockFilePath, $homework, 600);
+            write_to_cache($mockFilePath . $hash, $file, 3600);
+            write_to_cache($mockFilePath, $homework, 3600);
 
             $result["status"] = "success";
             $result["data"] = $submission;
@@ -556,11 +556,11 @@ if ($_POST["action"] ?? false) {
                         "body" => $fileContent
                     ];
 
-                    write_to_cache($mockFilePath . $submission["hash"], $file, 600);
+                    write_to_cache($mockFilePath . $submission["hash"], $file, 3600);
                 }
 
                 return $homeworkData;
-            }, 600);
+            }, 3600);
 
             $file = read_from_cache($mockFilePath . $fileHash);
 
@@ -609,14 +609,228 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $test = include($mockFilePath);
+            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                return include($mockFilePath);
+            }, 3600);
 
-            array_walk($test["questions"], function (&$item) {
-                $item["options"] = array_fill_keys(array_keys($item["options"]), false);
-            });
 
             $result["status"] = "success";
-            $result["data"] = $test;
+            $result["data"] = $test["meta"];
+            break;
+        }
+
+        case "launchUserCourseModuleTest":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "test not found";
+                break;
+            }
+
+            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                return include($mockFilePath);
+            }, 3600);
+
+            $testState = read_from_cache($mockFilePath . "state" . $test["meta"]["currentTry"], function () use ($test) {
+                $result = $test["questions"];
+                array_walk($result, function (&$item) {
+                    $item["options"] = array_fill_keys(array_keys($item["options"]), false);
+                });
+                return $result;
+            }, 3600);
+
+            $dayLimit = 30;
+            $reset = ($test["meta"]["lastAttemptTime"] <= (time() - ($dayLimit * 24 * 60 * 60)));
+            if (($test["meta"]["currentTry"] > $test["meta"]["triesLimit"]) && (!$reset)) {
+                $result["status"] = "error";
+                $result["data"] = "limit reached";
+                break;
+            }
+
+            if (($test["meta"]["currentTry"] > $test["meta"]["triesLimit"]) && ($reset)) {
+                $test["meta"]["currentTry"] = 0;
+                $test["meta"]["lastAttemptTime"] = time();
+            }
+
+            $test["meta"]["state"] = "in_progress";
+
+            write_to_cache($mockFilePath, $test, 3600);
+            write_to_cache($mockFilePath . "state" . $test["meta"]["currentTry"], $testState, 3600);
+
+            $result["status"] = "success";
+            $result["data"] = $testState;
+            break;
+        }
+
+        case "updateUserCourseModuleTest":
+        {
+
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+            $questionId = $data["questionId"] ?? null;
+            $answers = $data["answers"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            if (is_null($questionId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown question";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "test not found";
+                break;
+            }
+
+            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                return include($mockFilePath);
+            }, 3600);
+
+            $testState = read_from_cache($mockFilePath . "state" . $test["meta"]["currentTry"], function () use ($test) {
+                $result = $test["questions"];
+                array_walk($result, function (&$item) {
+                    $item["options"] = array_fill_keys(array_keys($item["options"]), false);
+                });
+                return $result;
+            }, 3600);
+
+            if ($test["meta"]["state"] !== "in_progress") {
+                $result["status"] = "error";
+                $result["data"] = "test not started";
+                break;
+            }
+
+            $answers = json_decode($answers, true);
+            if (isset($testState[$questionId])) {
+                foreach ($testState[$questionId]["options"] as $option => $_) {
+                    if (isset($answers[$option])) {
+                        $testState[$questionId]["options"][$option] = $answers[$option];
+                    } else {
+                        $result["status"] = "error";
+                        $result["data"] = "unknown option: $option";
+                        break;
+                    }
+                }
+            } else {
+                $result["status"] = "error";
+                $result["data"] = "unknown question#: $questionId";
+                break;
+            }
+
+            $test["meta"]["lastQuestion"] = $questionId;
+
+            write_to_cache($mockFilePath, $test, 3600);
+            write_to_cache($mockFilePath . "state" . $test["meta"]["currentTry"], $testState, 3600);
+
+            $result["status"] = "success";
+            $result["data"] = "question #$questionId updated";
+            break;
+        }
+
+        case "finishUserCourseModuleTest":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "test not found";
+                break;
+            }
+
+            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                return include($mockFilePath);
+            }, 3600);
+
+            $testState = read_from_cache($mockFilePath . "state" . $test["meta"]["currentTry"], function () use ($test) {
+                $result = $test["questions"];
+                array_walk($result, function (&$item) {
+                    $item["options"] = array_fill_keys(array_keys($item["options"]), false);
+                });
+                return $result;
+            }, 3600);
+
+            if ($test["meta"]["state"] !== "in_progress") {
+                $result["status"] = "error";
+                $result["data"] = "test not started";
+                break;
+            }
+
+            $test["meta"]["currentTry"]++;
+            $test["meta"]["lastAttemptTime"] = time();
+            $test["meta"]["state"] = "idle";
+
+            write_to_cache($mockFilePath, $test, 3600);
+            write_to_cache($mockFilePath . "state" . $test["meta"]["currentTry"], $testState, 3600);
+
+            $result["status"] = "success";
+            $result["data"] = "test finished";
             break;
         }
 
@@ -652,16 +866,274 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $test = include($mockFilePath);
+            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                return include($mockFilePath);
+            }, 3600);
 
-            array_walk($test["questions"], function (&$item) {
-                $item["options"] = array_keys($item["options"]);
-            });
+            $testState = read_from_cache($mockFilePath . "state" . $test["meta"]["currentTry"], function () use ($test) {
+                $result = $test["questions"];
+                array_walk($result, function (&$item) {
+                    $item["options"] = array_fill_keys(array_keys($item["options"]), false);
+                });
+                return $result;
+            }, 3600);
+
+            if ($test["meta"]["state"] !== "idle") {
+                $result["status"] = "error";
+                $result["data"] = "test in progress";
+                break;
+            }
+
+            $review = [
+                "score" => 100,
+                "passed" => true,
+                "mistakes" => 0,
+                "structure" => []
+            ];
+
+            foreach (array_column($test["questions"], "options") as $questionId => $options) {
+                $questionResult = true;
+                foreach ($options as $question => $answer) {
+                    $sample = $testState[$questionId]["options"];
+                    if ($sample[$question] !== $answer) {
+                        $questionResult = false;
+                        break;
+                    }
+                }
+                $review["structure"][] = $questionResult;
+
+                if (!$questionResult) {
+                    $review["mistakes"]++;
+                    $review["score"] -= 100 / $test["meta"]["questionsCount"];
+                }
+            }
+
+            $review["score"] = max(0, min(100, intval($review["score"])));
+            $review["passed"] = $review["mistakes"] <= $test["meta"]["mistakesLimit"];
+
+            write_to_cache($mockFilePath, $test, 3600);
+            write_to_cache($mockFilePath . "state" . $test["meta"]["currentTry"], $testState, 3600);
 
             $result["status"] = "success";
-            $result["data"] = $test;
+            $result["data"] = $review;
             break;
         }
+
+        case "getUnreadMessages":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $coursesMockFilePath = dirname(__DIR__) . "/mockFiles/userCourses/user_" . $_SESSION["userId"] . ".php";
+            $userCourses = [];
+
+            if (!(file_exists($coursesMockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "can't fetch user subscriptions";
+            } else {
+                $userCourses = include($coursesMockFilePath);
+            }
+
+            $messageList = [];
+            foreach ($userCourses as $courseId => $userCourse) {
+                $modulesMockFilePath = dirname(__DIR__) . "/mockFiles/modules/module_mock_" . $_SESSION["userId"] . "_" . $userCourse["id"] . ".php";
+                $userCourseModules = [];
+                if (!(file_exists($modulesMockFilePath))) {
+                    $result["status"] = "error";
+                    $result["data"] = "can't fetch user subscriptions";
+                } else {
+                    $userCourseModules = include($modulesMockFilePath);
+                }
+
+                foreach ($userCourseModules as $moduleId => $userCourseModule) {
+                    //Проверка сроков
+                    $targetDate = $userCourseModule["deadline"];
+                    $today = date("Y-m-d");
+                    $targetDateTime = new DateTime($targetDate);
+                    $todayDateTime = new DateTime($today);
+                    $interval = $todayDateTime->diff($targetDateTime);
+                    $daysUntilTarget = (int)$interval->format("%r%a");
+                    if ($daysUntilTarget < 10) {
+                        $messageList[] = [
+                            "course" => $courseId,
+                            "module" => $moduleId,
+                            "type" => "deadline",
+                            "content" => $daysUntilTarget
+                        ];
+                    }
+
+                    //проверка комментариев
+                    $HomeworkFilePath = dirname(__DIR__) . "/mockFiles/homework/trees/homework_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+                    if (!(file_exists($HomeworkFilePath))) {
+                        $homework = [];
+                        break;
+                    }
+
+                    $homework = read_from_cache($HomeworkFilePath, function () use ($HomeworkFilePath) {
+                        $registeredUsers = read_from_cache("registeredUsers", function () {
+                            return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
+                        }, 3600);
+
+                        $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
+                        $homeworkData = include($HomeworkFilePath);
+                        foreach ($homeworkData["comments"] as &$comment) {
+                            $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
+                        }
+
+                        foreach ($homeworkData["submissions"] as $submission) {
+                            $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
+                            $fileContent = file_get_contents($HWFilePath);
+
+                            $file = [
+                                "name" => $submission["fileName"],
+                                "body" => $fileContent
+                            ];
+
+                            write_to_cache($HomeworkFilePath . $submission["hash"], $file, 3600);
+                        }
+
+                        return $homeworkData;
+                    }, 3600);
+
+                    foreach ($homework["comments"] as $comment) {
+                        if ($comment["unread"]) {
+                            $messageList[] = [
+                                "course" => $courseId,
+                                "module" => $moduleId,
+                                "type" => "comment",
+                                "content" => $comment["message"]
+                            ];
+                        }
+                    }
+                }
+            }
+
+            $messagesReadStatus = read_from_cache($_SESSION["userId"] . "messagesTracker", function () {
+                return [];
+            });
+
+            foreach ($messageList as $key => $message) {
+                $hash = md5(json_encode($message));
+                if (in_array($hash, $messagesReadStatus)) {
+                    unset($messageList[$key]);
+                } else {
+                    $messageList[$key]["hash"] = $hash;
+                }
+            }
+
+            $result["status"] = "success";
+            $result["data"] = $messageList;
+            break;
+        }
+
+        case "markMessageAsRead":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $messageHash = $data["messageHash"] ?? null;
+
+            if (is_null($messageHash)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown message";
+                break;
+            }
+
+            $messagesReadStatus = read_from_cache($_SESSION["userId"] . "messagesTracker", function () {
+                return [];
+            });
+
+            $messagesReadStatus[] = $messageHash;
+
+            write_to_cache($_SESSION["userId"] . "messagesTracker", $messagesReadStatus, 3600);
+
+            $result["status"] = "success";
+            $result["data"] = "message status updated";
+            break;
+        }
+
+        case "markCommentAsRead":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+            $commentId = $data["commentId"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            if (is_null($commentId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown comment";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/homework/trees/homework_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $homework = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                $registeredUsers = read_from_cache("registeredUsers", function () {
+                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
+                }, 3600);
+
+                $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
+                $homeworkData = include($mockFilePath);
+                foreach ($homeworkData["comments"] as &$comment) {
+                    $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
+                }
+
+                foreach ($homeworkData["submissions"] as $submission) {
+                    $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
+                    $fileContent = file_get_contents($HWFilePath);
+
+                    $file = [
+                        "name" => $submission["fileName"],
+                        "body" => $fileContent
+                    ];
+
+                    write_to_cache($mockFilePath . $submission["hash"], $file, 600);
+                }
+
+                return $homeworkData;
+            }, 600);
+
+            $homework["comments"][$commentId]["unread"] = false;
+
+            write_to_cache($mockFilePath, $homework, 3600);
+
+            $result["status"] = "success";
+            $result["data"] = "comment status updated";
+            break;
+        }
+
 
         default:
         {
