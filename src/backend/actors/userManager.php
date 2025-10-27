@@ -186,14 +186,72 @@ if ($_POST["action"] ?? false) {
 
             $mockFilePath = dirname(__DIR__) . "/mockFiles/profiles/user_" . $_SESSION["userId"] . "_profile.php";
 
+            $profile = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                return include $mockFilePath;
+            }, 3600);
+
             if (!(file_exists($mockFilePath))) {
                 $result["status"] = "error";
-                $result["data"] = "unknown courseId";
+                $result["data"] = "profile not found";
                 break;
             }
 
             $result["status"] = "success";
-            $result["data"] = include $mockFilePath;
+            $result["data"] = $profile;
+
+            break;
+        }
+
+        case "saveProfileData":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $newProfile = $data["newProfile"] ?? null;
+
+            if (is_null($newProfile)) {
+                $result["status"] = "error";
+                $result["data"] = "invalid profile data";
+                break;
+            }
+
+            $newProfile = json_decode($newProfile, true);
+            error_log(var_export($newProfile, true));
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/profiles/user_" . $_SESSION["userId"] . "_profile.php";
+
+            $profile = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                return include $mockFilePath;
+            }, 3600);
+
+            $updateProfileTree = function (&$profileTreeNode, &$newProfileNode) use (&$updateProfileTree) {
+                foreach ($profileTreeNode as $key => &$node) {
+                    if (isset($newProfileNode[$key])) {
+                        if (is_array($node)) {
+                            $updateProfileTree($node, $newProfileNode[$key]);
+                        } else {
+                            $profileTreeNode[$key] = $newProfileNode[$key];
+                        }
+                    }
+                }
+            };
+
+            $updateProfileTree($profile, $newProfile);
+
+            write_to_cache($mockFilePath, $profile, 3600);
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "profile not found";
+                break;
+            }
+
+            $result["status"] = "success";
+            $result["data"] = "profile updated";
 
             break;
         }

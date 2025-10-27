@@ -250,44 +250,64 @@ let sd4 = ref(null);
 // courses.availableCourses[1].details.value.modules.then(console.log);
 
 
-// courses.availableCourses
-//     .then(r => r[0])
-//     .then(r => r.details)
-//     .then(r => sd1.value = r);
-//
-// courses.availableCourses[0].details.value.then(r => sd2.value = r);
-//
-//
-// setTimeout(() => {
-//   courses.availableCourses[0].details.then(r => sd3.value = r);
-// }, 1000);
-//
-// setTimeout(() => {
-//   courses.availableCourses
-//       .then(r => r[0])
-//       .then(r => r.details)
-//       .then(r => sd4.value = r);
-// }, 2000);
+courses.availableCourses
+    .then(r => r[0])
+    .then(r => r.details)
+    .then(r => sd1.value = r);
 
+courses.availableCourses[0].details.value.then(r => sd2.value = r);
+
+
+setTimeout(() => {
+  courses.availableCourses[0].details.then(r => sd3.value = r);
+}, 1000);
+
+setTimeout(() => {
+  courses.availableCourses
+      .then(r => r[0])
+      .then(r => r.details)
+      .then(r => sd4.value = r);
+}, 2000);
+
+function updateProfile() {
+  user.session.profile.updateWith({
+        "firstName": "Денис",
+        "lastName": "Калинин",
+        "birthDate": "1990-07-30",
+        "gender": "male",
+        "phone": "+71234567890",
+        "email": "ansar@example.com",
+        "mailingSettings": {
+          "digest": false,
+          "eventsAgenda": false,
+          "educationalMaterials": false,
+          "submissionDeadlines": false
+        }
+      }
+  );
+  console.log(user.session);
+}
 </script>
 
 <template>
   <main>
-    <!--        <pre>-->
-    <!--          <button @click="user.sessionTools.tryToLogIn('ansar', '123')">ТЫЦ</button>-->
-    <!--          <button @click="user.sessionTools.tryToLogOut()">антЫЦ</button>-->
-    <!--          {{ user.session }}-->
-    <!--          1-->
-    <!--          {{ sd1 }}-->
-    <!--          2-->
-    <!--          {{ sd2 }}-->
-    <!--          3-->
-    <!--          {{ sd3 }}-->
-    <!--          4-->
-    <!--          {{ sd4 }}-->
-    <!--                    auto-->
-    <!--                    {{ courses?.availableCourses[0] }}-->
-    <!--        </pre>-->
+    <!--    <pre>-->
+    <!--&lt;!&ndash;    <button @click="user.sessionTools.tryToLogIn('ansar', '123')">ВХОД</button>&ndash;&gt;-->
+    <!--      &lt;!&ndash;    <button @click="user.sessionTools.tryToLogOut()">ВЫХОД</button>&ndash;&gt;-->
+    <!--      &lt;!&ndash;    {{ user.session.profile }}&ndash;&gt;-->
+    <!--      &lt;!&ndash;    <button @click="updateProfile">ОБНОВИТЬ ПРОФИЛЬ</button>&ndash;&gt;-->
+
+    <!--                1-->
+    <!--                {{ sd1 }}-->
+    <!--                2-->
+    <!--                {{ sd2 }}-->
+    <!--                3-->
+    <!--                {{ sd3 }}-->
+    <!--                4-->
+    <!--                {{ sd4 }}-->
+    <!--                auto-->
+    <!--                {{ courses?.availableCourses[0].details }}-->
+    <!--    </pre>-->
 
     <h1>Дэшборд для теста API-хэндлов</h1>
     <h2>Используемый сервер: {{ serverURL }}</h2>

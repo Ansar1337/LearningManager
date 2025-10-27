@@ -62,6 +62,9 @@ export class Payload {
 
         for (let key in rawData) {
             if (rawData.hasOwnProperty(key)) {
+                if (typeof rawData[key] === "object") {
+                    rawData[key] = JSON.stringify(rawData[key]);
+                }
                 packet.append(key, rawData[key]);
             }
         }

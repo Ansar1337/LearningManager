@@ -122,7 +122,16 @@ if ($_POST["action"] ?? false) {
                 return $result;
             };
 
+            error_log(var_export($_COOKIE, true));
+            error_log("***********************************");
+            error_log(var_export($moduleTree, true));
+
             $treeWalker($moduleTree);
+            error_log("$---------------------------------$");
+
+            error_log(var_export($moduleTree, true));
+            error_log("***********************************");
+
             $result["status"] = "success";
             $result["data"] = $moduleTree;
 
@@ -215,6 +224,7 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
+            $status = ($status === "true");
             $mockFilePath = dirname(__DIR__) . "/mockFiles/materials/trees/article_tree_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
 
             if (!(file_exists($mockFilePath))) {

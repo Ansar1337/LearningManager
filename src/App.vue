@@ -27,10 +27,16 @@ import Footer from "@/components/Footer.vue";
   flex-direction: column;
   gap: 40px;
   align-items: center;
-  box-sizing: content-box;
 }
 
 .main, .main-content > * {
   width: 100%;
 }
+
+@media only screen and (max-width: 758px) {
+  .main-content {
+    box-sizing: content-box;
+  }
+}
+
 </style>

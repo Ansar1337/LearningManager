@@ -24,7 +24,6 @@
    ```
    npm run build
    ```
-5. The frontend application will work over the remote backend server at `https://rtlm.tableer.com`.
 
    API reference can be found [here](./src/backend/help.md).
    API test dashboard can be found at `/api` page of the project.
@@ -113,6 +112,6 @@ This repo also includes a backend part, so it's possible to launch it locally:
             4. [ ] Tests + status
                 1. [ ] Get questions
                 2. [ ] Check Questions
-    3. [ ] Profile data
-        1. [ ] Feed data
-        2. [ ] Update data
+    3. [x] Profile data
+        1. [x] Feed data
+        2. [x] Update data

@@ -66,6 +66,10 @@ function getWrappedObject(cleanValue, namespace) {
                 return getWrappedValue(promise, namespace);
             }
 
+            if (target[prop]) {
+                return target[prop];
+            }
+
             return Reflect.get(target, prop, receiver);
         }
     });

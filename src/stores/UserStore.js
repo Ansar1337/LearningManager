@@ -7,13 +7,22 @@ export const useUserStore = defineStore('user', () => {
     const updateRate = 60000;
 
     async function loadUserProfile() {
-        return await doRequest("userManager", "loadProfileData");
+        const response = await doRequest("userManager", "loadProfileData");
+        if (response.status === "success") {
+            response.data.updateWith = async function (newProfile) {
+                const response = await doRequest("userManager", "saveProfileData", {newProfile});
+                if (response.status === "success") {
+                    session.__refresh();
+                }
+            }
+        }
+
+        return response;
     }
 
     const sessionTools = {
         async loadSessionState() {
-            const sessionData = await doRequest("userManager", "getSession",);
-
+            const sessionData = await doRequest("userManager", "getSession");
             if (sessionData.status === "success") {
                 sessionData.data.profile = getComputableNode(
                     updateRate,
