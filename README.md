@@ -25,9 +25,6 @@
    npm run build
    ```
 
-   API reference can be found [here](./src/backend/help.md).
-   API test dashboard can be found at `/api` page of the project.
-
 ### How to run the Backend
 
 This repo also includes a backend part, so it's possible to launch it locally:
@@ -92,14 +89,14 @@ This repo also includes a backend part, so it's possible to launch it locally:
         2. [x] Register login in system
     3. [x] Log in
     4. [x] Log out
-2. [ ] Courses management
+2. [x] Courses management
     1. [x] Fetch available courses data
         1. [x] Metadata only (name, icon, short description)
         2. [x] Full description
-    2. [ ] Fetch User's courses
-        1. [ ] Unread messages
+    2. [x] Fetch User's courses
+        1. [x] Unread messages (BACKEND ONLY YET)
         2. [x] Metadata only
-        3. [ ] Modules by courseId
+        3. [x] Modules by courseId
             1. [x] Metadata (timings, performance etc)
             2. [X] Materials + status
                 1. [X] Article groups
@@ -109,9 +106,10 @@ This repo also includes a backend part, so it's possible to launch it locally:
                 2. [x] File upload
                 3. [x] Status
                 4. [x] Comments
-            4. [ ] Tests + status
-                1. [x] Get questions
-                2. [ ] Check Questions
+            4. [x] Tests + status (BACKEND ONLY YET)
+                1. [x] Get questions (BACKEND ONLY YET)
+                2. [x] Track questions (BACKEND ONLY YET)
+                3. [x] Check Questions (BACKEND ONLY YET)
     3. [x] Profile data
         1. [x] Feed data
         2. [x] Update data
