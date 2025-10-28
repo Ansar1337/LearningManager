@@ -3,7 +3,7 @@
 return [
     "dateStart" => "2024-02-01",
     "dateEnd" => "2024-10-01",
-    "timeEstimation" => 40 * 144000000,
+    "timeEstimation" => 40 * 3600000,
     "modules" => [
         "Введение в Kotlin",
         "Работа с Android Studio",

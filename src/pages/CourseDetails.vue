@@ -111,28 +111,28 @@ coursesStore.userCourses
 
 .module-card-tasks {
   font-size: 20px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 24px;
   letter-spacing: 0;
 }
 
 .module-card-details {
   font-size: 20px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 24px;
   letter-spacing: 0;
 }
 
 .module-card-estimate {
   font-size: 22px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 27px;
   letter-spacing: 0;
 }
 
 .module-card-time {
   font-size: 22px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 27px;
   letter-spacing: 0;
 }
@@ -148,7 +148,7 @@ coursesStore.userCourses
 .arrow-forward {
   width: 34px;
   height: 15px;
-  background-image: url("@/assets/arrow-forward.png");
+  background-image: url("../assets/images/arrow-forward.png");
   background-repeat: no-repeat;
   background-size: 100%;
   display: inline-block;
@@ -173,7 +173,7 @@ coursesStore.userCourses
   flex-wrap: wrap;
   gap: 5px;
   font-size: 24px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 29px;
   letter-spacing: 0;
 }
@@ -248,7 +248,7 @@ coursesStore.userCourses
   flex-wrap: wrap;
   gap: 5px;
   font-size: min(24px, 3vw);
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 29px;
   letter-spacing: 0;
 }

@@ -104,7 +104,7 @@ function register() {
     else if (result.data === "login not reserved")
       data.registerError = "Попытка регистрации незарезервированного логина";
     else if (result.data === "already logged in")
-      data.registerError = "Попытка регистрации после входа в систему";
+      data.registerError = "тка регистрации после входа в систему";
     else {
       data.registerError = "Возникла непредвиденная ошибка, попробуйте зайти позже";
       console.log("error", result.data);
@@ -204,7 +204,7 @@ function registrationComplete() {
             <div class="form-fields">
               <div class="title-big mb-5 title-success">
                 <div>
-                  <img src="@/assets/tick.png" alt="tick" class="tick-image">
+                  <img src="../../assets/images/tick.png" alt="tick" class="tick-image">
                 </div>
                 <div>
                   <span class="ml-5">Теперь вы готовы учиться</span>
@@ -225,13 +225,13 @@ function registrationComplete() {
 <style scoped>
 .title-big {
   font-size: 22px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 27px;
 }
 
 .title-small {
   font-size: 16px;
-  font-weight: 500;
+ /* font-weight: 500;*/
   line-height: 20px;
 }
 
@@ -242,7 +242,7 @@ function registrationComplete() {
 
 .label {
   font-size: 14px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 17px;
 }
 
@@ -252,14 +252,14 @@ function registrationComplete() {
   height: 30px;
   padding: 2px 10px 2px 10px;
   font-size: 16px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 20px;
 
 }
 
 .password-reset {
   font-size: 14px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 17px;
 }
 

@@ -80,7 +80,7 @@ const showLoginDialog = ref(false);
   min-width: 0;
   width: 46px;
   height: 37px;
-  background-image: url("@/assets/btn-bell.png");
+  background-image: url("@/assets/images/btn-bell.png");
   background-repeat: no-repeat;
   background-size: 100%;
 }

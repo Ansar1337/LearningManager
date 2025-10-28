@@ -1,0 +1,15 @@
+@font-face {
+    font-family: "Monserrat custom";
+    src: url("./../fonts/Montserrat-VariableFont_wght.ttf");
+}
+
+body {
+    background: #FFFFFF;
+    font-family: "Monserrat custom";
+    color: rgb(50, 50, 50) !important;
+}
+
+.main {
+    padding: 0 !important;
+    margin: 0 !important;
+}

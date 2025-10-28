@@ -5,6 +5,8 @@ import Feedback from "@/components/Feedback.vue";
 import {formatDate, formatEstimate} from "@/helpers/Formatters.js";
 import {ref} from "vue";
 
+const assetsUrl = new URL('@/assets', import.meta.url).href;
+
 const route = useRoute();
 const coursesStore = useCoursesStore();
 
@@ -110,7 +112,7 @@ coursesStore.availableCourses.then(r => {
 .arrow-backward {
   width: 34px;
   height: 15px;
-  background-image: url("@/assets/arrow-backward.png");
+  background-image: url("../assets/images/arrow-backward.png");
   background-repeat: no-repeat;
   background-size: 100%;
   display: inline-block;
@@ -124,8 +126,8 @@ coursesStore.availableCourses.then(r => {
 
 .description {
   font-size: 20px;
-  font-weight: 500;
-  line-height: 27px;
+  /*font-weight: 500;
+  line-height: 27px;*/
 }
 
 .modules-title {
@@ -136,12 +138,15 @@ coursesStore.availableCourses.then(r => {
 
 .modules {
   font-size: 20px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 20px;
 }
 
 .modules ol {
   list-style-position: inside;
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
 }
 
 .modules ol li span {
@@ -149,9 +154,9 @@ coursesStore.availableCourses.then(r => {
 }
 
 .course-card-content {
-  min-height: 180px;
+  /*min-height: 180px;
   max-width: 400px;
-  min-width: 300px;
+  min-width: 300px;*/
 }
 
 .card-title {
@@ -162,17 +167,20 @@ coursesStore.availableCourses.then(r => {
 
 .card-content {
   padding-left: 25px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
 }
 
 .card-schedule {
   font-size: 16px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 20px;
 }
 
 .card-time {
   font-size: 16px;
-  font-weight: 500;
+  /* font-weight: 500;*/
   line-height: 20px;
 }
 
@@ -188,7 +196,7 @@ coursesStore.availableCourses.then(r => {
   display: inline-block;
   width: 18px;
   height: 18px;
-  background-image: url("@/assets/time.png");
+  background-image: url("../assets/images/time.png");
   background-repeat: no-repeat;
   background-size: 100%;
 }

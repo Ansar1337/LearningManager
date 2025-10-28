@@ -93,7 +93,7 @@ footer .sections {
 .footer-title-small {
   min-height: 20px;
   font-size: 16px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 20px;
   color: #BDBDBD;
   margin-bottom: 10px;
@@ -101,7 +101,7 @@ footer .sections {
 
 .footer-contact {
   font-size: 20px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 24px;
 }
 </style>

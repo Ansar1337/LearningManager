@@ -1,4 +1,4 @@
-import './assets/main.css'
+import './assets/styles/main.css'
 import 'vuetify/styles'
 
 import {createApp} from 'vue'

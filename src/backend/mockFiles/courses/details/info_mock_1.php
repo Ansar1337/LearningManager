@@ -3,7 +3,7 @@
 return [
     "dateStart" => "2024-01-09",
     "dateEnd" => "2024-09-09",
-    "timeEstimation" => 35 * 144000000,
+    "timeEstimation" => 35 * 3600000,
     "modules" => [
         "Регистрация в мессенджере Discord",
         "Английский для программистов",

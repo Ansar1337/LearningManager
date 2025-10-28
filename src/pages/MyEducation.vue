@@ -40,7 +40,7 @@ function getCompleteness(id) {
 
               <div class="logo-holder">
                 <!-- TODO: нет больших картинок для языков -->
-                <img src="@/assets/java-big-logo.png" alt="language logo" class="card-image">
+                <img src="../assets/images/java-big-logo.png" alt="language logo" class="card-image">
               </div>
 
               <div class="card-content-info">
@@ -126,7 +126,7 @@ function getCompleteness(id) {
   flex-wrap: wrap;
   gap: 5px;
   font-size: min(24px, 3vw);
-  font-weight: 500;
+ /* font-weight: 500;*/
   line-height: 29px;
   letter-spacing: 0;
 }

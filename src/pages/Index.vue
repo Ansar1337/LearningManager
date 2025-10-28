@@ -26,7 +26,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
         <p>развитие в IT</p>
       </div>
       <section class="logo-image">
-        <img src="@/assets/laptop-logo.png" alt="logo image">
+        <img src="../assets/images/laptop-logo.png" alt="logo image">
         <div class="large-circle"></div>
         <div class="small-circle"></div>
         <IconCircleLogo class="icon-circle"/>
@@ -44,7 +44,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
           <v-card :key="course.id" elevation="4"
                   class="card">
             <v-card-title class="card-title mt-3">
-              <img :src="`${assetsUrl}/${course.icon || 'java-logo.png'}`"
+              <img :src="`${assetsUrl}/images/${course.icon || 'java-logo.png'}`"
                    alt="language logotype"
                    class="card-title-image">
               {{ course.title }}
@@ -122,7 +122,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
   height: 158px;
   background-repeat: no-repeat;
   background-size: 100%;
-  background-image: url("@/assets/card-icon-1.png");
+  background-image: url("../assets/images/card-icon-1.png");
 }
 
 .back-holder.checkbox-icon {
@@ -133,7 +133,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
   height: 164px;
   background-repeat: no-repeat;
   background-size: 100%;
-  background-image: url("@/assets/card-icon-2.png");
+  background-image: url("../assets/images/card-icon-2.png");
 }
 
 .back-holder.socials-icon {
@@ -141,7 +141,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
   height: 164px;
   background-repeat: no-repeat;
   background-size: 100%;
-  background-image: url("@/assets/card-icon-3.png");
+  background-image: url("../assets/images/card-icon-3.png");
 }
 
 .back-holder.calendar-icon {
@@ -152,7 +152,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
   height: 160px;
   background-repeat: no-repeat;
   background-size: 100%;
-  background-image: url("@/assets/card-icon-4.png");
+  background-image: url("../assets/images/card-icon-4.png");
 }
 
 /* logo */
@@ -256,13 +256,13 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 
 .card-text {
   font-size: 16px;
-  font-weight: 500;
+  /* font-weight: 500;*/
   line-height: 20px;
 }
 
 .card-text-arrow {
   font-style: normal;
-  font-weight: 500;
+  /*font-weight: 500;*/
   font-size: 34px;
   margin: 0 auto auto;
 }
@@ -315,7 +315,6 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 
 .content-about-regular {
   font-size: 20px;
-  font-weight: 500;
   line-height: 24px;
 }
 
