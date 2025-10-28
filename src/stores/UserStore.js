@@ -5,6 +5,7 @@ import {getComputableNode} from "@/helpers/SmartCompute.js";
 
 export const useUserStore = defineStore('user', () => {
     const updateRate = 60000;
+    let callOnChange = [];
 
     async function loadUserProfile() {
         const response = await doRequest("userManager", "loadProfileData");
@@ -21,6 +22,10 @@ export const useUserStore = defineStore('user', () => {
     }
 
     const sessionTools = {
+        addChangingListener(callable) {
+            callOnChange.push(callable);
+        },
+
         async loadSessionState() {
             const sessionData = await doRequest("userManager", "getSession");
             if (sessionData.status === "success") {
@@ -28,6 +33,10 @@ export const useUserStore = defineStore('user', () => {
                     updateRate,
                     loadUserProfile
                 );
+
+                callOnChange.forEach((listener) => {
+                    listener();
+                })
             }
 
             return sessionData;

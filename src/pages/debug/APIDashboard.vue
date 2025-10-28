@@ -219,6 +219,20 @@ const tests = [
 
   {
     actor: "coursesManager",
+    action: "markCommentAsRead",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+      {name: "ID комментария", type: "number", value: ""},
+    ],
+    description: "Отметка, что комментарий прочитан",
+    run(courseId, moduleId, commentId) {
+      return doRequest.call(this, this.actor, this.action, {courseId, moduleId, commentId});
+    }
+  },
+
+  {
+    actor: "coursesManager",
     action: "markMessageAsRead",
     payloadTemplate: [
       {name: "Хэш сообщения", type: "text", value: ""},
@@ -293,6 +307,21 @@ const tests = [
 
   {
     actor: "coursesManager",
+    action: "getUserCourseModuleTestQuestions",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+    ],
+    description: "Старт теста",
+    run(courseId, moduleId) {
+      return doRequest(this.actor, this.action, {
+        courseId, moduleId
+      });
+    }
+  },
+
+  {
+    actor: "coursesManager",
     action: "updateUserCourseModuleTest",
     payloadTemplate: [
       {name: "ID курса (0-3)", type: "number", value: "0"},
@@ -347,30 +376,36 @@ const tests = [
       return doRequest.call(this, this.actor, this.action);
     }
   },
-
-  {
-    actor: "coursesManager",
-    action: "markCommentAsRead",
-    payloadTemplate: [
-      {name: "ID курса (0-3)", type: "number", value: "0"},
-      {name: "ID модуля (0-3)", type: "number", value: "0"},
-      {name: "ID комментария", type: "number", value: ""},
-    ],
-    description: "Отметка, что комментарий прочитан",
-    run(courseId, moduleId, commentId) {
-      return doRequest.call(this, this.actor, this.action, {courseId, moduleId, commentId});
-    }
-  },
 ];
 
+window.TTT = true;
 const user = useUserStore();
 const courses = useCoursesStore();
+const ready = ref(false);
+
+function updateQuestion() {
+  courses.userCourses[0].modules[0].resources.test.questions[1].options["Травку жевал"] = true;
+}
 </script>
 
 <template>
   <main>
+    <!--        <pre>-->
+    <!--          <button @click="courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.tools?.launch()">ЗАПУСК</button>-->
+    <!--          <button @click="updateQuestion">ОТВЕТ</button>-->
+    <!--          <button @click="courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.tools?.finish()">ФИНИШ</button>-->
+    <!--          {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.test }}-->
+    <!--          {{ user.session }}-->
+    <!--          <hr>-->
+    <!--           <button @click="courses.unreadMessages[0].watched = true">ПРОЧИТАТЬ СООБЩЕНИЕ</button>-->
+    <!--        {{ courses.unreadMessages }}-->
+    <!--                <hr>-->
+    <!--           <button @click="courses.userCourses[0].modules[0].resources.homework.comments[3].unread = false">ПРОЧИТАТЬ КОММЕНТАРИЙ</button>-->
+    <!--        {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.homework}}-->
+    <!--        </pre>-->
     <h1>Дэшборд для теста API-хэндлов</h1>
     <h2>Используемый сервер: {{ serverURL }}</h2>
+
 
     <TestForm v-for="(test, index) in tests" :key="index"
               :index="index"

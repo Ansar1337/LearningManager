@@ -1,6 +1,14 @@
 <script setup>
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
+import {useUserStore} from "@/stores/UserStore.js";
+import {useCoursesStore} from "@/stores/CoursesStore.js";
+
+const userStore = useUserStore();
+const coursesStore = useCoursesStore();
+
+userStore.sessionTools.addChangingListener(coursesStore.update);
+
 </script>
 
 <template>

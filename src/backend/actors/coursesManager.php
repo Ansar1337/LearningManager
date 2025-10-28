@@ -655,14 +655,6 @@ if ($_POST["action"] ?? false) {
                 return include($mockFilePath);
             }, 3600);
 
-            $testState = read_from_cache($mockFilePath . "state" . $test["meta"]["currentTry"], function () use ($test) {
-                $result = $test["questions"];
-                array_walk($result, function (&$item) {
-                    $item["options"] = array_fill_keys(array_keys($item["options"]), false);
-                });
-                return $result;
-            }, 3600);
-
             $dayLimit = 30;
             $reset = ($test["meta"]["lastAttemptTime"] <= (time() - ($dayLimit * 24 * 60 * 60)));
             if (($test["meta"]["currentTry"] > $test["meta"]["triesLimit"]) && (!$reset)) {
@@ -677,6 +669,63 @@ if ($_POST["action"] ?? false) {
             }
 
             $test["meta"]["state"] = "in_progress";
+
+            write_to_cache($mockFilePath, $test, 3600);
+
+            $result["status"] = "success";
+            $result["data"] = "test launched";
+            break;
+        }
+
+        case "getUserCourseModuleTestQuestions":
+        {
+            if (!$_SESSION["loggedIn"]) {
+                $result["status"] = "error";
+                $result["data"] = "not logged in";
+                break;
+            }
+
+            $data = $_POST["data"] ?? [];
+            $courseId = $data["courseId"] ?? null;
+            $moduleId = $data["moduleId"] ?? null;
+
+            if (is_null($courseId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown course";
+                break;
+            }
+
+            if (is_null($moduleId)) {
+                $result["status"] = "error";
+                $result["data"] = "unknown module";
+                break;
+            }
+
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+
+            if (!(file_exists($mockFilePath))) {
+                $result["status"] = "error";
+                $result["data"] = "test not found";
+                break;
+            }
+
+            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+                return include($mockFilePath);
+            }, 3600);
+
+            $testState = read_from_cache($mockFilePath . "state" . $test["meta"]["currentTry"], function () use ($test) {
+                $result = $test["questions"];
+                array_walk($result, function (&$item) {
+                    $item["options"] = array_fill_keys(array_keys($item["options"]), false);
+                });
+                return $result;
+            }, 3600);
+
+            if ($test["meta"]["state"] !== "in_progress") {
+                $result["status"] = "error";
+                $result["data"] = "test not started";
+                break;
+            }
 
             write_to_cache($mockFilePath, $test, 3600);
             write_to_cache($mockFilePath . "state" . $test["meta"]["currentTry"], $testState, 3600);
@@ -762,7 +811,7 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $test["meta"]["lastQuestion"] = $questionId;
+            $test["meta"]["lastQuestion"] = intval($questionId);
 
             write_to_cache($mockFilePath, $test, 3600);
             write_to_cache($mockFilePath . "state" . $test["meta"]["currentTry"], $testState, 3600);
@@ -883,6 +932,12 @@ if ($_POST["action"] ?? false) {
                 $result["data"] = "test in progress";
                 break;
             }
+
+//            if ($test["currentTry"] === 1) {
+//                $result["status"] = "error";
+//                $result["data"] = "test in progress";
+//                break;
+//            }
 
             $review = [
                 "score" => 100,
@@ -1026,7 +1081,7 @@ if ($_POST["action"] ?? false) {
             }
 
             $result["status"] = "success";
-            $result["data"] = $messageList;
+            $result["data"] = array_values($messageList);
             break;
         }
 

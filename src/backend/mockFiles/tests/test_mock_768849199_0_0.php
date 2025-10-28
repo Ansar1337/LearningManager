@@ -93,7 +93,8 @@ $test = [
                 "Ладно" => true //варианты ответов и флаг, правильный ли ответ, но он не передается на клиент
             ]
         ]
-    ]
+    ],
+    "review" => []
 ];
 
 $test["meta"]["questionsCount"] = sizeof($test["questions"]);

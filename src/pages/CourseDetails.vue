@@ -267,6 +267,7 @@ coursesStore.userCourses
 
 .timeline > * {
   position: relative;
+  z-index: auto;
 }
 
 .timeline > *::before {

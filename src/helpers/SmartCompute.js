@@ -1,5 +1,5 @@
 "use strict";
-import {computed, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 
 function getWrappedPrimitive(cleanValue) {
     let placeholder = {
@@ -30,7 +30,8 @@ function getWrappedPrimitive(cleanValue) {
     });
 }
 
-function getWrappedObject(cleanValue, namespace) {
+function getWrappedObject(cleanValue, namespace, refreshWith = () => {
+}) {
     let resolvedData = undefined;
     let promise = {};
     let promises = {};
@@ -42,6 +43,11 @@ function getWrappedObject(cleanValue, namespace) {
             if (prop === '__v_isRef') {
                 return target?.__v_isRef;
             }
+
+            if (prop === '__refresh') {
+                return target[prop] ?? refreshWith;
+            }
+
 
             if (prop === 'then') {
                 return (onFulfilled, onRejected) => {
@@ -75,7 +81,8 @@ function getWrappedObject(cleanValue, namespace) {
     });
 }
 
-function getWrappedValue(cleanValue, namespace = "") {
+function getWrappedValue(cleanValue, namespace = "", refreshWith = () => {
+}) {
     if (typeof cleanValue === "object") {
         return getWrappedObject(cleanValue);
     } else {
@@ -84,7 +91,7 @@ function getWrappedValue(cleanValue, namespace = "") {
 }
 
 export function getComputableNode(updateRate, populateWithFunc, ...populateWithArgs) {
-    const realStorage = ref({
+    const realStorage = reactive({
         data: getWrappedValue(undefined),
         promiseData: Promise.resolve(),
         deferredValue: null,
@@ -95,25 +102,26 @@ export function getComputableNode(updateRate, populateWithFunc, ...populateWithA
         throw new Error("populateWithFunc should be a function!");
     }
     const fullFiller = (refresh = false) => {
-        if ((refresh) || ((realStorage.value.lastUpdate - Date.now()) > updateRate)) {
+        if ((refresh) || ((realStorage.lastUpdate - Date.now()) > updateRate)) {
             const pendingData = populateWithFunc.apply(this, populateWithArgs.concat(realStorage)).then(
                 infoResponse => {
                     if (infoResponse.status === "success") {
-                        realStorage.value.data = getWrappedValue(infoResponse.data); //implement soft merging, not replacing
-                        realStorage.value.lastUpdate = Date.now();
+                        realStorage.data = getWrappedValue(infoResponse.data, undefined, fullFiller.bind(this, true)); //implement soft merging, not replacing
                     } else {
+                        realStorage.data = getWrappedValue(infoResponse, undefined, fullFiller.bind(this, true)); //implement soft merging, not replacing
                         console.log(`${populateWithFunc.name} called with ${populateWithArgs.join("|")} got error: <${infoResponse.data}>`);
                     }
-                    return realStorage.value.data;
+                    realStorage.lastUpdate = Date.now();
+                    return realStorage.data;
                 }
             );
 
             if (!refresh) {
-                realStorage.value.data = pendingData;
+                realStorage.data = pendingData;
             }
         }
 
-        return getWrappedValue(realStorage.value.data);
+        return getWrappedValue(realStorage.data, undefined, fullFiller.bind(this, true));
     }
 
     const result = computed(() => fullFiller());

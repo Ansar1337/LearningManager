@@ -8,6 +8,7 @@ export const useCoursesStore = defineStore('courses', () => {
     // let eagerMode = ref(false);
     let updateRate = 60000;
 
+
     async function loadAvailableCourses() {
         const coursesResponse = await doRequest("coursesManager", "getAvailableCourses");
         if (coursesResponse.status === "success") {
@@ -130,20 +131,32 @@ export const useCoursesStore = defineStore('courses', () => {
         });
     }
 
+    async function markCommentAsRead(courseId, moduleId, commentId) {
+        return await doRequest("coursesManager", "markCommentAsRead", {courseId, moduleId, commentId});
+    }
+
     async function loadUserCourseModuleHomework(courseId, moduleId, storage) {
         const response = await doRequest("coursesManager", "getUserCourseModuleHomework", {
             courseId, moduleId
         });
 
         if (response.status === "success") {
+
+            response.data.comments.forEach((item) => {
+                item.unread = ref(item.unread);
+                watch(item.unread, () => {
+                    markCommentAsRead(courseId, moduleId, item.id);
+                })
+            });
+
             response.data.tools = {
                 addComment(message) {
                     doRequest("coursesManager", "addHomeworkComment", {
                         courseId, moduleId, message
                     }).then(res => {
                         if (res.status === "success") {
-                            storage.value.data.comments = storage.value.data.comments ?? [];
-                            storage.value.data.comments.push(res.data);
+                            storage.data.comments = storage.data.comments ?? [];
+                            storage.data.comments.push(res.data);
                         }
                     });
                 },
@@ -153,8 +166,8 @@ export const useCoursesStore = defineStore('courses', () => {
                         courseId, moduleId, file
                     }).then(res => {
                         if (res.status === "success") {
-                            storage.value.data.submissions = storage.value.data.submissions ?? [];
-                            storage.value.data.submissions.push(res.data);
+                            storage.data.submissions = storage.data.submissions ?? [];
+                            storage.data.submissions.push(res.data);
                         }
                     });
                 },
@@ -170,24 +183,35 @@ export const useCoursesStore = defineStore('courses', () => {
         return response;
     }
 
+    async function launchUserCourseModuleTest(courseId, moduleId) {
+        return await doRequest("coursesManager", "launchUserCourseModuleTest", {
+            courseId, moduleId
+        });
+    }
 
-    async function loadUserCourseModuleTest(courseId, moduleId, storage) {
-        const response = await doRequest("coursesManager", "getUserCourseModuleTest", {
+
+    async function getUserCourseModuleTestQuestions(courseId, moduleId, updateMetaData) {
+        const response = await doRequest("coursesManager", "getUserCourseModuleTestQuestions", {
             courseId, moduleId
         });
 
         if (response.status === "success") {
-            response.data.tools = {
-                //start
-                //cancel
-                //end
-            };
-
             response.data.questions = response.data.questions ?? [];
-            response.data.questions = reactive(response.data.questions);
+            response.data.questions = reactive(response.data);
             response.data.questions.forEach((item, index) => {
                 watch(item.options, (status) => {
-
+                    let watcher;
+                    const checker = async () => {
+                        const updateResponse = await updateUserCourseModuleTest(
+                            courseId, moduleId, index, status
+                        );
+                        if (updateResponse.status === "success") {
+                            clearInterval(watcher);
+                            updateMetaData();
+                        }
+                    }
+                    watcher = setInterval(checker, 5000);
+                    checker();
                 });
             });
         }
@@ -195,18 +219,127 @@ export const useCoursesStore = defineStore('courses', () => {
         return response;
     }
 
-    const availableCourses = getComputableNode(
+    async function updateUserCourseModuleTest(courseId, moduleId, questionId, answers) {
+        return await doRequest("coursesManager", "updateUserCourseModuleTest", {
+            courseId, moduleId, questionId, answers
+        });
+    }
+
+    async function finishUserCourseModuleTest(courseId, moduleId) {
+        return await doRequest("coursesManager", "finishUserCourseModuleTest", {
+            courseId, moduleId
+        });
+    }
+
+    async function reviewUserCourseModuleTest(courseId, moduleId) {
+        return await doRequest("coursesManager", "reviewUserCourseModuleTest", {
+            courseId, moduleId
+        });
+    }
+
+    async function loadUserCourseModuleTestMetaOnly(courseId, moduleId) {
+        return await doRequest("coursesManager", "getUserCourseModuleTest", {
+            courseId, moduleId
+        });
+    }
+
+
+    async function loadUserCourseModuleTest(courseId, moduleId, origStorage, metaOnly = false) {
+        const response = await loadUserCourseModuleTestMetaOnly(courseId, moduleId);
+
+        if (response.status === "success") {
+            if (metaOnly) {
+                return response.data;
+            }
+
+            response.data.tools = {
+                async updateMeta() {
+                    const newMeta = await loadUserCourseModuleTestMetaOnly(courseId, moduleId);
+                    Object.assign(response.data, newMeta.data);
+                    response.data.questions.__refresh();
+                },
+
+                async launch() {
+                    const launchResponse = await launchUserCourseModuleTest(courseId, moduleId)
+                    if (launchResponse.status === "success") {
+                        response.data.state = "in_progress";
+                        response.data.questions.__refresh();
+                    }
+                },
+
+                async finish() {
+                    const finishResponse = await finishUserCourseModuleTest(courseId, moduleId)
+                    if (finishResponse.status === "success") {
+                        response.data.state = "idle";
+                        response.data.lastAttemptTime = Math.floor(Date.now() / 1000);
+                        response.data.currentTry++;
+                        response.data.questions.__refresh();
+                        response.data.review.__refresh();
+
+                    }
+                },
+            };
+
+            response.data.questions = getComputableNode(
+                updateRate,
+                getUserCourseModuleTestQuestions,
+                courseId, moduleId, response.data.tools.updateMeta
+            );
+
+            response.data.review = getComputableNode(
+                updateRate,
+                reviewUserCourseModuleTest,
+                courseId, moduleId
+            );
+
+        }
+
+        return response;
+    }
+
+    async function markMessageAsRead(messageHash) {
+        return await doRequest("coursesManager", "markMessageAsRead", {messageHash});
+    }
+
+    async function getUnreadMessages() {
+        const response = await doRequest("coursesManager", "getUnreadMessages");
+
+        if (response.status === "success") {
+            response.data.forEach((item) => {
+                item.watched = ref(false);
+                watch(item.watched, (newValue) => {
+                    markMessageAsRead(item.hash);
+                });
+            });
+        }
+        return response;
+    }
+
+    let availableCourses = getComputableNode(
         updateRate,
         loadAvailableCourses
     );
 
-    const userCourses = getComputableNode(
+    let userCourses = getComputableNode(
         updateRate,
         loadUserCourses
     );
 
+    let unreadMessages = getComputableNode(
+        updateRate,
+        getUnreadMessages
+    );
+
+    const update = function () {
+        availableCourses.__refresh();
+        userCourses.__refresh();
+        unreadMessages.__refresh();
+    }
+
     return {
         availableCourses,
-        userCourses
+        userCourses,
+        unreadMessages,
+        update
     };
 });
