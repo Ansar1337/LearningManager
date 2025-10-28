@@ -3,6 +3,7 @@
 import {onMounted, ref} from "vue";
 
 const props = defineProps({
+  index: Number,
   description: String,
   actor: String,
   action: String,
@@ -59,7 +60,7 @@ function runTest() {
 
 <template>
   <div>
-    <h2><code>{{ actor }}</code> / <code>{{ action }}</code></h2>
+    <h2>{{ index }}.<code>{{ actor }}</code> / <code>{{ action }}</code></h2>
     <section class="test-container">
       <section class="test">
         <fieldset>

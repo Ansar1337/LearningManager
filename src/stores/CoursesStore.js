@@ -178,9 +178,9 @@ export const useCoursesStore = defineStore('courses', () => {
 
         if (response.status === "success") {
             response.data.tools = {
-                //submit
-                //restore
+                //start
                 //cancel
+                //end
             };
 
             response.data.questions = response.data.questions ?? [];

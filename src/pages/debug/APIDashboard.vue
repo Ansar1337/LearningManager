@@ -219,6 +219,18 @@ const tests = [
 
   {
     actor: "coursesManager",
+    action: "markMessageAsRead",
+    payloadTemplate: [
+      {name: "Хэш сообщения", type: "text", value: ""},
+    ],
+    description: "Отметка, что сообщение прочитано",
+    run(messageHash) {
+      return doRequest.call(this, this.actor, this.action, {messageHash});
+    }
+  },
+
+  {
+    actor: "coursesManager",
     action: "addHomeworkSubmission",
     payloadTemplate: [
       {name: "ID курса (0-3)", type: "number", value: "0"},
@@ -256,7 +268,7 @@ const tests = [
       {name: "ID курса (0-3)", type: "number", value: "0"},
       {name: "ID модуля (0-3)", type: "number", value: "0"},
     ],
-    description: "Загрузка тестов",
+    description: "Загрузка метаданных теста",
     run(courseId, moduleId) {
       return doRequest(this.actor, this.action, {
         courseId, moduleId
@@ -264,6 +276,91 @@ const tests = [
     }
   },
 
+  {
+    actor: "coursesManager",
+    action: "launchUserCourseModuleTest",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+    ],
+    description: "Старт теста",
+    run(courseId, moduleId) {
+      return doRequest(this.actor, this.action, {
+        courseId, moduleId
+      });
+    }
+  },
+
+  {
+    actor: "coursesManager",
+    action: "updateUserCourseModuleTest",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+      {name: "ID вопроса", type: "number", value: "0"},
+      {name: "Ответы:", type: "text", value: "{\"Один\":false,\"Двое\":false,\"null pointer exception\":true}"},
+    ],
+    description: "Обновление ответов",
+    run(courseId, moduleId, questionId, answers) {
+      return doRequest.call(this, this.actor, this.action, {
+        courseId, moduleId, questionId, answers
+      });
+    }
+  },
+
+  {
+    actor: "coursesManager",
+    action: "finishUserCourseModuleTest",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+    ],
+    description: "Завершение теста",
+    run(courseId, moduleId) {
+      return doRequest.call(this, this.actor, this.action, {
+        courseId, moduleId
+      });
+    }
+  },
+
+  {
+    actor: "coursesManager",
+    action: "reviewUserCourseModuleTest",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+    ],
+    description: "Оценка теста",
+    run(courseId, moduleId) {
+      return doRequest.call(this, this.actor, this.action, {
+        courseId, moduleId
+      });
+    }
+  },
+
+  {
+    actor: "coursesManager",
+    action: "getUnreadMessages",
+    payloadTemplate: [],
+    description: "Выгрузка непрочитанных уведомлений",
+    run() {
+      return doRequest.call(this, this.actor, this.action);
+    }
+  },
+
+  {
+    actor: "coursesManager",
+    action: "markCommentAsRead",
+    payloadTemplate: [
+      {name: "ID курса (0-3)", type: "number", value: "0"},
+      {name: "ID модуля (0-3)", type: "number", value: "0"},
+      {name: "ID комментария", type: "number", value: ""},
+    ],
+    description: "Отметка, что комментарий прочитан",
+    run(courseId, moduleId, commentId) {
+      return doRequest.call(this, this.actor, this.action, {courseId, moduleId, commentId});
+    }
+  },
 ];
 
 const user = useUserStore();
@@ -272,15 +369,11 @@ const courses = useCoursesStore();
 
 <template>
   <main>
-    <button @click="courses.userCourses[0].modules[0].resources.test.questions[0].options['Один']=true">ТЫЦ</button>
-    <pre>
-          {{ courses.userCourses[0].modules[0].resources.test.questions }}
-        </pre>
-
     <h1>Дэшборд для теста API-хэндлов</h1>
     <h2>Используемый сервер: {{ serverURL }}</h2>
 
     <TestForm v-for="(test, index) in tests" :key="index"
+              :index="index"
               :description="test.description"
               :actor="test.actor"
               :action="test.action"
