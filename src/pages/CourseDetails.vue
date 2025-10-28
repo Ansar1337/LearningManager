@@ -1,4 +1,21 @@
 <script setup>
+import {ref} from "vue";
+import {useRoute} from "vue-router";
+import {useCoursesStore} from "@/stores/CoursesStore.js";
+import {formatDate, formatLongEstimate} from "@/helpers/Formatters.js";
+
+const coursesStore = useCoursesStore();
+const route = useRoute();
+const course = ref({});
+const details = ref({});
+
+coursesStore.availableCourses
+    .then(courses => courses[route.params.id].details.value)
+    .then(_ => course.value = coursesStore.availableCourses[route.params.id]);
+
+coursesStore.userCourses
+    .then(courses => courses[route.params.id].modules.value)
+    .then(_ => details.value = coursesStore.userCourses[route.params.id]);
 
 </script>
 
@@ -10,7 +27,7 @@
         <div class="link-none forward">
           Моё обучение
           <div class="arrow-forward"></div>
-          Java-разработчик
+          {{ course?.title }}-разработчик
         </div>
       </router-link>
     </div>
@@ -20,19 +37,20 @@
         <v-card-text>
           <div class="card-content-info">
             <div class="card-content-info-title">
-              <div class="course-title">Java-разработчик</div>
+              <div class="course-title">{{ course?.title }}-разработчик</div>
               <div class="time-schedule">
-                <div>9 января 2024</div>
-                <div> —</div>
-                <div>9 сентября 2024</div>
+                <div>{{ formatDate(course?.details?.dateStart) }}</div>
+                <div class="separator"></div>
+                <div>{{ formatDate(course?.details?.dateEnd) }}</div>
               </div>
             </div>
 
             <div class="card-content-completeness">
               <div class="card-content-completeness-progress">
-                <v-progress-linear color="#6FCF97" model-value="20" :height="7" rounded="2"></v-progress-linear>
+                <v-progress-linear color="#6FCF97" :model-value="details?.completeness" :height="7"
+                                   rounded="2"></v-progress-linear>
               </div>
-              <div class="percent">20%</div>
+              <div class="percent">{{ details?.completeness }}%</div>
             </div>
 
             <div class="card-content-continue">
@@ -51,30 +69,82 @@
     </div>
 
     <div class="module-title">
-      Модули курса (6)
+      Модули курса ({{ details?.modules?.length }})
     </div>
 
-    <div class="mb-5">
-      <v-timeline density="compact" align="start">
-        <v-timeline-item
-            v-for="message in ['1', '2', '3']"
-            :key="message.time"
-            :dot-color="message.color"
-            size="x-small"
-        >
-          <div class="mb-4">
-            <div class="font-weight-normal">
-              <strong>{{ message.from }}</strong> @{{ message.time }}
-            </div>
-            <div>{{ message.message }}</div>
+    <div class="mb-5 timeline">
+      <v-card v-for="module in details?.modules || []"
+              elevation="0"
+              color="#F6F8F9"
+              class="module-card"
+              :class="{ done: module?.lessonsCompleted == module?.lessonsTotal}">
+        <v-card-text class="module-card-content">
+          <div>
+            <div class="module-card-title">{{ module?.name }}</div>
+            <div class="module-card-tasks">{{ module?.lessonsCompleted }} из {{ module?.lessonsTotal }} занятия</div>
+            <div class="module-card-details">Посмотреть подробнее</div>
+            <div class="module-card-estimate">до {{ formatDate(module?.deadline) }}</div>
+            <div class="module-card-time">{{ formatLongEstimate(module?.estimatedTime) }}</div>
+            <div class="module-card-grade">{{ module?.performance }} / 100 баллов</div>
           </div>
-        </v-timeline-item>
-      </v-timeline>
+        </v-card-text>
+      </v-card>
     </div>
   </div>
 </template>
 
 <style scoped>
+.module-card {
+  overflow: visible;
+}
+
+.module-card-content {
+  padding-left: 80px;
+}
+
+.module-card-title {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 29px;
+  letter-spacing: 0;
+}
+
+.module-card-tasks {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0;
+}
+
+.module-card-details {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0;
+}
+
+.module-card-estimate {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 27px;
+  letter-spacing: 0;
+}
+
+.module-card-time {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 27px;
+  letter-spacing: 0;
+}
+
+.module-card-grade {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 27px;
+  letter-spacing: 0;
+}
+
+
 .arrow-forward {
   width: 34px;
   height: 15px;
@@ -170,5 +240,73 @@
   flex-wrap: wrap;
   justify-content: space-between;
   flex-grow: 1;
+}
+
+
+.time-schedule {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: min(24px, 3vw);
+  font-weight: 500;
+  line-height: 29px;
+  letter-spacing: 0;
+}
+
+.separator::before {
+  content: "—";
+}
+
+
+/* timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.timeline > * {
+  position: relative;
+}
+
+.timeline > *::before {
+  display: block;
+  content: "";
+  width: 25px;
+  height: 25px;
+  background-color: #BDBDBD;
+  border-radius: 100%;
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  z-index: 2;
+}
+
+.timeline > *::after {
+  display: block;
+  content: "";
+  width: 5px;
+  height: calc(100% + 35px);
+  background-color: #BDBDBD;
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  z-index: 1;
+  overflow: visible;
+}
+
+.timeline > *:last-child::after {
+  display: none;
+}
+
+.timeline > *.done::before,
+.timeline > *.done + :not(.done)::before {
+  background-color: #6FCF97;
+  box-shadow: 0 0 16px 0 #6FCF97;
+
+}
+
+.timeline > *.done::after {
+  background-color: #6FCF97;
 }
 </style>

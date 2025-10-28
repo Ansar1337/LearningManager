@@ -1,6 +1,7 @@
 <script setup>
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {ref} from "vue";
+import {formatDateShort} from "@/helpers/Formatters.js";
 
 const coursesStore = useCoursesStore();
 
@@ -16,16 +17,7 @@ coursesStore.availableCourses.then(courses => {
 coursesStore.userCourses.then(_ => courseDetails.value = true);
 
 function isUserCourse(id) {
-  // TODO: проблемы типов, id string и number в разных частях
-  return coursesStore.userCourses.map(c => c.id + '').includes(id + '');
-}
-
-function formatDate(date) {
-  return date
-      ? new Date(date)
-          .toLocaleString("ru-RU", {year: "numeric", month: "short", day: "numeric"})
-          .replace(" г.", "")
-      : "";
+  return coursesStore.userCourses.map(c => parseInt(c.id)).includes(parseInt(id));
 }
 
 function getCompleteness(id) {
@@ -55,9 +47,9 @@ function getCompleteness(id) {
                 <div class="card-content-text">
                   <div class="card-title">{{ course.title }}-разработчик</div>
                   <div class="time-schedule">
-                    <div>{{ formatDate(course?.details?.dateStart) }}</div>
+                    <div>{{ formatDateShort(course?.details?.dateStart) }}</div>
                     <div class="separator"></div>
-                    <div>{{ formatDate(course?.details?.dateEnd) }}</div>
+                    <div>{{ formatDateShort(course?.details?.dateEnd) }}</div>
                   </div>
                 </div>
                 <div v-if="isUserCourse(course.id)" class="card-content-progress">

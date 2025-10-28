@@ -2,12 +2,13 @@
 import {useRoute} from "vue-router";
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import Feedback from "@/components/Feedback.vue";
+import {formatDate, formatEstimate} from "@/helpers/Formatters.js";
 import {ref} from "vue";
 
 const route = useRoute();
 const coursesStore = useCoursesStore();
 
-let course = ref([]);
+let course = ref({});
 let details = ref(null);
 
 coursesStore.availableCourses.then(r => {
@@ -16,28 +17,6 @@ coursesStore.availableCourses.then(r => {
 }).then(r => {
   details.value = r;
 });
-
-function formatDate(date) {
-  return date
-      ? new Date(date)
-          .toLocaleString("ru-RU", {year: "numeric", month: "long", day: "numeric"})
-          .replace(" г.", "")
-      : "";
-}
-
-function formatEstimate(estimate) {
-  if (estimate) {
-    let hours = Math.floor((estimate / (1000 * 60 * 60)));
-    if (hours >= 10 && hours <= 20 || [5, 6, 7, 8, 9, 0].includes(hours % 10))
-      hours += " часов";
-    else if ([2, 3, 4].includes(hours % 10))
-      hours += " часа";
-    else
-      hours += " час";
-    return hours;
-  }
-}
-
 </script>
 
 <template>
