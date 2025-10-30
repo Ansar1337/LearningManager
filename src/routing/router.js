@@ -6,6 +6,7 @@ import MyEducation from "@/pages/MyEducation.vue";
 import CourseDetails from "@/pages/CourseDetails.vue";
 import Profile from "@/pages/Profile.vue";
 import Progress from "@/pages/Progress.vue";
+import ModuleDetails from "@/pages/ModuleDetails.vue";
 
 const routes = [
     {path: '/', component: Index},
@@ -16,7 +17,8 @@ const routes = [
     {path: '/courses', name: 'myEducation', component: MyEducation},
     {path: '/course/:id', name: 'coursePage', component: CourseDetails},
     {path: '/profile', name: 'profile', component: Profile},
-    {path: '/progress', name: 'progress', component: Progress}
+    {path: '/progress', name: 'progress', component: Progress},
+    {path: '/course/:id/module/:mid', name: 'module', component: ModuleDetails}
 ]
 
 const router = VueRouter.createRouter({

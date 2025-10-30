@@ -59,9 +59,11 @@ coursesStore.userCourses
 
             <div class="card-content-continue">
               <div class="last-lesson">
+                <!-- TODO: ссылка на последнюю главу -->
                 Вы остановились на главе <span class="text-summer-sky">Java Core</span>
               </div>
               <div>
+                <!-- TODO: ссылка на последнюю главу -->
                 <v-btn color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none">
                   Продолжить обучение
                 </v-btn>
@@ -86,7 +88,11 @@ coursesStore.userCourses
           <div class="module-card-content">
             <div class="module-card-title">{{ module?.name }}</div>
             <div class="module-card-tasks">{{ module?.lessonsCompleted }} из {{ module?.lessonsTotal }} занятия</div>
-            <div class="module-card-details text-summer-sky">Посмотреть подробнее</div>
+            <router-link :to="{name: 'module', params: { id: course.id, mid: module.id }}" class="link-none">
+              <div class="module-card-details text-summer-sky">
+                Посмотреть подробнее
+              </div>
+            </router-link>
             <div class="module-card-info">
               <div class="module-card-estimate text-silver">
                 <span class="module-card-estimate-icon">&nbsp;</span>
