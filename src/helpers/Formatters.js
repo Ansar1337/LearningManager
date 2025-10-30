@@ -1,7 +1,7 @@
 "use strict";
 
 export function formatDate(date) {
-    return date
+    return date && !(date instanceof Promise)
         ? new Date(date)
             .toLocaleString("ru-RU", {year: "numeric", month: "long", day: "numeric"})
             .replace(" г.", "")
@@ -9,7 +9,7 @@ export function formatDate(date) {
 }
 
 export function formatDateShort(date) {
-    return date
+    return date && !(date instanceof Promise)
         ? new Date(date)
             .toLocaleString("ru-RU", {year: "numeric", month: "short", day: "numeric"})
             .replace(" г.", "")
@@ -17,7 +17,7 @@ export function formatDateShort(date) {
 }
 
 export function formatEstimate(estimate) {
-    if (estimate) {
+    if (estimate && !(estimate instanceof Promise)) {
         let hours = Math.floor((estimate / (1000 * 60 * 60)));
         if (hours >= 10 && hours <= 20 || [5, 6, 7, 8, 9, 0].includes(hours % 10))
             hours += " часов";
@@ -30,7 +30,7 @@ export function formatEstimate(estimate) {
 }
 
 export function formatLongEstimate(estimate) {
-    if (estimate) {
+    if (estimate && !(estimate instanceof Promise)) {
         let hours = Math.floor((estimate / (1000 * 60 * 60)));
         let minutes = Math.floor((estimate % (1000 * 60 * 60)) / (1000 * 60));
 

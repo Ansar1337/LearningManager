@@ -8,6 +8,7 @@ const coursesStore = useCoursesStore();
 const route = useRoute();
 const course = ref({});
 const details = ref({});
+const modules = ref([])
 
 coursesStore.availableCourses
     .then(courses => courses[route.params.id].details.value)
@@ -15,7 +16,10 @@ coursesStore.availableCourses
 
 coursesStore.userCourses
     .then(courses => courses[route.params.id].modules.value)
-    .then(_ => details.value = coursesStore.userCourses[route.params.id]);
+    .then(result => {
+      details.value = coursesStore.userCourses[route.params.id];
+      modules.value = result;
+    });
 
 </script>
 
@@ -27,7 +31,7 @@ coursesStore.userCourses
         <div class="link-none forward">
           Моё обучение
           <div class="arrow-forward"></div>
-          {{ course?.title }}-разработчик
+          {{ course?.title ? `${course?.title}-разработчик` : "" }}
         </div>
       </router-link>
     </div>
@@ -37,7 +41,7 @@ coursesStore.userCourses
         <v-card-text>
           <div class="card-content-info">
             <div class="card-content-info-title">
-              <div class="course-title">{{ course?.title }}-разработчик</div>
+              <div class="course-title">{{ course?.title ? `${course?.title}-разработчик` : "" }}</div>
               <div class="time-schedule">
                 <div>{{ formatDate(course?.details?.dateStart) }}</div>
                 <div class="separator"></div>
@@ -69,23 +73,31 @@ coursesStore.userCourses
     </div>
 
     <div class="module-title">
-      Модули курса ({{ details?.modules?.length }})
+      Модули курса ({{ modules?.length }})
     </div>
 
     <div class="mb-5 timeline">
-      <v-card v-for="module in details?.modules || []"
+      <v-card v-for="module in modules"
               elevation="0"
               color="#F6F8F9"
               class="module-card"
               :class="{ done: module?.lessonsCompleted == module?.lessonsTotal}">
-        <v-card-text class="module-card-content">
-          <div>
+        <v-card-text>
+          <div class="module-card-content">
             <div class="module-card-title">{{ module?.name }}</div>
             <div class="module-card-tasks">{{ module?.lessonsCompleted }} из {{ module?.lessonsTotal }} занятия</div>
-            <div class="module-card-details">Посмотреть подробнее</div>
-            <div class="module-card-estimate">до {{ formatDate(module?.deadline) }}</div>
-            <div class="module-card-time">{{ formatLongEstimate(module?.estimatedTime) }}</div>
-            <div class="module-card-grade">{{ module?.performance }} / 100 баллов</div>
+            <div class="module-card-details text-summer-sky">Посмотреть подробнее</div>
+            <div class="module-card-info">
+              <div class="module-card-estimate text-silver">
+                <span class="module-card-estimate-icon">&nbsp;</span>
+                <span>до {{ formatDate(module?.deadline) }}</span>
+              </div>
+              <div class="module-card-time text-silver">
+                <span class="module-card-time-icon">&nbsp;</span>
+                <span>{{ formatLongEstimate(module?.estimatedTime) }}</span>
+              </div>
+              <div class="module-card-grade text-summer-sky">{{ module?.performance }} / 100 баллов</div>
+            </div>
           </div>
         </v-card-text>
       </v-card>
@@ -100,6 +112,9 @@ coursesStore.userCourses
 
 .module-card-content {
   padding-left: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .module-card-title {
@@ -111,28 +126,50 @@ coursesStore.userCourses
 
 .module-card-tasks {
   font-size: 20px;
-  /*font-weight: 500;*/
+  font-weight: 500;
   line-height: 24px;
   letter-spacing: 0;
 }
 
 .module-card-details {
   font-size: 20px;
-  /*font-weight: 500;*/
+  font-weight: 500;
   line-height: 24px;
   letter-spacing: 0;
+  text-decoration: underline;
+  text-underline-position: under;
 }
 
 .module-card-estimate {
   font-size: 22px;
-  /*font-weight: 500;*/
+  font-weight: 500;
   line-height: 27px;
   letter-spacing: 0;
 }
 
+.module-card-estimate-icon {
+  display: inline-block;
+  width: 35px;
+  height: 27px;
+  background-image: url("@/assets/calendar-grey.png");
+  background-repeat: no-repeat;
+  background-size: 28px 24px;
+  background-position-y: center;
+}
+
+.module-card-time-icon {
+  display: inline-block;
+  width: 35px;
+  height: 25px;
+  background-image: url("@/assets/time-grey.png");
+  background-repeat: no-repeat;
+  background-size: 26px 22px;
+  background-position-y: center;
+}
+
 .module-card-time {
   font-size: 22px;
-  /*font-weight: 500;*/
+  font-weight: 500;
   line-height: 27px;
   letter-spacing: 0;
 }
@@ -144,11 +181,18 @@ coursesStore.userCourses
   letter-spacing: 0;
 }
 
+.module-card-info {
+  display: flex;
+  gap: 5px 25px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
 
 .arrow-forward {
   width: 34px;
   height: 15px;
-  background-image: url("../assets/images/arrow-forward.png");
+  background-image: url("@/assets/images/arrow-forward.png");
   background-repeat: no-repeat;
   background-size: 100%;
   display: inline-block;
@@ -173,7 +217,7 @@ coursesStore.userCourses
   flex-wrap: wrap;
   gap: 5px;
   font-size: 24px;
-  /*font-weight: 500;*/
+  font-weight: 500;
   line-height: 29px;
   letter-spacing: 0;
 }
@@ -240,6 +284,7 @@ coursesStore.userCourses
   flex-wrap: wrap;
   justify-content: space-between;
   flex-grow: 1;
+  align-items: center;
 }
 
 
@@ -248,7 +293,7 @@ coursesStore.userCourses
   flex-wrap: wrap;
   gap: 5px;
   font-size: min(24px, 3vw);
-  /*font-weight: 500;*/
+  font-weight: 500;
   line-height: 29px;
   letter-spacing: 0;
 }
