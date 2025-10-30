@@ -31,7 +31,7 @@ const showLoginDialog = ref(false);
             <v-list>
               <v-list-item title="Учебная программа" :to="{name: 'myEducation'}" :active="false"
                            class="list-item-space"/>
-              <v-list-item title="Успеваемость" :to="'/'" :active="false" class="list-item-space"/>
+              <v-list-item title="Успеваемость" :to="{name: 'progress'}" :active="false" class="list-item-space"/>
               <v-divider/>
               <v-list-item title="Настройки профиля" :to="{name: 'profile'}" :active="false" class="list-item-space"/>
               <v-divider/>

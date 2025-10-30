@@ -5,6 +5,7 @@ import CourseAbout from "@/pages/CourseAbout.vue";
 import MyEducation from "@/pages/MyEducation.vue";
 import CourseDetails from "@/pages/CourseDetails.vue";
 import Profile from "@/pages/Profile.vue";
+import Progress from "@/pages/Progress.vue";
 
 const routes = [
     {path: '/', component: Index},
@@ -14,7 +15,8 @@ const routes = [
     {path: '/course/about/:id', name: 'courseAbout', component: CourseAbout},
     {path: '/courses', name: 'myEducation', component: MyEducation},
     {path: '/course/:id', name: 'coursePage', component: CourseDetails},
-    {path: '/profile', name: 'profile', component: Profile}
+    {path: '/profile', name: 'profile', component: Profile},
+    {path: '/progress', name: 'progress', component: Progress}
 ]
 
 const router = VueRouter.createRouter({

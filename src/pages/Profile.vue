@@ -203,7 +203,6 @@ let changeNotification = () => userStore.session.profile.updateWith(profileNotif
 .custom-checkbox-label {
   padding-left: 20px;
   font-size: 18px;
-  font-weight: 500;
   line-height: 24px;
   letter-spacing: 0;
 }
