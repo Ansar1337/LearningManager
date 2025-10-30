@@ -33,11 +33,10 @@ const showLoginDialog = ref(false);
                            class="list-item-space"/>
               <v-list-item title="Успеваемость" :to="'/'" :active="false" class="list-item-space"/>
               <v-divider/>
-              <v-list-item title="Настройки профиля" :to="'/'" :active="false" class="list-item-space"/>
+              <v-list-item title="Настройки профиля" :to="{name: 'profile'}" :active="false" class="list-item-space"/>
               <v-divider/>
 
-              <!-- TODO: редирект на главную -->
-              <v-list-item title="Выйти" :active="false" class="list-item-space"
+              <v-list-item title="Выйти" :to="'/'" :active="false" class="list-item-space"
                            @click="userStore.sessionTools.tryToLogOut"/>
             </v-list>
           </v-menu>
