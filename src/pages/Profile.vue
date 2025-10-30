@@ -4,19 +4,29 @@ import {useUserStore} from "@/stores/UserStore.js";
 
 const userStore = useUserStore();
 
-let tab = defineModel({default: 1});
+let tab = defineModel('tab', {default: 1});
 let data = [
   {id: 'first', value: 1, title: 'Личная информация', checked: true},
   {id: 'second', value: 2, title: 'Авторизация', checked: false},
   {id: 'third', value: 3, title: 'E-mail', checked: false},
 ]
 
+// TODO: разное поведение в then при прямом переходе и F5
 const info = ref({});
 userStore.session.profile
-    .then(result => result.value)
+    .then(result => result.value ? result.value : result)
     .then(result => info.value = result);
 
-// TODO: сделать логику сохранения
+
+const profileInfo = {}
+const profileEmail = {}
+const profilePassword = {}
+const profileNotification = {mailingSettings: {}}
+
+let changeInfo = () => userStore.session.profile.updateWith(profileInfo);
+let changeEmail = () => userStore.session.profile.updateWith(profileEmail);
+let changePassword = () => userStore.session.profile.updateWith(profilePassword);
+let changeNotification = () => userStore.session.profile.updateWith(profileNotification);
 </script>
 
 <template>
@@ -46,39 +56,44 @@ userStore.session.profile
                 <div>
                   <label>Фамилия</label>
                 </div>
-                <input :value="info?.lastName" type="text" placeholder="Фамилия" class="input mb-6 mt-1">
+                <input :value="info?.lastName" type="text" placeholder="Фамилия" class="input mb-6 mt-1"
+                       @input="event => profileInfo.lastName = event.target.value">
               </div>
 
               <div>
                 <div>
                   <label>Имя</label>
                 </div>
-                <input :value="info?.firstName" type="text" placeholder="Имя" class="input mb-6 mt-1">
+                <input :value="info?.firstName" type="text" placeholder="Имя" class="input mb-6 mt-1"
+                       @input="event => profileInfo.firstName = event.target.value">
               </div>
 
               <div>
                 <div>
                   <label>Пол</label>
                 </div>
-                <input :value="info?.gender" type="text" placeholder="Пол" class="input mb-6 mt-1">
+                <input :value="info?.gender" type="text" placeholder="Пол" class="input mb-6 mt-1"
+                       @input="event => profileInfo.gender = event.target.value">
               </div>
 
               <div>
                 <div>
                   <label>Дата рождения</label>
                 </div>
-                <input :value="info?.birthDate" type="text" placeholder="Дата рождения" class="input mb-6 mt-1">
+                <input :value="info?.birthDate" type="date" placeholder="Дата рождения" class="input mb-6 mt-1"
+                       @input="event => profileInfo.birthDate = event.target.value">
               </div>
 
               <div>
                 <div>
                   <label>Номер телефона</label>
                 </div>
-                <input :value="info?.phone" type="text" placeholder="Номер телефона" class="input mb-6 mt-1">
+                <input :value="info?.phone" type="text" placeholder="Номер телефона" class="input mb-6 mt-1"
+                       @input="event => profileInfo.phone = event.target.value">
               </div>
             </div>
             <div class="save-btn-right">
-              <v-btn color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none">
+              <v-btn @click="changeInfo" color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none">
                 Сохранить
               </v-btn>
             </div>
@@ -93,18 +108,20 @@ userStore.session.profile
                   <div>
                     <label>Почта</label>
                   </div>
-                  <input :value="info?.email" type="text" placeholder="Почта" class="input mb-6 mt-1">
+                  <input :value="info?.email" type="text" placeholder="Почта" class="input mb-6 mt-1"
+                         @input="event => profileEmail.email = event.target.value">
                 </div>
 
                 <div>
                   <div>
                     <label>Пароль</label>
                   </div>
-                  <input type="text" placeholder="Пароль" class="input mb-6 mt-1">
+                  <input type="password" placeholder="Пароль" class="input mb-6 mt-1"
+                         @input="event => profileEmail.emailPasswordCheck = event.target.value">
                 </div>
               </div>
               <div class="save-btn">
-                <v-btn color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none">
+                <v-btn @click="changeEmail" color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none">
                   Сохранить
                 </v-btn>
               </div>
@@ -116,25 +133,29 @@ userStore.session.profile
                   <div>
                     <label>Текущий пароль</label>
                   </div>
-                  <input type="text" placeholder="Текущий пароль" class="input mb-6 mt-1">
+                  <input type="password" placeholder="Текущий пароль" class="input mb-6 mt-1"
+                         @input="event => profilePassword.changePassword = event.target.value">
                 </div>
 
                 <div>
                   <div>
                     <label>Новый пароль</label>
                   </div>
-                  <input type="text" placeholder="Новый пароль" class="input mb-6 mt-1">
+                  <input type="password" placeholder="Новый пароль" class="input mb-6 mt-1"
+                         @input="event => profilePassword.changePasswordNew = event.target.value">
                 </div>
 
                 <div>
                   <div>
                     <label>Повторите новый пароль</label>
                   </div>
-                  <input type="text" placeholder="Повторите новый пароль" class="input mb-6 mt-1">
+                  <input type="password" placeholder="Повторите новый пароль" class="input mb-6 mt-1"
+                         @input="event => profilePassword.changePasswordNewCheck = event.target.value">
                 </div>
               </div>
               <div class="save-btn">
-                <v-btn color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none">
+                <v-btn @click="changePassword" color="#2D9CDB"
+                       class="start-btn bg-summer-sky text-white mt-2 text-none">
                   Сохранить
                 </v-btn>
               </div>
@@ -145,24 +166,29 @@ userStore.session.profile
           <div class="card">
             <div class="small-title">E-mail</div>
             <div class="w100">
-              <input :checked="info?.mailingSettings?.digest" type="checkbox" class="custom-checkbox">
+              <input :checked="info?.mailingSettings?.digest" type="checkbox" class="custom-checkbox"
+                     @change="event => profileNotification.mailingSettings.digest = event.target.checked">
               <label class="custom-checkbox-label">Дайджест: новости, подборки, скидки</label>
             </div>
             <div class="w100">
-              <input :checked="info?.mailingSettings?.eventsAgenda" type="checkbox" class="custom-checkbox">
+              <input :checked="info?.mailingSettings?.eventsAgenda" type="checkbox" class="custom-checkbox"
+                     @change="event => profileNotification.mailingSettings.eventsAgenda = event.target.checked">
               <label class="custom-checkbox-label">Афиша событий и конференция</label>
             </div>
             <div class="w100">
-              <input :checked="info?.mailingSettings?.educationalMaterials" type="checkbox" class="custom-checkbox">
+              <input :checked="info?.mailingSettings?.educationalMaterials" type="checkbox" class="custom-checkbox"
+                     @change="event => profileNotification.mailingSettings.educationalMaterials = event.target.checked">
               <label class="custom-checkbox-label">Полезные материалы для обучения, анонсы новых курсов</label>
             </div>
             <div class="w100">
-              <input :checked="info?.mailingSettings?.submissionDeadlines" type="checkbox" class="custom-checkbox">
+              <input :checked="info?.mailingSettings?.submissionDeadlines" type="checkbox" class="custom-checkbox"
+                     @change="event => profileNotification.mailingSettings.submissionDeadlines = event.target.checked">
               <label class="custom-checkbox-label">Оповещения о сроках сдачи работ и подсказки, что делать в первую
                 очередь</label>
             </div>
             <div class="save-btn">
-              <v-btn color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none">
+              <v-btn @click="changeNotification" color="#2D9CDB"
+                     class="start-btn bg-summer-sky text-white mt-2 text-none">
                 Сохранить
               </v-btn>
             </div>
