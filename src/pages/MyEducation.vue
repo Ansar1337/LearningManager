@@ -1,6 +1,6 @@
 <script setup>
 import {useCoursesStore} from "@/stores/CoursesStore.js";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {formatDateShort} from "@/helpers/Formatters.js";
 
 const coursesStore = useCoursesStore();
@@ -10,10 +10,11 @@ const courseDetails = ref(false);
 const showAll = ref(false);
 
 coursesStore.availableCourses.then(courses => {
-  Promise.all(courses.map(c => c.details.value)).then(_ => {
+  Promise.all(courses.map(c => c.details)).then(_ => {
     courseInfo.value = true
   })
 });
+
 coursesStore.userCourses.then(_ => courseDetails.value = true);
 
 function isUserCourse(id) {
@@ -21,7 +22,7 @@ function isUserCourse(id) {
 }
 
 function getCompleteness(id) {
-  return coursesStore.userCourses.find(uc => parseInt(uc.id) === parseInt(id)).completeness
+  return coursesStore.userCourses.find(uc => parseInt(uc.id) === parseInt(id)).completeness;
 }
 
 </script>
@@ -31,9 +32,9 @@ function getCompleteness(id) {
     <div class="title mt-5">
       Моё обучение
     </div>
-
     <div class="course-card-list">
-      <template v-if="courseInfo && courseDetails" v-for="course in coursesStore.availableCourses">
+      <template v-if="courseInfo && courseDetails" v-for="(course, index) in coursesStore.availableCourses"
+                :key="index">
         <template v-if="showAll || isUserCourse(course.id)">
           <v-card elevation="0" color="#F6F8F9" :key="course.id" class="pt-2 pb-2">
             <v-card-text class="card-content">
@@ -45,7 +46,7 @@ function getCompleteness(id) {
 
               <div class="card-content-info">
                 <div class="card-content-text">
-                  <div class="card-title">{{ course.title }}-разработчик</div>
+                  <div class="card-title">Курс "{{ course.title }}"</div>
                   <div class="time-schedule">
                     <div>{{ formatDateShort(course?.details?.dateStart) }}</div>
                     <div class="separator"></div>
@@ -76,6 +77,7 @@ function getCompleteness(id) {
           </v-card>
         </template>
       </template>
+      <template v-else>Загрузка...</template>
     </div>
 
     <div class="text-right">
@@ -116,7 +118,7 @@ function getCompleteness(id) {
 
 .card-title {
   font-size: min(36px, 4vw);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 44px;
   letter-spacing: 0;
 }
@@ -126,7 +128,7 @@ function getCompleteness(id) {
   flex-wrap: wrap;
   gap: 5px;
   font-size: min(24px, 3vw);
- /* font-weight: 500;*/
+  /*font-weight: 500;*/
   line-height: 29px;
   letter-spacing: 0;
 }

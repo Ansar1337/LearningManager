@@ -4,6 +4,7 @@ import TestForm from "@/components/debug/TestForm.vue";
 import {ref} from "vue";
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {useUserStore} from "@/stores/UserStore.js";
+import {useRoute} from "vue-router";
 
 const serverURL = ref(import.meta.env.VITE_API_SERVER_URL || "https://rtlm.tableer.com");
 
@@ -382,14 +383,27 @@ window.TTT = true;
 const user = useUserStore();
 const courses = useCoursesStore();
 const ready = ref(false);
+const route = useRoute();
 
-function updateQuestion() {
-  courses.userCourses[0].modules[0].resources.test.questions[1].options["Травку жевал"] = true;
-}
+// function updateQuestion() {
+//   courses.userCourses[0].modules[0].resources.test.questions[1].options["Травку жевал"] = true;
+// }
+
+
+setTimeout(() => {
+  console.log(courses.availableCourses[0].details);
+}, 3000)
+
+setTimeout(() => {
+  window.DDD = true;
+  console.log(courses.availableCourses[0].details);
+}, 2000)
 </script>
 
 <template>
   <main>
+    <button @click="console.log(courses.availableCourses[0].details)">ТЫЦ</button>
+
     <!--        <pre>-->
     <!--          <button @click="courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.tools?.launch()">ЗАПУСК</button>-->
     <!--          <button @click="updateQuestion">ОТВЕТ</button>-->

@@ -6,32 +6,26 @@ import {formatDate, formatLongEstimate} from "@/helpers/Formatters.js";
 
 const coursesStore = useCoursesStore();
 const route = useRoute();
-const course = ref({});
-const details = ref({});
-const modules = ref([])
 
-coursesStore.availableCourses
-    .then(courses => courses[route.params.id].details.value)
-    .then(_ => course.value = coursesStore.availableCourses[route.params.id]);
+const course = coursesStore.availableCourses[route.params.id];
+const details = coursesStore.userCourses[route.params.id];
+const ready = ref(false);
 
-coursesStore.userCourses
-    .then(courses => courses[route.params.id].modules.value)
-    .then(result => {
-      details.value = coursesStore.userCourses[route.params.id];
-      modules.value = result;
-    });
+Promise.all([course.details, details.modules]).then(_ => {
+  ready.value = true;
+});
 
 </script>
 
 <template>
-  <div>
+  <div v-if="ready">
     <div class="mt-5">
       <!-- TODO: breadcrumbs -->
       <router-link to="/" class="link-none">
         <div class="link-none forward">
           Моё обучение
           <div class="arrow-forward"></div>
-          {{ course?.title ? `${course?.title}-разработчик` : "" }}
+          Курс({{ course?.title }})
         </div>
       </router-link>
     </div>
@@ -41,7 +35,7 @@ coursesStore.userCourses
         <v-card-text>
           <div class="card-content-info">
             <div class="card-content-info-title">
-              <div class="course-title">{{ course?.title ? `${course?.title}-разработчик` : "" }}</div>
+              <div class="course-title">{{ course?.title }}</div>
               <div class="time-schedule">
                 <div>{{ formatDate(course?.details?.dateStart) }}</div>
                 <div class="separator"></div>
@@ -51,12 +45,11 @@ coursesStore.userCourses
 
             <div class="card-content-completeness">
               <div class="card-content-completeness-progress">
-                <v-progress-linear color="#6FCF97" :model-value="details?.completeness" :height="7"
+                <v-progress-linear color="#6FCF97" :model-value="Number(details?.completeness)" :height="7"
                                    rounded="2"></v-progress-linear>
               </div>
               <div class="percent">{{ details?.completeness }}%</div>
             </div>
-
             <div class="card-content-continue">
               <div class="last-lesson">
                 Вы остановились на главе <span class="text-summer-sky">Java Core</span>
@@ -73,31 +66,23 @@ coursesStore.userCourses
     </div>
 
     <div class="module-title">
-      Модули курса ({{ modules?.length }})
+      Модули курса ({{ details?.modules?.length }})
     </div>
 
     <div class="mb-5 timeline">
-      <v-card v-for="module in modules"
+      <v-card v-for="module in details?.modules || []"
               elevation="0"
               color="#F6F8F9"
               class="module-card"
               :class="{ done: module?.lessonsCompleted == module?.lessonsTotal}">
-        <v-card-text>
-          <div class="module-card-content">
+        <v-card-text class="module-card-content">
+          <div>
             <div class="module-card-title">{{ module?.name }}</div>
             <div class="module-card-tasks">{{ module?.lessonsCompleted }} из {{ module?.lessonsTotal }} занятия</div>
-            <div class="module-card-details text-summer-sky">Посмотреть подробнее</div>
-            <div class="module-card-info">
-              <div class="module-card-estimate text-silver">
-                <span class="module-card-estimate-icon">&nbsp;</span>
-                <span>до {{ formatDate(module?.deadline) }}</span>
-              </div>
-              <div class="module-card-time text-silver">
-                <span class="module-card-time-icon">&nbsp;</span>
-                <span>{{ formatLongEstimate(module?.estimatedTime) }}</span>
-              </div>
-              <div class="module-card-grade text-summer-sky">{{ module?.performance }} / 100 баллов</div>
-            </div>
+            <div class="module-card-details">Посмотреть подробнее</div>
+            <div class="module-card-estimate">до {{ formatDate(module?.deadline) }}</div>
+            <div class="module-card-time">{{ formatLongEstimate(module?.estimatedTime) }}</div>
+            <div class="module-card-grade">{{ module?.performance }} / 100 баллов</div>
           </div>
         </v-card-text>
       </v-card>
@@ -126,14 +111,14 @@ coursesStore.userCourses
 
 .module-card-tasks {
   font-size: 20px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 24px;
   letter-spacing: 0;
 }
 
 .module-card-details {
   font-size: 20px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 24px;
   letter-spacing: 0;
   text-decoration: underline;
@@ -142,7 +127,7 @@ coursesStore.userCourses
 
 .module-card-estimate {
   font-size: 22px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 27px;
   letter-spacing: 0;
 }
@@ -151,7 +136,7 @@ coursesStore.userCourses
   display: inline-block;
   width: 35px;
   height: 27px;
-  background-image: url("@/assets/calendar-grey.png");
+  background-image: url("@/assets/images/calendar-grey.png");
   background-repeat: no-repeat;
   background-size: 28px 24px;
   background-position-y: center;
@@ -161,7 +146,7 @@ coursesStore.userCourses
   display: inline-block;
   width: 35px;
   height: 25px;
-  background-image: url("@/assets/time-grey.png");
+  background-image: url("@/assets/images/time-grey.png");
   background-repeat: no-repeat;
   background-size: 26px 22px;
   background-position-y: center;
@@ -169,7 +154,7 @@ coursesStore.userCourses
 
 .module-card-time {
   font-size: 22px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 27px;
   letter-spacing: 0;
 }
@@ -192,7 +177,7 @@ coursesStore.userCourses
 .arrow-forward {
   width: 34px;
   height: 15px;
-  background-image: url("@/assets/images/arrow-forward.png");
+  background-image: url("../assets/images/arrow-forward.png");
   background-repeat: no-repeat;
   background-size: 100%;
   display: inline-block;
@@ -217,7 +202,7 @@ coursesStore.userCourses
   flex-wrap: wrap;
   gap: 5px;
   font-size: 24px;
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 29px;
   letter-spacing: 0;
 }
@@ -293,7 +278,7 @@ coursesStore.userCourses
   flex-wrap: wrap;
   gap: 5px;
   font-size: min(24px, 3vw);
-  font-weight: 500;
+  /*font-weight: 500;*/
   line-height: 29px;
   letter-spacing: 0;
 }

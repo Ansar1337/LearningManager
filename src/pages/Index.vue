@@ -39,7 +39,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
     <div class="title-for-block">Направления обучения</div>
 
     <section class="cards-container">
-      <template v-if="coursesAreReady" v-for="course in courses.availableCourses">
+      <template v-if="coursesAreReady" v-for="course in courses.availableCourses" :key="course.id">
         <router-link :to="{name: 'courseAbout', params: { id :  course.id}}" class="link-none">
           <v-card :key="course.id" elevation="4"
                   class="card">
@@ -256,13 +256,13 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
 
 .card-text {
   font-size: 16px;
-  /* font-weight: 500;*/
+  font-weight: 500;
   line-height: 20px;
 }
 
 .card-text-arrow {
   font-style: normal;
-  /*font-weight: 500;*/
+  font-weight: 500;
   font-size: 34px;
   margin: 0 auto auto;
 }

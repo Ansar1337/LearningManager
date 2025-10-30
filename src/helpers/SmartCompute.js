@@ -30,22 +30,20 @@ function getWrappedPrimitive(cleanValue) {
     });
 }
 
-function getWrappedObject(cleanValue, namespace, refreshWith = () => {
+function getWrappedObject(cleanValue, namespace = "", refreshWith = () => {
 }) {
-    let resolvedData = undefined;
+    let resolvedData = {};
     let promise = {};
     let promises = {};
 
     return new Proxy(cleanValue, {
         get: (target, prop, receiver) => {
-            namespace += String(prop);
-
-            if (prop === '__v_isRef') {
-                return target?.__v_isRef;
-            }
-
             if (prop === '__refresh') {
                 return target[prop] ?? refreshWith;
+            }
+
+            if (prop === '__namespace') {
+                return namespace;
             }
 
 
@@ -55,21 +53,54 @@ function getWrappedObject(cleanValue, namespace, refreshWith = () => {
                 };
             }
 
-            if ((promises[namespace]?.[prop]) && (typeof promises[namespace]?.[prop] !== "function")) {
-                return getWrappedValue(promises[namespace][prop], namespace);
+            if (resolvedData[prop]) {
+                return getWrappedValue(resolvedData[prop]?.value ?? resolvedData[prop]);
             }
 
-            if ((target instanceof Promise) && (!(promises[namespace]?.[prop]))) {
-                promise = target.then(res => {
-                    resolvedData = res;
-                    if (res) {
-                        return getWrappedValue(res[prop] ?? res?.value?.[prop], namespace);
-                    }
-                });
-                promises[namespace] = promises[namespace] ?? {};
-                promises[namespace][prop] = promises[namespace]?.[prop] ?? {};
-                promises[namespace][prop] = promise;
-                return getWrappedValue(promise, namespace);
+            if ((promises[namespace]?.[prop]) && (typeof promises[namespace]?.[prop] !== "function")) {
+                return getWrappedValue(promises[namespace][prop]);
+            }
+
+
+            if (target instanceof Promise) {
+                if ((String(prop).startsWith('__v_')) || (String(prop).startsWith('Symbol(Symbol'))) {
+                    // return target?.prop;
+                    return undefined;
+                }
+
+                if (prop === 'ready') {
+                    return false;
+                }
+
+                if (prop === 'valueOf') {
+                    return () => 0;
+                }
+
+                if (prop === 'toString') {
+                    return () => "";
+                }
+
+                if (!(promises[namespace]?.[prop])) {
+                    namespace += String(prop);
+                    promise = target.then(res => {
+                        resolvedData = res;
+                        if (res) {
+                            return getWrappedValue(res[prop] ?? res?.value?.[prop]);
+                        }
+                    });
+                    promises[namespace] = promises[namespace] ?? {};
+                    promises[namespace][prop] = promises[namespace]?.[prop] ?? {};
+                    promises[namespace][prop] = promise;
+                    return getWrappedValue(promise);
+                }
+            }
+
+            if ((String(prop).startsWith('__v_')) || (String(prop).startsWith('Symbol(Symbol'))) {
+                return target?.prop;
+            }
+
+            if (prop === 'ready') {
+                return true;
             }
 
             if (target[prop]) {
@@ -84,7 +115,7 @@ function getWrappedObject(cleanValue, namespace, refreshWith = () => {
 function getWrappedValue(cleanValue, namespace = "", refreshWith = () => {
 }) {
     if (typeof cleanValue === "object") {
-        return getWrappedObject(cleanValue);
+        return getWrappedObject(cleanValue, namespace, refreshWith);
     } else {
         return getWrappedPrimitive(cleanValue);
     }
