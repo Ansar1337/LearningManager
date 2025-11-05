@@ -1,25 +1,28 @@
 <script setup>
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 import {useRoute} from "vue-router";
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {formatDate, formatLongEstimate} from "@/helpers/Formatters.js";
 
 const coursesStore = useCoursesStore();
 const route = useRoute();
-const course = ref({});
-const details = ref({});
-const modules = ref([])
+const course = ref();
+const details = ref();
+const modules = ref();
 
-coursesStore.availableCourses
-    .then(courses => courses[route.params.id].details.value)
-    .then(_ => course.value = coursesStore.availableCourses[route.params.id]);
 
-coursesStore.userCourses
-    .then(courses => courses[route.params.id].modules.value)
-    .then(result => {
-      details.value = coursesStore.userCourses[route.params.id];
-      modules.value = result;
-    });
+coursesStore.availableCourses[route.params.id].then(data => {
+  course.value = data;
+});
+
+coursesStore.userCourses[route.params.id].then(data => {
+  details.value = data;
+});
+
+coursesStore.userCourses[route.params.id].modules.then(data => {
+  modules.value = data;
+});
+
 
 </script>
 
@@ -31,7 +34,7 @@ coursesStore.userCourses
         <div class="link-none forward">
           Моё обучение
           <div class="arrow-forward"></div>
-          {{ course?.title ? `${course?.title}` : "" }}
+          {{ course?.title ? course?.title : "" }}
         </div>
       </router-link>
     </div>
@@ -41,7 +44,7 @@ coursesStore.userCourses
         <v-card-text>
           <div class="card-content-info">
             <div class="card-content-info-title">
-              <div class="course-title">Курс "{{ course?.title ? `${course?.title}` : "" }}"</div>
+              <div class="course-title">Курс "{{ course?.title ? course?.title : "" }}"</div>
               <div class="time-schedule">
                 <div>{{ formatDate(course?.details?.dateStart) }}</div>
                 <div class="separator"></div>
@@ -51,7 +54,7 @@ coursesStore.userCourses
 
             <div class="card-content-completeness">
               <div class="card-content-completeness-progress">
-                <v-progress-linear color="#6FCF97" :model-value="details?.completeness" :height="7"
+                <v-progress-linear color="#6FCF97" :model-value="Number(details?.completeness)" :height="7"
                                    rounded="2"></v-progress-linear>
               </div>
               <div class="percent">{{ details?.completeness }}%</div>
