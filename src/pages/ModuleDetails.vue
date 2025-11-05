@@ -35,7 +35,7 @@ const showFeedbackDialog = ref(false);
       <div class="time-text">Время прохождения ~ 4 часа 30 минут</div>
     </div>
 
-    <router-link :to="''" class="link-none">
+    <router-link :to="{name: 'articles', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
       <div class="task-row">
         <div class="task-column">
           <div class="article-text task-title">
@@ -48,7 +48,7 @@ const showFeedbackDialog = ref(false);
       </div>
     </router-link>
 
-    <router-link :to="''" class="link-none">
+    <router-link :to="{name: 'homework', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
       <div class="task-row">
         <div class="task-column">
           <div class="article-text task-title">
@@ -72,7 +72,7 @@ const showFeedbackDialog = ref(false);
     </div>
 
 
-    <router-link :to="''" class="link-none">
+    <router-link :to="{name: 'test', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
       <div class="task-row">
         <div class="task-column">
           <div class="article-text task-title">
