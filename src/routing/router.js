@@ -16,15 +16,15 @@ const routes = [
     {path: '/index', component: Index},
     {path: '/main', component: Index},
     {path: '/api', component: APIDashboard},
-    {path: '/course/about/:id', name: 'courseAbout', component: CourseAbout},
-    {path: '/courses', name: 'myEducation', component: MyEducation},
-    {path: '/course/:id', name: 'coursePage', component: CourseDetails},
+    {path: '/about/:id/', name: 'courseAbout', component: CourseAbout},
+    {path: '/myCourses', name: 'myEducation', component: MyEducation},
+    {path: '/myCourses/course/:id', name: 'coursePage', component: CourseDetails},
     {path: '/profile', name: 'profile', component: Profile},
     {path: '/progress', name: 'progress', component: Progress},
-    {path: '/course/:id/module/:mid', name: 'module', component: ModuleDetails},
-    {path: '/course/:id/module/:mid/articles', name: 'articles', component: Articles},
-    {path: '/course/:id/module/:mid/homework', name: 'homework', component: Homework},
-    {path: '/course/:id/module/:mid/test', name: 'test', component: Test},
+    {path: '/myCourses/course/:id/module/:mid', name: 'module', component: ModuleDetails},
+    {path: '/myCourses/course/:id/module/:mid/articles', name: 'articles', component: Articles},
+    {path: '/myCourses/course/:id/module/:mid/homework', name: 'homework', component: Homework},
+    {path: '/myCourses/course/:id/module/:mid/test', name: 'test', component: Test},
 ]
 
 const router = VueRouter.createRouter({

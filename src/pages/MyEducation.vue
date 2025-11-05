@@ -2,6 +2,7 @@
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {ref, watch} from "vue";
 import {formatDateShort} from "@/helpers/Formatters.js";
+import Breadcrumbs from "@/components/Breadcrumbs.vue";
 
 const coursesStore = useCoursesStore();
 

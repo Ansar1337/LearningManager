@@ -1,8 +1,9 @@
 <script setup>
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {useRoute} from "vue-router";
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {formatDate, formatLongEstimate} from "@/helpers/Formatters.js";
+import Breadcrumbs from "@/components/Breadcrumbs.vue";
 
 const coursesStore = useCoursesStore();
 const route = useRoute();
@@ -23,20 +24,20 @@ coursesStore.userCourses[route.params.id].modules.then(data => {
   modules.value = data;
 });
 
+onMounted(() => {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  });
+});
 
 </script>
 
 <template>
   <div>
     <div class="mt-5">
-      <!-- TODO: breadcrumbs -->
-      <router-link to="/" class="link-none">
-        <div class="link-none forward">
-          Моё обучение
-          <div class="arrow-forward"></div>
-          {{ course?.title ? course?.title : "" }}
-        </div>
-      </router-link>
+      <Breadcrumbs></Breadcrumbs>
     </div>
 
     <div>

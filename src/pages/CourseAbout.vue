@@ -3,7 +3,8 @@ import {useRoute} from "vue-router";
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import Feedback from "@/components/Feedback.vue";
 import {formatDate, formatEstimate} from "@/helpers/Formatters.js";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import Breadcrumbs from "@/components/Breadcrumbs.vue";
 
 const assetsUrl = new URL('@/assets', import.meta.url).href;
 
@@ -19,17 +20,21 @@ coursesStore.availableCourses.then(r => {
 }).then(r => {
   details.value = r;
 });
+
+onMounted(() => {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  });
+});
+
 </script>
 
 <template>
   <div>
     <div class="mt-5">
-      <router-link to="/" class="link-none">
-        <div class="link-none backward">
-          <div class="arrow-backward"></div>
-          На главную
-        </div>
-      </router-link>
+      <Breadcrumbs :with-main-page="true"></Breadcrumbs>
     </div>
 
     <div class="title">
@@ -205,5 +210,6 @@ coursesStore.availableCourses.then(r => {
   display: flex;
   gap: 10px;
 }
+
 
 </style>

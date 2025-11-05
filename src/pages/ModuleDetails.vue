@@ -1,28 +1,28 @@
 <script setup>
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {useRoute} from "vue-router";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import FeedbackDialog from "@/components/dialogs/FeedbackDialog.vue";
+import Breadcrumbs from "@/components/Breadcrumbs.vue";
 
 const route = useRoute();
 const coursesStore = useCoursesStore();
 
 const showFeedbackDialog = ref(false);
+
+onMounted(() => {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  });
+});
 </script>
 
 <template>
   <div class="mb-5">
     <div class="mt-5">
-      <!-- TODO: breadcrumbs -->
-      <router-link to="/" class="link-none">
-        <div class="link-none forward">
-          Моё обучение
-          <div class="arrow-forward"></div>
-          Java
-          <div class="arrow-forward"></div>
-          Основы Java
-        </div>
-      </router-link>
+      <Breadcrumbs></Breadcrumbs>
     </div>
 
     <!-- TODO: адаптировать под экраны иконки законченности задания -->

@@ -1,20 +1,12 @@
 <script setup>
 
+import Breadcrumbs from "@/components/Breadcrumbs.vue";
 </script>
 
 <template>
   <div class="mb-5">
     <div class="mt-5">
-      <!-- TODO: breadcrumbs -->
-      <router-link to="/" class="link-none">
-        <div class="link-none forward">
-          Моё обучение
-          <div class="arrow-forward"></div>
-          Java
-          <div class="arrow-forward"></div>
-          Основы Java
-        </div>
-      </router-link>
+      <Breadcrumbs></Breadcrumbs>
     </div>
     <div>Здесь будут статьи</div>
   </div>
