@@ -1,7 +1,8 @@
 <script setup>
-
 import Breadcrumbs from "@/components/Breadcrumbs.vue";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
+import {useCoursesStore} from "@/stores/CoursesStore.js";
+import {useRoute} from "vue-router";
 
 onMounted(() => {
   window.scrollTo({
@@ -10,6 +11,16 @@ onMounted(() => {
     behavior: 'smooth'
   });
 });
+
+let coursesStore = useCoursesStore();
+let route = useRoute();
+
+let module = ref();
+let articles = ref();
+
+
+coursesStore.userCourses[route.params.id].modules[route.params.mid].then(result => module.value = result);
+coursesStore.userCourses[route.params.id].modules[route.params.mid].resources.articles.then(result => articles.value = result);
 </script>
 
 <template>
@@ -17,24 +28,35 @@ onMounted(() => {
     <div class="mt-5">
       <Breadcrumbs></Breadcrumbs>
     </div>
-    <div>Здесь будут статьи</div>
+
+    <div class="title">
+      <div>{{ module?.name }}</div>
+      <div class="articles-subtitle">
+        estimated completion time: ~30 minutes
+      </div>
+    </div>
+
+    <div>
+      Здесь будут статьи
+    </div>
+
+    <pre>{{ articles }}</pre>
   </div>
 </template>
 
 <style scoped>
-.arrow-forward {
-  width: 34px;
-  height: 15px;
-  background-image: url("@/assets/images/arrow-forward.png");
-  background-repeat: no-repeat;
-  background-size: 100%;
-  display: inline-block;
+.title {
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 44px;
+  letter-spacing: 0;
 }
 
-.forward {
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 29px;
+.articles-subtitle {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 27px;
+  letter-spacing: 0;
   color: #828282;
 }
 </style>
