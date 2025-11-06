@@ -1,6 +1,15 @@
 <script setup>
 
 import Breadcrumbs from "@/components/Breadcrumbs.vue";
+import {onMounted} from "vue";
+
+onMounted(() => {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  });
+});
 </script>
 
 <template>

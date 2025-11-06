@@ -97,7 +97,7 @@ Promise.all([
   breadcrumbs[breadcrumbs.length - 1].disabled = true;
   breadcrumbs[breadcrumbs.length - 1].href = null;
 
-  if (!props.withMainPage) {
+  if (!props.withMainPage) { //если есть указание не отображать ссылку на главную страницу, удаляем ее
     breadcrumbs.shift();
   }
 });

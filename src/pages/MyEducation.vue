@@ -2,8 +2,10 @@
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {ref, watch} from "vue";
 import {formatDateShort} from "@/helpers/Formatters.js";
-import Breadcrumbs from "@/components/Breadcrumbs.vue";
+import {useUserStore} from "@/stores/UserStore.js";
+import {useRouter} from "vue-router";
 
+const router = useRouter();
 const coursesStore = useCoursesStore();
 
 const courseInfo = ref(false);

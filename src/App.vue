@@ -3,16 +3,24 @@ import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import {useUserStore} from "@/stores/UserStore.js";
 import {useCoursesStore} from "@/stores/CoursesStore.js";
+import {onMounted, ref} from "vue";
 
 const userStore = useUserStore();
 const coursesStore = useCoursesStore();
+const sessionIsReady = ref(false);
 
-userStore.sessionTools.addChangingListener(coursesStore.update);
+onMounted(() => {
+  userStore.sessionTools.addChangingListener(coursesStore.update);
+  userStore.sessionTools.loadSessionState().then(_ => {
+        sessionIsReady.value = true;
+      }
+  );
+});
 
 </script>
 
 <template>
-  <div class="main">
+  <div class="main" v-if="sessionIsReady">
     <Header class="header-content"></Header>
     <hr class="hr-line"/>
     <router-view class="main-content"></router-view>
@@ -41,10 +49,21 @@ userStore.sessionTools.addChangingListener(coursesStore.update);
   width: 100%;
 }
 
+.main-content {
+  flex-grow: 1;
+}
+
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 @media only screen and (max-width: 758px) {
   .main-content {
     box-sizing: content-box;
   }
 }
+
 
 </style>
