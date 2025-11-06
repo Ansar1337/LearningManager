@@ -58,7 +58,7 @@ const showLoginDialog = ref(false);
 
 .header-container {
   margin: 0 auto;
-  padding: 10px 40px;
+  padding: 10px 0;
   display: flex;
   flex: 1 1 auto;
   max-width: min(1920px, 85%);
@@ -79,7 +79,7 @@ const showLoginDialog = ref(false);
   min-width: 0;
   width: 46px;
   height: 37px;
-  background-image: url("@/assets/images/btn-bell.png");
+  background-image: url("../assets/images/btn-bell.png");
   background-repeat: no-repeat;
   background-size: 100%;
 }

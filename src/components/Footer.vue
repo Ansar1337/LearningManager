@@ -65,7 +65,7 @@ import IconTelegram from "@/components/icons/IconTelegram.vue"
 
 .footer-container {
   margin: 0 auto;
-  padding: 10px 40px;
+  padding: 10px 0;
   display: flex;
   flex: 1 1 auto;
   gap: 10px;

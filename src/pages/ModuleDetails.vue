@@ -35,56 +35,57 @@ onMounted(() => {
       <div class="time-text">Время прохождения ~ 4 часа 30 минут</div>
     </div>
 
-    <router-link :to="{name: 'articles', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
-      <div class="task-row">
+    <div class="section-container">
+      <router-link :to="{name: 'articles', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
+        <div class="task-row">
+          <div class="task-column">
+            <div class="article-text task-title">
+              <div class="materials"></div>
+              Материалы
+            </div>
+            <div class="complete"></div>
+          </div>
+          <div class="time-text">4 часа 30 минут</div>
+        </div>
+      </router-link>
+
+      <router-link :to="{name: 'homework', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
+        <div class="task-row">
+          <div class="task-column">
+            <div class="article-text task-title">
+              <div class="homeworks"></div>
+              Домашнее задание
+            </div>
+            <div class="uncompleted"></div>
+          </div>
+          <div class="time-text">4 часа 30 минут</div>
+        </div>
+      </router-link>
+
+      <div class="task-row clickable" @click="showFeedbackDialog = true">
         <div class="task-column">
           <div class="article-text task-title">
-            <div class="materials"></div>
-            Материалы
+            <div class="feedback"></div>
+            Обратная связь по уроку
           </div>
-          <div class="complete"></div>
         </div>
         <div class="time-text">4 часа 30 минут</div>
       </div>
-    </router-link>
 
-    <router-link :to="{name: 'homework', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
-      <div class="task-row">
-        <div class="task-column">
-          <div class="article-text task-title">
-            <div class="homeworks"></div>
-            Домашнее задание
+
+      <router-link :to="{name: 'test', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
+        <div class="task-row">
+          <div class="task-column">
+            <div class="article-text task-title">
+              <div class="tests"></div>
+              Тест по теме
+            </div>
+            <div class="uncompleted"></div>
           </div>
-          <div class="uncompleted"></div>
+          <div class="time-text">4 часа 30 минут</div>
         </div>
-        <div class="time-text">4 часа 30 минут</div>
-      </div>
-    </router-link>
-
-    <div class="task-row clickable" @click="showFeedbackDialog = true">
-      <div class="task-column">
-        <div class="article-text task-title">
-          <div class="feedback"></div>
-          Обратная связь по уроку
-        </div>
-      </div>
-      <div class="time-text">4 часа 30 минут</div>
+      </router-link>
     </div>
-
-
-    <router-link :to="{name: 'test', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
-      <div class="task-row">
-        <div class="task-column">
-          <div class="article-text task-title">
-            <div class="tests"></div>
-            Тест по теме
-          </div>
-          <div class="uncompleted"></div>
-        </div>
-        <div class="time-text">4 часа 30 минут</div>
-      </div>
-    </router-link>
-
     <feedback-dialog v-model:is-open="showFeedbackDialog"></feedback-dialog>
   </div>
 </template>
@@ -104,6 +105,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 20px;
+  justify-content: space-between;
 }
 
 .task-title {
@@ -197,5 +199,11 @@ onMounted(() => {
   background-image: url("../assets/images/tests.png");
   background-repeat: no-repeat;
   background-size: 100%;
+}
+
+.section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 </style>

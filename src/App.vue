@@ -37,9 +37,9 @@ onMounted(() => {
 
 .main-content {
   margin: 0 auto;
-  /* padding: 0 40px; */
   display: flex;
   max-width: min(1920px, 85%);
+  width: 100%;
   flex-direction: column;
   gap: 40px;
   align-items: center;
