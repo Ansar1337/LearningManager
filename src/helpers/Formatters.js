@@ -16,6 +16,15 @@ export function formatDateShort(date) {
         : "";
 }
 
+
+export function formatDatetime(date) {
+    return date && !(date instanceof Promise)
+        ? new Date(date)
+            .toLocaleTimeString("ru-RU", {month: "long", year: "numeric", day: "2-digit"})
+            .replace(" г.", "")
+        : "";
+}
+
 export function formatEstimate(estimate) {
     if (estimate && !(estimate instanceof Promise)) {
         let hours = Math.floor((estimate / (1000 * 60 * 60)));
