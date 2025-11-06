@@ -24,6 +24,10 @@
    ```
    npm run build
    ```
+5. The frontend application will work over the backend server.
+
+   API reference can be found [here](./src/backend/help.md).
+   API test dashboard can be found at `/api` page of the project.
 
 ### How to run the Backend
 
@@ -57,30 +61,30 @@ This repo also includes a backend part, so it's possible to launch it locally:
 
 ### Pages/UI:
 
-1. [ ] Dialogs
+1. [x] Dialogs
     1. [x] Login
     2. [x] Registration
-    3. [ ] Feedback form
+    3. [x] Feedback form
 2. [ ] Header menus/buttons
     1. [x] Login
     2. [ ] Notifications
-    3. [ ] User's menu
+    3. [x] User's menu
     4. [x] Logout
 3. [x] Homepage
 4. [ ] Courses' description page
 5. [ ] User's cabinet mainpage
-    1. [ ] "My learning" page
+    1. [x] "My learning" page
     2. [ ] My learning -> Course details page
     3. [ ] My learning -> Course details -> Module page
     4. [ ] My learning -> Course details -> Module page -> Lections page
     5. [ ] My learning -> Course details -> Module page -> Homework page
     6. [ ] My learning -> Course details -> Module page -> Test page
-    7. [ ] Profile settings -> Personal data page
-    8. [ ] Profile settings -> Credentials page
-    9. [ ] Profile settings -> Email page
+    7. [x] Profile settings -> Personal data page
+    8. [x] Profile settings -> Credentials page
+    9. [x] Profile settings -> Email page
     10. [ ] Performance Page
 
-### API+StateManagement:
+### API+StateManagement [DONE]:
 
 1. [x] Session Management
     1. [x] Check account state
@@ -94,7 +98,7 @@ This repo also includes a backend part, so it's possible to launch it locally:
         1. [x] Metadata only (name, icon, short description)
         2. [x] Full description
     2. [x] Fetch User's courses
-        1. [x] Unread messages (BACKEND ONLY YET)
+        1. [x] Unread messages
         2. [x] Metadata only
         3. [x] Modules by courseId
             1. [x] Metadata (timings, performance etc)
@@ -106,10 +110,11 @@ This repo also includes a backend part, so it's possible to launch it locally:
                 2. [x] File upload
                 3. [x] Status
                 4. [x] Comments
-            4. [x] Tests + status (BACKEND ONLY YET)
-                1. [x] Get questions (BACKEND ONLY YET)
-                2. [x] Track questions (BACKEND ONLY YET)
-                3. [x] Check Questions (BACKEND ONLY YET)
+            4. [x] Tests + status
+                1. [x] Get questions
+                2. [x] Track questions
+                3. [x] Check Questions
     3. [x] Profile data
         1. [x] Feed data
         2. [x] Update data
+    

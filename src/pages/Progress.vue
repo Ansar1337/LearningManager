@@ -7,7 +7,6 @@ import {useCoursesStore} from "@/stores/CoursesStore.js";
 const userStore = useUserStore();
 const coursesStore = useCoursesStore();
 
-// TODO: разное поведение в then при прямом переходе и F5
 const info = ref({});
 userStore.session.profile
     .then(result => result.value ? result.value : result)

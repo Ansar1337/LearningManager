@@ -141,8 +141,7 @@ function registrationComplete() {
               <input id="password" name="password" type="password" class="input" v-model="data.password">
               <div class="error-text" v-if="data.passwordError !== ''">{{ data.passwordError }}</div>
 
-              <!-- TODO: доделать функционал кнопки  -->
-              <div class="text-summer-sky password-reset mt-2">Не помню пароль</div>
+              <div @click="data.step = 5" class="text-summer-sky password-reset mt-2">Не помню пароль</div>
             </div>
 
             <div class="error-text text-center" v-if="data.commonError !== ''">{{ data.commonError }}</div>
@@ -217,6 +216,34 @@ function registrationComplete() {
             </v-btn>
           </v-card-text>
         </v-window-item>
+
+        <v-window-item :value="5">
+          <v-card-text>
+            <div class="title-small mb-5">Введите почту, куда будет отправлен временный пароль</div>
+            <div class="form-fields">
+              <label class="mt-2 mb-2 d-block label" for="reg">Введите ваш email</label>
+              <input id="reg" name="reg" type="text" class="input">
+            </div>
+
+            <v-btn color="#2D9CDB" class="action-button mb-2 text-none" elevation="0" @click="data.step = 6">
+              <span>Восстановить пароль</span>
+            </v-btn>
+          </v-card-text>
+        </v-window-item>
+
+        <v-window-item :value="6">
+          <v-card-text>
+            <div class="title-small mb-5">Письмо отпарвлено на вашу почту</div>
+            <div class="form-fields">
+              <label class="mt-2 mb-2 d-block label" for="reg">Используйте временный пароль из письма, чтобы
+                войти</label>
+            </div>
+
+            <v-btn color="#2D9CDB" class="action-button mb-2 text-none" elevation="0" @click="isOpen = false">
+              <span>Продолжить</span>
+            </v-btn>
+          </v-card-text>
+        </v-window-item>
       </v-window>
     </v-card>
   </v-dialog>
@@ -231,7 +258,7 @@ function registrationComplete() {
 
 .title-small {
   font-size: 16px;
- /* font-weight: 500;*/
+  /* font-weight: 500;*/
   line-height: 20px;
 }
 

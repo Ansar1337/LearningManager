@@ -11,7 +11,6 @@ let data = [
   {id: 'third', value: 3, title: 'E-mail', checked: false},
 ]
 
-// TODO: разное поведение в then при прямом переходе и F5
 const info = ref({});
 userStore.session.profile
     .then(result => result.value ? result.value : result)

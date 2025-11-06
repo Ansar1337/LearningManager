@@ -1,20 +1,25 @@
 <script setup>
+import {ref} from "vue";
+import ConsultantDialog from "@/components/dialogs/ConsultantDialog.vue";
 
+const showConsultantDialog = ref(false);
 </script>
 
 <template>
   <section class="feedback bg-alice-blue mb-5">
     <div class="feedback-title text-summer-sky mt-6">Остались вопросы?</div>
     <div class="feedback-text">Оставьте контакты — мы с вами свяжемся</div>
-    <form class="mt-6">
+    <div class="mt-6">
       <input type="text" placeholder="Имя" class="input mb-6">
       <input type="text" placeholder="+7 (777) 777-77-77" class="input mb-6">
       <input type="text" placeholder="Электронная почта" class="input mb-6">
-      <button type="submit" class="confirm bg-summer-sky text-white mb-6">Получить консультацию</button>
-    </form>
+      <button @click="showConsultantDialog = true" class="confirm bg-summer-sky text-white mb-6">Получить консультацию
+      </button>
+    </div>
 
     <!-- TODO: добавить ссылки на страницы "условия политики" и "пользовательского соглашения" -->
     <div class="feedback-small mb-6">Нажимая кнопку, принимаю условия политики и пользовательского соглашения</div>
+    <consultant-dialog v-model:is-open="showConsultantDialog"></consultant-dialog>
   </section>
 </template>
 
