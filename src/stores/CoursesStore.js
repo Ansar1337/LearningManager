@@ -196,24 +196,25 @@ export const useCoursesStore = defineStore('courses', () => {
         });
 
         if (response.status === "success") {
-            response.data.questions = response.data.questions ?? [];
-            response.data.questions = reactive(response.data);
-            response.data.questions.forEach((item, index) => {
-                watch(item.options, (status) => {
-                    let watcher;
-                    const checker = async () => {
-                        const updateResponse = await updateUserCourseModuleTest(
-                            courseId, moduleId, index, status
-                        );
-                        if (updateResponse.status === "success") {
-                            clearInterval(watcher);
-                            updateMetaData();
+            response.data = response.data ?? [];
+            response.data = reactive(response.data);
+            response.data.forEach((item, index) => {
+                    watch(item.options, (status) => {
+                        let watcher;
+                        const checker = async () => {
+                            const updateResponse = await updateUserCourseModuleTest(
+                                courseId, moduleId, index, status
+                            );
+                            if (updateResponse.status === "success") {
+                                clearInterval(watcher);
+                                updateMetaData();
+                            }
                         }
-                    }
-                    watcher = setInterval(checker, 5000);
-                    checker();
-                });
-            });
+                        watcher = setInterval(checker, 5000);
+                        checker();
+                    });
+                }
+            );
         }
 
         return response;
@@ -312,6 +313,7 @@ export const useCoursesStore = defineStore('courses', () => {
                 });
             });
         }
+
         return response;
     }
 

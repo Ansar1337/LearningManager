@@ -72,7 +72,7 @@ Promise.all([
   }
 
 
-  const path = route.path; ///course/0/module/0/test
+  const path = route.path; // /course/0/module/0/test
   const segmentedPath = path.split("/").filter((item) => {
     return item !== "";
   });  // [course, 0, module, 0, test]
@@ -100,6 +100,7 @@ Promise.all([
   if (!props.withMainPage) { //если есть указание не отображать ссылку на главную страницу, удаляем ее
     breadcrumbs.shift();
   }
+
 });
 </script>
 

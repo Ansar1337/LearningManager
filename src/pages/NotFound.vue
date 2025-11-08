@@ -7,7 +7,7 @@ const route = useRoute();
 
 <template>
   <div>
-    PAGE [{{ route.path }}] DOES NOT EXISTS
+    PAGE [{{ route.path }}] DOES NOT EXIST
   </div>
 </template>
 

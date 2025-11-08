@@ -601,7 +601,9 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+//            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . 0 . "_" . 0 . ".php";
+            $mockFilePathCacheKey = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
 
             if (!(file_exists($mockFilePath))) {
                 $result["status"] = "error";
@@ -609,7 +611,7 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+            $test = read_from_cache($mockFilePathCacheKey, function () use ($mockFilePath) {
                 return include($mockFilePath);
             }, 3600);
 
@@ -643,7 +645,9 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+//            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . 0 . "_" . 0 . ".php";
+            $mockFilePathCacheKey = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
 
             if (!(file_exists($mockFilePath))) {
                 $result["status"] = "error";
@@ -651,7 +655,7 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+            $test = read_from_cache($mockFilePathCacheKey, function () use ($mockFilePath) {
                 return include($mockFilePath);
             }, 3600);
 
@@ -670,7 +674,7 @@ if ($_POST["action"] ?? false) {
 
             $test["meta"]["state"] = "in_progress";
 
-            write_to_cache($mockFilePath, $test, 3600);
+            write_to_cache($mockFilePathCacheKey, $test, 3600);
 
             $result["status"] = "success";
             $result["data"] = "test launched";
@@ -701,7 +705,9 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+//            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . 0 . "_" . 0 . ".php";
+            $mockFilePathCacheKey = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
 
             if (!(file_exists($mockFilePath))) {
                 $result["status"] = "error";
@@ -709,11 +715,11 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+            $test = read_from_cache($mockFilePathCacheKey, function () use ($mockFilePath) {
                 return include($mockFilePath);
             }, 3600);
 
-            $testState = read_from_cache($mockFilePath . "state" . $test["meta"]["currentTry"], function () use ($test) {
+            $testState = read_from_cache($mockFilePathCacheKey . "state" . $test["meta"]["currentTry"], function () use ($test) {
                 $result = $test["questions"];
                 array_walk($result, function (&$item) {
                     $item["options"] = array_fill_keys(array_keys($item["options"]), false);
@@ -727,8 +733,8 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            write_to_cache($mockFilePath, $test, 3600);
-            write_to_cache($mockFilePath . "state" . $test["meta"]["currentTry"], $testState, 3600);
+            write_to_cache($mockFilePathCacheKey, $test, 3600);
+            write_to_cache($mockFilePathCacheKey . "state" . $test["meta"]["currentTry"], $testState, 3600);
 
             $result["status"] = "success";
             $result["data"] = $testState;
@@ -768,7 +774,9 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+//            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . 0 . "_" . 0 . ".php";
+            $mockFilePathCacheKey = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
 
             if (!(file_exists($mockFilePath))) {
                 $result["status"] = "error";
@@ -776,11 +784,11 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+            $test = read_from_cache($mockFilePathCacheKey, function () use ($mockFilePath) {
                 return include($mockFilePath);
             }, 3600);
 
-            $testState = read_from_cache($mockFilePath . "state" . $test["meta"]["currentTry"], function () use ($test) {
+            $testState = read_from_cache($mockFilePathCacheKey . "state" . $test["meta"]["currentTry"], function () use ($test) {
                 $result = $test["questions"];
                 array_walk($result, function (&$item) {
                     $item["options"] = array_fill_keys(array_keys($item["options"]), false);
@@ -813,8 +821,8 @@ if ($_POST["action"] ?? false) {
 
             $test["meta"]["lastQuestion"] = intval($questionId);
 
-            write_to_cache($mockFilePath, $test, 3600);
-            write_to_cache($mockFilePath . "state" . $test["meta"]["currentTry"], $testState, 3600);
+            write_to_cache($mockFilePathCacheKey, $test, 3600);
+            write_to_cache($mockFilePathCacheKey . "state" . $test["meta"]["currentTry"], $testState, 3600);
 
             $result["status"] = "success";
             $result["data"] = "question #$questionId updated";
@@ -845,7 +853,9 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+//            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . 0 . "_" . 0 . ".php";
+            $mockFilePathCacheKey = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
 
             if (!(file_exists($mockFilePath))) {
                 $result["status"] = "error";
@@ -853,11 +863,11 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+            $test = read_from_cache($mockFilePathCacheKey, function () use ($mockFilePath) {
                 return include($mockFilePath);
             }, 3600);
 
-            $testState = read_from_cache($mockFilePath . "state" . $test["meta"]["currentTry"], function () use ($test) {
+            $testState = read_from_cache($mockFilePathCacheKey . "state" . $test["meta"]["currentTry"], function () use ($test) {
                 $result = $test["questions"];
                 array_walk($result, function (&$item) {
                     $item["options"] = array_fill_keys(array_keys($item["options"]), false);
@@ -875,8 +885,8 @@ if ($_POST["action"] ?? false) {
             $test["meta"]["lastAttemptTime"] = time();
             $test["meta"]["state"] = "idle";
 
-            write_to_cache($mockFilePath, $test, 3600);
-            write_to_cache($mockFilePath . "state" . $test["meta"]["currentTry"], $testState, 3600);
+            write_to_cache($mockFilePathCacheKey, $test, 3600);
+            write_to_cache($mockFilePathCacheKey . "state" . $test["meta"]["currentTry"], $testState, 3600);
 
             $result["status"] = "success";
             $result["data"] = "test finished";
@@ -907,7 +917,9 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+            //            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+            $mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . 0 . "_" . 0 . ".php";
+            $mockFilePathCacheKey = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
 
             if (!(file_exists($mockFilePath))) {
                 $result["status"] = "error";
@@ -915,11 +927,11 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $test = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+            $test = read_from_cache($mockFilePathCacheKey, function () use ($mockFilePath) {
                 return include($mockFilePath);
             }, 3600);
 
-            $testState = read_from_cache($mockFilePath . "state" . $test["meta"]["currentTry"], function () use ($test) {
+            $testState = read_from_cache($mockFilePathCacheKey . "state" . $test["meta"]["currentTry"], function () use ($test) {
                 $result = $test["questions"];
                 array_walk($result, function (&$item) {
                     $item["options"] = array_fill_keys(array_keys($item["options"]), false);
@@ -966,8 +978,8 @@ if ($_POST["action"] ?? false) {
             $review["score"] = max(0, min(100, intval($review["score"])));
             $review["passed"] = $review["mistakes"] <= $test["meta"]["mistakesLimit"];
 
-            write_to_cache($mockFilePath, $test, 3600);
-            write_to_cache($mockFilePath . "state" . $test["meta"]["currentTry"], $testState, 3600);
+            write_to_cache($mockFilePathCacheKey, $test, 3600);
+            write_to_cache($mockFilePathCacheKey . "state" . $test["meta"]["currentTry"], $testState, 3600);
 
             $result["status"] = "success";
             $result["data"] = $review;

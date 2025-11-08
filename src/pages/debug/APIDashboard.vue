@@ -385,38 +385,40 @@ const courses = useCoursesStore();
 const ready = ref(false);
 const route = useRoute();
 
-// function updateQuestion() {
-//   courses.userCourses[0].modules[0].resources.test.questions[1].options["Травку жевал"] = true;
-// }
+function updateQuestion() {
+  courses.userCourses[0].modules[0].resources.test.questions[1].options["Травку жевал"] = !courses.userCourses[0].modules[0].resources.test.questions[1].options["Травку жевал"];
+  console.log(courses.userCourses[0].modules[0].resources.test.questions[1].options["Травку жевал"]);
+  console.log(courses.userCourses[0].modules[0].resources.test.questions[1].options);
+}
 
-
-setTimeout(() => {
-  console.log(courses.availableCourses[0].details);
-}, 3000)
-
-setTimeout(() => {
-  window.DDD = true;
-  console.log(courses.availableCourses[0].details);
-}, 2000)
+//
+// setTimeout(() => {
+//   console.log(courses.availableCourses[0].details);
+// }, 3000)
+//
+// setTimeout(() => {
+//   window.DDD = true;
+//   console.log(courses.availableCourses[0].details);
+// }, 2000)
 </script>
 
 <template>
   <main>
-    <button @click="console.log(courses.availableCourses[0].details)">ТЫЦ</button>
-
-    <!--        <pre>-->
-    <!--          <button @click="courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.tools?.launch()">ЗАПУСК</button>-->
-    <!--          <button @click="updateQuestion">ОТВЕТ</button>-->
-    <!--          <button @click="courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.tools?.finish()">ФИНИШ</button>-->
-    <!--          {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.test }}-->
-    <!--          {{ user.session }}-->
-    <!--          <hr>-->
-    <!--           <button @click="courses.unreadMessages[0].watched = true">ПРОЧИТАТЬ СООБЩЕНИЕ</button>-->
-    <!--        {{ courses.unreadMessages }}-->
-    <!--                <hr>-->
-    <!--           <button @click="courses.userCourses[0].modules[0].resources.homework.comments[3].unread = false">ПРОЧИТАТЬ КОММЕНТАРИЙ</button>-->
-    <!--        {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.homework}}-->
-    <!--        </pre>-->
+    <!--    <button @click="console.log(courses.availableCourses[0].details)">ТЫЦ</button>-->
+    <!--    <pre>-->
+    <!--              {{user.session}}-->
+    <!--              <button @click="courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.tools?.launch()">ЗАПУСК</button>-->
+    <!--              <button @click="updateQuestion">ОТВЕТ</button>-->
+    <!--              <button @click="courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.tools?.finish()">ФИНИШ</button>-->
+    <!--              {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.test}}-->
+    {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.questions?.[1]?.options }}
+    <!--              <hr>-->
+    <!--               <button @click="courses.unreadMessages[0].watched = true">ПРОЧИТАТЬ СООБЩЕНИЕ</button>-->
+    <!--            {{ courses.unreadMessages }}-->
+    <!--                    <hr>-->
+    <!--               <button @click="courses.userCourses[0].modules[0].resources.homework.comments[3].unread = false">ПРОЧИТАТЬ КОММЕНТАРИЙ</button>-->
+    <!--            {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.homework}}-->
+    <!--            </pre>-->
     <h1>Дэшборд для теста API-хэндлов</h1>
     <h2>Используемый сервер: {{ serverURL }}</h2>
 

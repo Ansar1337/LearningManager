@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', () => {
 
     async function loadUserProfile() {
         const response = await doRequest("userManager", "loadProfileData");
+
         if (response.status === "success") {
             response.data.updateWith = async function (newProfile) {
                 const response = await doRequest("userManager", "saveProfileData", {newProfile});

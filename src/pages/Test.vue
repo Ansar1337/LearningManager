@@ -7,10 +7,11 @@ import {ref} from "vue";
 const coursesStore = useCoursesStore();
 const route = useRoute();
 
-let tab = defineModel('tab', {default: 1});
-let questionIndex = defineModel('question', {default: 0});
-let module = ref();
-let testInfo = ref();
+const tab = defineModel('tab', {default: 1});
+const questionIndex = defineModel('question', {default: 0});
+const module = ref();
+const testInfo = ref();
+let questions = ref();
 
 coursesStore.userCourses[route.params.id].modules[route.params.mid].resources.test.then(result => {
   module.value = coursesStore.userCourses[route.params.id].modules[route.params.mid];
@@ -18,18 +19,6 @@ coursesStore.userCourses[route.params.id].modules[route.params.mid].resources.te
 });
 
 /* TODO: перезапуск квеста ведет к ошибке */
-function startTest() {
-  testInfo.value?.tools?.launch().then(_ => {
-    testInfo.value.questions.then(_ => {
-      tab.value = 2;
-    })
-  })
-}
-
-function complete() {
-  tab.value = 3;
-  testInfo.value?.tools?.finish();
-}
 
 </script>
 
@@ -60,7 +49,7 @@ function complete() {
             <div>{{ testInfo?.triesLimit }} попытки</div>
           </div>
           <div>
-            <v-btn @click="startTest" :disabled="!testInfo" color="#2D9CDB"
+            <v-btn @click="testInfo?.tools?.launch() && tab++" :disabled="!testInfo" color="#2D9CDB"
                    class="start-btn bg-summer-sky text-white mt-2 text-none" elevation="0">
               Начать!
             </v-btn>
@@ -70,20 +59,25 @@ function complete() {
 
       <v-window-item :value="2">
         <v-window v-model="questionIndex">
-          <template v-for="(question, index) in testInfo?.questions || []">
+          <template v-for="(question, index) in testInfo.questions || []">
             <v-window-item :value="index">
               <div class="card">
                 <div class="title">
                   {{ question?.title }}
                 </div>
                 <div v-for="(value, key) in question?.options" class="info">
-                  <input :checked="value" type="checkbox" class="custom-checkbox"
-                         @change="event => question.options[key] = event.target.checked">
-                  <label class="custom-checkbox-label">{{ key }}</label>
+                  <label class="custom-checkbox-label">
+                    <input
+                        v-model="question.options[key]"
+                        type="checkbox"
+                        class="custom-checkbox">
+                    {{ key }}
+                  </label>
                 </div>
                 <div>
-                  <v-btn @click="index === testInfo?.questions?.length - 1 ? complete() : questionIndex++"
-                         color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none" elevation="0">
+                  <v-btn
+                      @click="index === testInfo?.questions?.length - 1 ? (testInfo?.tools?.finish() && tab++) : questionIndex++"
+                      color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none" elevation="0">
                     {{ index === testInfo?.questions?.length - 1 ? 'Завершить' : 'Далее' }}
                   </v-btn>
                 </div>
@@ -127,9 +121,7 @@ function complete() {
           </div>
           <div class="card-content-completeness">
             <div class="card-content-completeness-progress">
-              <v-progress-linear color="#6FCF97"
-                                 :model-value="Number(testInfo?.review?.mistakes / testInfo?.review?.structure?.length * 100)"
-                                 :height="7"
+              <v-progress-linear color="#6FCF97" :model-value="Number(testInfo?.review?.score)" :height="7"
                                  rounded="2"></v-progress-linear>
             </div>
             <div class="percent" :style="{color: testInfo?.review?.passed ? '#6FCF97' : '#EB5757'}">
