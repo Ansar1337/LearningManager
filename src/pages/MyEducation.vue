@@ -13,7 +13,7 @@ const courseDetails = ref(false);
 const showAll = ref(false);
 
 coursesStore.availableCourses.then(courses => {
-  Promise.all(courses.map(c => c.details.value)).then(_ => {
+  Promise.all(courses.map(c => c.details)).then(_ => {
     courseInfo.value = true;
   })
 });

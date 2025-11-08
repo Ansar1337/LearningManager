@@ -11,7 +11,6 @@ const tab = defineModel('tab', {default: 1});
 const questionIndex = defineModel('question', {default: 0});
 const module = ref();
 const testInfo = ref();
-let questions = ref();
 
 coursesStore.userCourses[route.params.id].modules[route.params.mid].resources.test.then(result => {
   module.value = coursesStore.userCourses[route.params.id].modules[route.params.mid];
