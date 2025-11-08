@@ -104,7 +104,7 @@ onMounted(() => {
               </div>
               <div class="module-card-time text-silver">
                 <span class="module-card-time-icon">&nbsp;</span>
-                <span>{{ formatLongEstimate(module?.estimatedTime) }}</span>
+                <span>{{ formatLongEstimate(module?.estimatedTime?.total) }}</span>
               </div>
               <div class="module-card-grade text-summer-sky">{{ module?.performance }} / 100 баллов</div>
             </div>
@@ -310,59 +310,5 @@ onMounted(() => {
 
 .separator::before {
   content: "—";
-}
-
-
-/* timeline */
-.timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.timeline > * {
-  position: relative;
-  z-index: auto;
-}
-
-.timeline > *::before {
-  display: block;
-  content: "";
-  width: 25px;
-  height: 25px;
-  background-color: #BDBDBD;
-  border-radius: 100%;
-  position: absolute;
-  top: 30px;
-  left: 30px;
-  z-index: 2;
-}
-
-.timeline > *::after {
-  display: block;
-  content: "";
-  width: 5px;
-  height: calc(100% + 35px);
-  background-color: #BDBDBD;
-  position: absolute;
-  top: 40px;
-  left: 40px;
-  z-index: 1;
-  overflow: visible;
-}
-
-.timeline > *:last-child::after {
-  display: none;
-}
-
-.timeline > *.done::before,
-.timeline > *.done + :not(.done)::before {
-  background-color: #6FCF97;
-  box-shadow: 0 0 16px 0 #6FCF97;
-
-}
-
-.timeline > *.done::after {
-  background-color: #6FCF97;
 }
 </style>

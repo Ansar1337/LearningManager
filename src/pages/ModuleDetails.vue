@@ -2,11 +2,57 @@
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
+import {formatLongEstimate} from "@/helpers/Formatters.js";
 import FeedbackDialog from "@/components/dialogs/FeedbackDialog.vue";
 import Breadcrumbs from "@/components/Breadcrumbs.vue";
 
 const route = useRoute();
 const coursesStore = useCoursesStore();
+const moduleInfo = ref();
+const moduleResources = ref();
+const completeness = ref({
+  articles: 0,
+  homework: 0,
+  test: 0,
+  total: 0
+});
+
+coursesStore.userCourses[route.params.id].modules[route.params.mid].then(res => {
+  moduleInfo.value = res;
+  return res.resources;
+}).then(res => {
+  moduleResources.value = res;
+  let maxPoints = 0;
+  Promise.all([
+    res.articles.value.then(r => {
+      const completedChapters = r.reduce((acc, item) => {
+        return (acc + (+item.completed.value));
+      }, 0);
+
+      maxPoints += r.length;
+      completeness.value.articles = completedChapters / r.length * 100;
+      completeness.value.total += completedChapters;
+    }),
+
+    res.homework.value.status.then(r => {
+      maxPoints += 1;
+      if (r === "Done") {
+        completeness.value.homework = 1;
+        completeness.value.total += 1;
+      }
+    }),
+
+    res.test.value.review.then(r => {
+      maxPoints += 1;
+      if (r?.passed) {
+        completeness.value.test = 1;
+        completeness.value.total += 1;
+      }
+    })]).then(_ => {
+    completeness.value.total = completeness.value.total / maxPoints * 100;
+  });
+
+});
 
 const showFeedbackDialog = ref(false);
 
@@ -29,60 +75,68 @@ onMounted(() => {
     <!-- TODO: данные не совпадают с макетом, не времени выполнения каждой секции -->
     <div class="task-row">
       <div class="task-column">
-        <div class="title task-title">Основы Java</div>
-        <v-progress-circular color="#6FCF97" :model-value="20" :size="30" :width="7"/>
+        <div class="title task-title">{{ moduleInfo.name }}</div>
+        <v-progress-circular color="#6FCF97"
+                             :model-value="completeness.total"
+                             :size="50" :width="10"/>
       </div>
-      <div class="time-text">Время прохождения ~ 4 часа 30 минут</div>
+      <div class="time-text">~{{ formatLongEstimate(moduleInfo?.estimatedTime?.total) }}</div>
     </div>
 
-    <div class="section-container">
-      <router-link :to="{name: 'articles', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
+    <div class="section-container timeline">
+      <router-link :to="{name: 'articles', params: { id: route.params.id, mid: route.params.mid }}"
+                   :class="'link-none ' + ((completeness.articles === 100) ? ('done') : (''))">
         <div class="task-row">
           <div class="task-column">
             <div class="article-text task-title">
               <div class="materials"></div>
               Материалы
             </div>
-            <div class="complete"></div>
+            <div v-if="completeness.articles === 100" class="completeness-marker complete"></div>
+            <v-progress-circular v-else color="#6FCF97" :model-value="completeness.articles" :size="50" :width="10"/>
           </div>
-          <div class="time-text">4 часа 30 минут</div>
+          <div class="time-text">~{{ formatLongEstimate(moduleInfo?.estimatedTime?.articles) }}</div>
         </div>
       </router-link>
 
-      <router-link :to="{name: 'homework', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
+      <router-link :to="{name: 'homework', params: { id: route.params.id, mid: route.params.mid }}"
+                   :class="'link-none ' + ((moduleResources?.homework?.status === 'Done') ? ('done') : (''))">
         <div class="task-row">
           <div class="task-column">
             <div class="article-text task-title">
               <div class="homeworks"></div>
               Домашнее задание
             </div>
-            <div class="uncompleted"></div>
+            <div
+                :class="'completeness-marker ' + ((moduleResources?.homework?.status === 'Done') ? ('complete') : ('uncompleted'))"></div>
           </div>
-          <div class="time-text">4 часа 30 минут</div>
+          <div class="time-text">~{{ formatLongEstimate(moduleInfo?.estimatedTime?.homework) }}</div>
         </div>
       </router-link>
 
-      <div class="task-row clickable" @click="showFeedbackDialog = true">
+      <div class="task-row clickable no-timeline" @click="showFeedbackDialog = true">
         <div class="task-column">
           <div class="article-text task-title">
             <div class="feedback"></div>
             Обратная связь по уроку
           </div>
         </div>
-        <div class="time-text">4 часа 30 минут</div>
+        <div class="time-text">Помогите нам стать еще лучше!</div>
       </div>
 
 
-      <router-link :to="{name: 'test', params: { id: route.params.id, mid: route.params.mid }}" class="link-none">
+      <router-link :to="{name: 'test', params: { id: route.params.id, mid: route.params.mid }}"
+                   :class="'link-none ' + ((moduleResources?.test?.review?.passed) ? ('done') : ('')) ">
         <div class="task-row">
           <div class="task-column">
             <div class="article-text task-title">
               <div class="tests"></div>
               Тест по теме
             </div>
-            <div class="uncompleted"></div>
+            <div
+                :class="'completeness-marker ' + ((moduleResources?.test?.review?.passed) ? ('complete') : ('uncompleted'))"></div>
           </div>
-          <div class="time-text">4 часа 30 минут</div>
+          <div class="time-text">~{{ formatLongEstimate(moduleInfo?.estimatedTime?.test) }}</div>
         </div>
       </router-link>
     </div>
@@ -99,6 +153,8 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding-right: 30px;
+  box-sizing: border-box;
 }
 
 .task-column {
@@ -110,6 +166,17 @@ onMounted(() => {
 
 .task-title {
   min-width: max(50%, 300px);
+}
+
+.section-container > * {
+  background-color: rgb(246, 248, 249);
+  padding: 30px 0 30px 80px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.section-container > *:hover {
+  background-color: rgb(226 226 226);
 }
 
 .arrow-forward {
@@ -153,20 +220,20 @@ onMounted(() => {
   color: black;
 }
 
-.complete {
-  width: 28px;
-  height: 28px;
-  background-image: url("../assets/images/task-complete.png");
+.completeness-marker {
   background-repeat: no-repeat;
   background-size: 100%;
+  width: 50px;
+  height: 50px;
+  margin-bottom: -40px;
 }
 
-.uncompleted {
-  width: 28px;
-  height: 28px;
+.completeness-marker.complete {
+  background-image: url("../assets/images/task-complete.png");
+}
+
+.completeness-marker.uncompleted {
   background-image: url("../assets/images/task-uncompleted.png");
-  background-repeat: no-repeat;
-  background-size: 100%;
 }
 
 .materials {
@@ -205,5 +272,9 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 30px;
+}
+
+.v-progress-circular {
+  margin-bottom: -30px;
 }
 </style>

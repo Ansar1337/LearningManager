@@ -7,7 +7,12 @@ return [
         'lessonsCompleted' => 1,
         'lessonsTotal' => 1,
         'deadline' => '2024-01-14',
-        'estimatedTime' => 4800000,
+        'estimatedTime' => [
+            'articles' => 2400000, // 50%
+            'homework' => 1440000, // 30%
+            'test' => 960000, // 20%
+            'total' => 4800000 // 100%
+        ],
         'performance' => 100,
         'resources' => [
             'articles' => [],
@@ -21,7 +26,12 @@ return [
         'lessonsCompleted' => 3,
         'lessonsTotal' => 3,
         'deadline' => '2024-01-14',
-        'estimatedTime' => 4800000,
+        'estimatedTime' => [
+            'articles' => 2400000,
+            'homework' => 1440000,
+            'test' => 960000,
+            'total' => 4800000
+        ],
         'performance' => 96,
         'resources' => [
             'articles' => [],
@@ -35,7 +45,12 @@ return [
         'lessonsCompleted' => 11,
         'lessonsTotal' => 11,
         'deadline' => '2024-01-14',
-        'estimatedTime' => 16200000,
+        'estimatedTime' => [
+            'articles' => 8100000,
+            'homework' => 4860000,
+            'test' => 3240000,
+            'total' => 16200000
+        ],
         'performance' => 98,
         'resources' => [
             'articles' => [],
@@ -49,7 +64,12 @@ return [
         'lessonsCompleted' => 3,
         'lessonsTotal' => 23,
         'deadline' => '2024-01-14',
-        'estimatedTime' => 4800000,
+        'estimatedTime' => [
+            'articles' => 2400000,
+            'homework' => 1440000,
+            'test' => 960000,
+            'total' => 4800000
+        ],
         'performance' => 100,
         'resources' => [
             'articles' => [],
@@ -63,7 +83,12 @@ return [
         'lessonsCompleted' => 0,
         'lessonsTotal' => 1,
         'deadline' => '2024-01-14',
-        'estimatedTime' => 4800000,
+        'estimatedTime' => [
+            'articles' => 2400000,
+            'homework' => 1440000,
+            'test' => 960000,
+            'total' => 4800000
+        ],
         'performance' => 100,
         'resources' => [
             'articles' => [],
@@ -77,7 +102,12 @@ return [
         'lessonsCompleted' => 1,
         'lessonsTotal' => 6,
         'deadline' => '2024-01-14',
-        'estimatedTime' => 4800000,
+        'estimatedTime' => [
+            'articles' => 2400000,
+            'homework' => 1440000,
+            'test' => 960000,
+            'total' => 4800000
+        ],
         'performance' => 100,
         'resources' => [
             'articles' => [],

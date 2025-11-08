@@ -7,7 +7,12 @@ return [
         'lessonsCompleted' => 5,
         'lessonsTotal' => 5,
         'deadline' => '2024-04-17',
-        'estimatedTime' => 7200000,
+        'estimatedTime' => [
+            'articles' => 3600000, // 50%
+            'homework' => 2160000, // 30%
+            'test' => 1440000, // 20%
+            'total' => 7200000 // 100%
+        ],
         'performance' => 100,
         'resources' => [
             'articles' => [],
@@ -21,7 +26,12 @@ return [
         'lessonsCompleted' => 4,
         'lessonsTotal' => 4,
         'deadline' => '2024-04-24',
-        'estimatedTime' => 7200000,
+        'estimatedTime' => [
+            'articles' => 3600000,
+            'homework' => 2160000,
+            'test' => 1440000,
+            'total' => 7200000
+        ],
         'performance' => 98,
         'resources' => [
             'articles' => [],
@@ -35,7 +45,12 @@ return [
         'lessonsCompleted' => 6,
         'lessonsTotal' => 6,
         'deadline' => '2024-05-01',
-        'estimatedTime' => 10800000,
+        'estimatedTime' => [
+            'articles' => 5400000,
+            'homework' => 3240000,
+            'test' => 2160000,
+            'total' => 10800000
+        ],
         'performance' => 97,
         'resources' => [
             'articles' => [],
@@ -49,7 +64,12 @@ return [
         'lessonsCompleted' => 8,
         'lessonsTotal' => 10,
         'deadline' => '2024-05-15',
-        'estimatedTime' => 14400000,
+        'estimatedTime' => [
+            'articles' => 7200000,
+            'homework' => 4320000,
+            'test' => 2880000,
+            'total' => 14400000
+        ],
         'performance' => 94,
         'resources' => [
             'articles' => [],
@@ -63,7 +83,12 @@ return [
         'lessonsCompleted' => 7,
         'lessonsTotal' => 9,
         'deadline' => '2024-05-29',
-        'estimatedTime' => 12600000,
+        'estimatedTime' => [
+            'articles' => 6300000,
+            'homework' => 3780000,
+            'test' => 2520000,
+            'total' => 12600000
+        ],
         'performance' => 92,
         'resources' => [
             'articles' => [],
@@ -77,7 +102,12 @@ return [
         'lessonsCompleted' => 5,
         'lessonsTotal' => 5,
         'deadline' => '2024-06-05',
-        'estimatedTime' => 9000000,
+        'estimatedTime' => [
+            'articles' => 4500000,
+            'homework' => 2700000,
+            'test' => 1800000,
+            'total' => 9000000
+        ],
         'performance' => 95,
         'resources' => [
             'articles' => [],
@@ -91,7 +121,12 @@ return [
         'lessonsCompleted' => 3,
         'lessonsTotal' => 4,
         'deadline' => '2024-06-12',
-        'estimatedTime' => 5400000,
+        'estimatedTime' => [
+            'articles' => 2700000,
+            'homework' => 1620000,
+            'test' => 1080000,
+            'total' => 5400000
+        ],
         'performance' => 93,
         'resources' => [
             'articles' => [],
@@ -105,7 +140,12 @@ return [
         'lessonsCompleted' => 10,
         'lessonsTotal' => 12,
         'deadline' => '2024-06-26',
-        'estimatedTime' => 18000000,
+        'estimatedTime' => [
+            'articles' => 9000000,
+            'homework' => 5400000,
+            'test' => 3600000,
+            'total' => 18000000
+        ],
         'performance' => 90,
         'resources' => [
             'articles' => [],
