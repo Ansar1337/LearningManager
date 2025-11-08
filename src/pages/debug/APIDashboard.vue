@@ -406,19 +406,20 @@ function updateQuestion() {
   <main>
     <!--    <button @click="console.log(courses.availableCourses[0].details)">ТЫЦ</button>-->
     <!--    <pre>-->
-    <!--              {{user.session}}-->
-    <!--              <button @click="courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.tools?.launch()">ЗАПУСК</button>-->
-    <!--              <button @click="updateQuestion">ОТВЕТ</button>-->
-    <!--              <button @click="courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.tools?.finish()">ФИНИШ</button>-->
-    <!--              {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.test}}-->
-    {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.questions?.[1]?.options }}
-    <!--              <hr>-->
-    <!--               <button @click="courses.unreadMessages[0].watched = true">ПРОЧИТАТЬ СООБЩЕНИЕ</button>-->
-    <!--            {{ courses.unreadMessages }}-->
+    <!--              {{ user.session }}-->
+    <!--                  <button-->
+    <!--                      @click="courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.tools?.launch()">ЗАПУСК</button>-->
+    <!--                  <button @click="updateQuestion">ОТВЕТ</button>-->
+    <!--                  <button-->
+    <!--                      @click="courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.tools?.finish()">ФИНИШ</button>-->
+    <!--              {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.test?.questions?.[1]?.options }}-->
     <!--                    <hr>-->
-    <!--               <button @click="courses.userCourses[0].modules[0].resources.homework.comments[3].unread = false">ПРОЧИТАТЬ КОММЕНТАРИЙ</button>-->
-    <!--            {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.homework}}-->
-    <!--            </pre>-->
+    <!--                     <button @click="courses.unreadMessages[0].watched = true">ПРОЧИТАТЬ СООБЩЕНИЕ</button>-->
+    <!--                  {{ courses.unreadMessages }}-->
+    <!--                          <hr>-->
+    <!--                     <button @click="courses.userCourses[0].modules[0].resources.homework.comments[3].unread = false">ПРОЧИТАТЬ КОММЕНТАРИЙ</button>-->
+    <!--                  {{ courses?.userCourses?.[0]?.modules?.[0]?.resources?.homework }}-->
+    <!--                </pre>-->
     <h1>Дэшборд для теста API-хэндлов</h1>
     <h2>Используемый сервер: {{ serverURL }}</h2>
 

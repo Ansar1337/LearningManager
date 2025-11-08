@@ -195,24 +195,57 @@ export const useCoursesStore = defineStore('courses', () => {
             courseId, moduleId
         });
 
+        const updater = (questionId, newValue) => {
+            let watcher;
+
+            const checker = async () => {
+                const updateResponse = await updateUserCourseModuleTest(
+                    courseId, moduleId, questionId, newValue
+                );
+                if (updateResponse.status === "success") {
+                    clearInterval(watcher);
+                    updateMetaData();
+                }
+            }
+            watcher = setInterval(checker, 5000);
+            checker();
+        }
+
         if (response.status === "success") {
             response.data = response.data ?? [];
+
+            response.data.forEach(item => {
+                if (item?.type === "single") {
+                    item.singleStorage = "";
+                    for (let key in item.options) {
+                        if (!item.options.hasOwnProperty(key)) {
+                            continue;
+                        }
+                        if (item.options[key] === true) {
+                            item.singleStorage = key;
+                            break;
+                        }
+                    }
+                }
+            });
+
             response.data = reactive(response.data);
             response.data.forEach((item, index) => {
-                    watch(item.options, (status) => {
-                        let watcher;
-                        const checker = async () => {
-                            const updateResponse = await updateUserCourseModuleTest(
-                                courseId, moduleId, index, status
-                            );
-                            if (updateResponse.status === "success") {
-                                clearInterval(watcher);
-                                updateMetaData();
+                    if (item.type === "many") {
+                        watch(item.options, (status) => {
+                            updater(index, status)
+                        });
+                    } else {
+                        watch(() => item.singleStorage, (newValue) => {
+                            for (let key in item.options) {
+                                if (!item.options.hasOwnProperty(key)) {
+                                    continue;
+                                }
+                                item.options[key] = (key === newValue)
                             }
-                        }
-                        watcher = setInterval(checker, 5000);
-                        checker();
-                    });
+                            updater(index, item.options);
+                        });
+                    }
                 }
             );
         }

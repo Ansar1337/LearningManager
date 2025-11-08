@@ -285,7 +285,7 @@ export function getComputableNode(updateRate, populateWithFunc, ...populateWithA
             }), [], fullFiller.bind(this, true));
 
             computableNodes[cacheKey] = pendingData;
-            pendingData.mark = cacheKey;
+            pendingData.markq = cacheKey;
 
             if (!refresh) {
                 realStorage.data = pendingData;
