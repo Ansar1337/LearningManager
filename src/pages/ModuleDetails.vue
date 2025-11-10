@@ -75,7 +75,7 @@ onMounted(() => {
     <!-- TODO: данные не совпадают с макетом, не времени выполнения каждой секции -->
     <div class="task-row">
       <div class="task-column">
-        <div class="title task-title">{{ moduleInfo.name }}</div>
+        <div class="title task-title">{{ moduleInfo?.name }}</div>
         <v-progress-circular color="#6FCF97"
                              :model-value="completeness.total"
                              :size="50" :width="10"/>
