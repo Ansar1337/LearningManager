@@ -3,6 +3,7 @@ import Breadcrumbs from "@/components/Breadcrumbs.vue";
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {useRoute} from "vue-router";
 import {ref} from "vue";
+import {formatDate} from "../helpers/Formatters.js";
 
 const coursesStore = useCoursesStore();
 const route = useRoute();
@@ -27,6 +28,8 @@ coursesStore.userCourses[route.params.id].modules.then(result => {
       review.value = currentTestReview;
       if (review.value.passed) {
         tab.value = 3;
+      } else if (testInfo.value.currentTry > testInfo.value.triesLimit) {
+        tab.value = 4;
       }
     });
 
@@ -192,6 +195,31 @@ function startTest() {
           </div>
         </div>
       </v-window-item>
+
+      <v-window-item :value="4">
+        <div class="card">
+          <div class="title">
+            Тест по теме "{{ module?.name }}"
+          </div>
+          <div class="info review">
+            Unfortunately, the test was not passed. You can try again after
+            {{ formatDate(testInfo?.lastAttemptTime + testInfo?.coolDown) }}
+          </div>
+          <div class="buttons-holder">
+            <v-btn
+                :to="{name: 'coursePage', params: { id: route.params.id }}"
+                color="#2D9CDB"
+                class="start-btn bg-summer-sky text-white mt-2 text-none" elevation="0">
+              На страницу курса
+            </v-btn>
+            <v-btn :to="{name: 'module', params: { id: route.params.id, mid: route.params.mid }}"
+                   color="#2D9CDB"
+                   class="start-btn bg-summer-sky text-white mt-2 text-none" elevation="0">
+              Вернуться в модуль
+            </v-btn>
+          </div>
+        </div>
+      </v-window-item>
     </v-window>
   </div>
 </template>
@@ -221,6 +249,12 @@ function startTest() {
 .custom-checkbox {
   width: 17px;
   height: 17px;
+}
+
+.buttons-holder {
+  display: flex;
+  gap: 20px;
+  justify-content: left;
 }
 
 .info {

@@ -2,6 +2,43 @@
 
 $result = $result ?? [];
 
+function initHomework($mockFilePath)
+{
+    $homework = read_from_cache($mockFilePath, function () use ($mockFilePath) {
+        $registeredUsers = read_from_cache("registeredUsers", function () {
+            return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
+        }, 3600);
+
+        $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
+        $homeworkData = include($mockFilePath);
+        foreach ($homeworkData["comments"] as &$comment) {
+            $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
+        }
+
+        foreach ($homeworkData["submissions"] as $submission) {
+            $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
+            $fileContent = file_get_contents($HWFilePath);
+
+            $file = [
+                "name" => $submission["fileName"],
+                "body" => $fileContent
+            ];
+
+            write_to_cache($mockFilePath . $submission["hash"], $file, 3600);
+        }
+
+        return $homeworkData;
+    }, 3600);
+
+    return $homework;
+}
+
+function initTest()
+{
+
+}
+
+
 if ($_POST["action"] ?? false) {
     switch ($_POST["action"]) {
         case "getAvailableCourses":
@@ -69,6 +106,32 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
+//            $HWmockFilePath = dirname(__DIR__) . "/mockFiles/homework/trees/homework_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+//
+//            if (!(file_exists($HWmockFilePath))) {
+//                $result["status"] = "error";
+//                $result["data"] = "unknown module";
+//                break;
+//            }
+//
+//            $homework = initHomework($mockFilePath);
+//
+//            //$mockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+//            $testMockFilePath = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . 0 . "_" . 0 . ".php";
+//            $testMilePathCacheKey = dirname(__DIR__) . "/mockFiles/tests/test_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
+//
+//            if (!(file_exists($mockFilePath))) {
+//                $result["status"] = "error";
+//                $result["data"] = "test not found";
+//                break;
+//            }
+//
+//            $test = read_from_cache($testMilePathCacheKey, function () use ($mockFilePath) {
+//                return include($mockFilePath);
+//            }, 3600);
+//
+
+
             $result["status"] = "success";
             $result["data"] = include($mockFilePath);
             break;
@@ -121,16 +184,6 @@ if ($_POST["action"] ?? false) {
                 }
                 return $result;
             };
-
-            error_log(var_export($_COOKIE, true));
-            error_log("***********************************");
-            error_log(var_export($moduleTree, true));
-
-            $treeWalker($moduleTree);
-            error_log("$---------------------------------$");
-
-            error_log(var_export($moduleTree, true));
-            error_log("***********************************");
 
             $result["status"] = "success";
             $result["data"] = $moduleTree;
@@ -287,31 +340,7 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $homework = read_from_cache($mockFilePath, function () use ($mockFilePath) {
-                $registeredUsers = read_from_cache("registeredUsers", function () {
-                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
-                }, 3600);
-
-                $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
-                $homeworkData = include($mockFilePath);
-                foreach ($homeworkData["comments"] as &$comment) {
-                    $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
-                }
-
-                foreach ($homeworkData["submissions"] as $submission) {
-                    $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
-                    $fileContent = file_get_contents($HWFilePath);
-
-                    $file = [
-                        "name" => $submission["fileName"],
-                        "body" => $fileContent
-                    ];
-
-                    write_to_cache($mockFilePath . $submission["hash"], $file, 3600);
-                }
-
-                return $homeworkData;
-            }, 3600);
+            $homework = initHomework($mockFilePath);
 
             $result["status"] = "success";
             $result["data"] = $homework;
@@ -358,31 +387,7 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $homework = read_from_cache($mockFilePath, function () use ($mockFilePath) {
-                $registeredUsers = read_from_cache("registeredUsers", function () {
-                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
-                }, 3600);
-
-                $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
-                $homeworkData = include($mockFilePath);
-                foreach ($homeworkData["comments"] as &$comment) {
-                    $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
-                }
-
-                foreach ($homeworkData["submissions"] as $submission) {
-                    $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
-                    $fileContent = file_get_contents($HWFilePath);
-
-                    $file = [
-                        "name" => $submission["fileName"],
-                        "body" => $fileContent
-                    ];
-
-                    write_to_cache($mockFilePath . $submission["hash"], $file, 3600);
-                }
-
-                return $homeworkData;
-            }, 3600);
+            $homework = initHomework($mockFilePath);
 
             $comment = [
                 "sender" => $_SESSION["userId"], //userId в системе
@@ -439,31 +444,7 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $homework = read_from_cache($mockFilePath, function () use ($mockFilePath) {
-                $registeredUsers = read_from_cache("registeredUsers", function () {
-                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
-                }, 3600);
-
-                $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
-                $homeworkData = include($mockFilePath);
-                foreach ($homeworkData["comments"] as &$comment) {
-                    $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
-                }
-
-                foreach ($homeworkData["submissions"] as $submission) {
-                    $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
-                    $fileContent = file_get_contents($HWFilePath);
-
-                    $file = [
-                        "name" => $submission["fileName"],
-                        "body" => $fileContent
-                    ];
-
-                    write_to_cache($mockFilePath . $submission["hash"], $file, 3600);
-                }
-
-                return $homeworkData;
-            }, 3600);
+            $homework = initHomework($mockFilePath);
 
             $uploadedFileTempName = $_FILES['data']['tmp_name']['file'];
             $uploadedFileName = $_FILES['data']['name']['file'];
@@ -536,32 +517,7 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $homework = read_from_cache($mockFilePath, function () use ($mockFilePath) {
-                $registeredUsers = read_from_cache("registeredUsers", function () {
-                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
-                }, 3600);
-
-                $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
-                $homeworkData = include($mockFilePath);
-                foreach ($homeworkData["comments"] as &$comment) {
-                    $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
-                }
-
-                foreach ($homeworkData["submissions"] as $submission) {
-                    $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
-                    $fileContent = file_get_contents($HWFilePath);
-
-                    $file = [
-                        "name" => $submission["fileName"],
-                        "body" => $fileContent
-                    ];
-
-                    write_to_cache($mockFilePath . $submission["hash"], $file, 3600);
-                }
-
-                return $homeworkData;
-            }, 3600);
-
+            $homework = initHomework($mockFilePath);
             $file = read_from_cache($mockFilePath . $fileHash);
 
             if (!$file) {
@@ -659,8 +615,8 @@ if ($_POST["action"] ?? false) {
                 return include($mockFilePath);
             }, 3600);
 
-            $dayLimit = 30;
-            $reset = ($test["meta"]["lastAttemptTime"] <= (time() - ($dayLimit * 24 * 60 * 60)));
+            $dayLimit = 3;
+            $reset = ($test["meta"]["lastAttemptTime"] <= (time() - ($dayLimit * 24 * 60 * 60 * 1000)));
             if (($test["meta"]["currentTry"] > $test["meta"]["triesLimit"]) && (!$reset)) {
                 $result["status"] = "error";
                 $result["data"] = "limit reached";
@@ -669,7 +625,7 @@ if ($_POST["action"] ?? false) {
 
             if (($test["meta"]["currentTry"] > $test["meta"]["triesLimit"]) && ($reset)) {
                 $test["meta"]["currentTry"] = 0;
-                $test["meta"]["lastAttemptTime"] = time();
+                $test["meta"]["lastAttemptTime"] = time() * 1000;
             }
 
             $test["meta"]["state"] = "in_progress";
@@ -882,7 +838,7 @@ if ($_POST["action"] ?? false) {
             }
 
             $test["meta"]["currentTry"]++;
-            $test["meta"]["lastAttemptTime"] = time();
+            $test["meta"]["lastAttemptTime"] = time() * 1000;
             $test["meta"]["state"] = "idle";
 
             write_to_cache($mockFilePathCacheKey, $test, 3600);
@@ -1036,35 +992,12 @@ if ($_POST["action"] ?? false) {
                     $HomeworkFilePath = dirname(__DIR__) . "/mockFiles/homework/trees/homework_mock_" . $_SESSION["userId"] . "_" . $courseId . "_" . $moduleId . ".php";
 
                     if (!(file_exists($HomeworkFilePath))) {
-                        $homework = [];
+                        $result["status"] = "error";
+                        $result["data"] = "unknown module";
                         break;
                     }
 
-                    $homework = read_from_cache($HomeworkFilePath, function () use ($HomeworkFilePath) {
-                        $registeredUsers = read_from_cache("registeredUsers", function () {
-                            return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
-                        }, 3600);
-
-                        $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
-                        $homeworkData = include($HomeworkFilePath);
-                        foreach ($homeworkData["comments"] as &$comment) {
-                            $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
-                        }
-
-                        foreach ($homeworkData["submissions"] as $submission) {
-                            $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
-                            $fileContent = file_get_contents($HWFilePath);
-
-                            $file = [
-                                "name" => $submission["fileName"],
-                                "body" => $fileContent
-                            ];
-
-                            write_to_cache($HomeworkFilePath . $submission["hash"], $file, 3600);
-                        }
-
-                        return $homeworkData;
-                    }, 3600);
+                    $homework = initHomework($HomeworkFilePath);
 
                     foreach ($homework["comments"] as $comment) {
                         if ($comment["unread"]) {
@@ -1166,31 +1099,7 @@ if ($_POST["action"] ?? false) {
                 break;
             }
 
-            $homework = read_from_cache($mockFilePath, function () use ($mockFilePath) {
-                $registeredUsers = read_from_cache("registeredUsers", function () {
-                    return include dirname(__DIR__) . "/mockFiles/users/users_list.php";
-                }, 3600);
-
-                $registeredUsersIds = array_column($registeredUsers, "userName", "userId");
-                $homeworkData = include($mockFilePath);
-                foreach ($homeworkData["comments"] as &$comment) {
-                    $comment["sender"] = $registeredUsersIds[$comment["sender"]] ?? "System";
-                }
-
-                foreach ($homeworkData["submissions"] as $submission) {
-                    $HWFilePath = dirname(__DIR__) . "/mockFiles/homework/files/" . $submission["fileName"];
-                    $fileContent = file_get_contents($HWFilePath);
-
-                    $file = [
-                        "name" => $submission["fileName"],
-                        "body" => $fileContent
-                    ];
-
-                    write_to_cache($mockFilePath . $submission["hash"], $file, 600);
-                }
-
-                return $homeworkData;
-            }, 600);
+            $homework = initHomework($mockFilePath);
 
             $homework["comments"][$commentId]["unread"] = false;
 

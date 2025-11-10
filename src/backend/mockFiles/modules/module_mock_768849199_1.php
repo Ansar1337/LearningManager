@@ -13,7 +13,7 @@ return [
             'test' => 960000, // 20%
             'total' => 4800000 // 100%
         ],
-        'performance' => 100,
+        'performance' => 0,
         'resources' => [
             'articles' => [],
             'homework' => [],
@@ -32,7 +32,7 @@ return [
             'test' => 960000,
             'total' => 4800000
         ],
-        'performance' => 96,
+        'performance' => 0,
         'resources' => [
             'articles' => [],
             'homework' => [],
@@ -51,7 +51,7 @@ return [
             'test' => 3240000,
             'total' => 16200000
         ],
-        'performance' => 98,
+        'performance' => 0,
         'resources' => [
             'articles' => [],
             'homework' => [],
@@ -70,7 +70,7 @@ return [
             'test' => 960000,
             'total' => 4800000
         ],
-        'performance' => 100,
+        'performance' => 0,
         'resources' => [
             'articles' => [],
             'homework' => [],
@@ -89,7 +89,7 @@ return [
             'test' => 960000,
             'total' => 4800000
         ],
-        'performance' => 100,
+        'performance' => 0,
         'resources' => [
             'articles' => [],
             'homework' => [],
@@ -108,7 +108,7 @@ return [
             'test' => 960000,
             'total' => 4800000
         ],
-        'performance' => 100,
+        'performance' => 0,
         'resources' => [
             'articles' => [],
             'homework' => [],

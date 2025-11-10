@@ -305,7 +305,7 @@ export const useCoursesStore = defineStore('courses', () => {
                     const finishResponse = await finishUserCourseModuleTest(courseId, moduleId)
                     if (finishResponse.status === "success") {
                         response.data.state = "idle";
-                        response.data.lastAttemptTime = Math.floor(Date.now() / 1000);
+                        response.data.lastAttemptTime = Math.floor(Date.now());
                         response.data.currentTry++;
                         response.data.questions.__refresh();
                         response.data.review.__refresh();

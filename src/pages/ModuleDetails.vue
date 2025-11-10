@@ -75,7 +75,7 @@ onMounted(() => {
     <!-- TODO: данные не совпадают с макетом, не времени выполнения каждой секции -->
     <div class="task-row">
       <div class="task-column">
-        <div class="title task-title">{{ moduleInfo?.name }}</div>
+        <div class="title task-title">{{ moduleInfo.name }}</div>
         <v-progress-circular color="#6FCF97"
                              :model-value="completeness.total"
                              :size="50" :width="10"/>
@@ -134,7 +134,12 @@ onMounted(() => {
               Тест по теме
             </div>
             <div
-                :class="'completeness-marker ' + ((moduleResources?.test?.review?.passed) ? ('complete') : ('uncompleted'))"></div>
+                v-if="(!(moduleResources?.test?.review?.passed)) && (moduleResources?.test?.currentTry > moduleResources?.test?.triesLimit)"
+                class="completeness-marker failed">
+            </div>
+            <div v-else
+                 :class="'completeness-marker ' + ((moduleResources?.test?.review?.passed) ? ('complete') : ('uncompleted'))">
+            </div>
           </div>
           <div class="time-text">~{{ formatLongEstimate(moduleInfo?.estimatedTime?.test) }}</div>
         </div>
@@ -221,6 +226,7 @@ onMounted(() => {
 }
 
 .completeness-marker {
+  background-position: center;
   background-repeat: no-repeat;
   background-size: 100%;
   width: 50px;
@@ -229,11 +235,17 @@ onMounted(() => {
 }
 
 .completeness-marker.complete {
-  background-image: url("../assets/images/task-complete.png");
+  background-image: url(/src/assets/images/task-complete.png);
+  transform: scale(1.2);
 }
 
 .completeness-marker.uncompleted {
   background-image: url("../assets/images/task-uncompleted.png");
+}
+
+.completeness-marker.failed {
+  background-image: url("../assets/images/red-sign.svg");
+  filter: drop-shadow(0px 0px 3px #fd5252);
 }
 
 .materials {

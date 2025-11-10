@@ -10,6 +10,7 @@ const route = useRoute();
 const course = ref();
 const details = ref();
 const modules = ref();
+const firstUnfinishedModuleId = ref(-1);
 
 
 coursesStore.availableCourses[route.params.id].then(data => {
@@ -22,6 +23,24 @@ coursesStore.userCourses[route.params.id].then(data => {
 
 coursesStore.userCourses[route.params.id].modules.then(data => {
   modules.value = data;
+
+  for (let i = 0; i < data.length; i++) {
+    const module = data[i];
+
+    Promise.all([
+      module.resources.test.value.review.then(review => {
+        module.performance += review.score ?? 0;
+        if ((!review.passed) && (firstUnfinishedModuleId.value < 0)) {
+          firstUnfinishedModuleId.value = module.id;
+        }
+      }),
+      module.resources.homework.value.then(homework => {
+        module.performance += homework.score ?? 0;
+      })
+    ]).then(_ => {
+      module.performance /= 2;
+    });
+  }
 });
 
 onMounted(() => {
@@ -39,7 +58,6 @@ onMounted(() => {
     <div class="mt-5">
       <Breadcrumbs></Breadcrumbs>
     </div>
-
     <div>
       <v-card elevation="0" color="#F6F8F9" class="pt-2 pb-2">
         <v-card-text>
@@ -64,11 +82,14 @@ onMounted(() => {
             <div class="card-content-continue">
               <div class="last-lesson">
                 <!-- TODO: ссылка на последнюю главу -->
-                Вы остановились на главе <span class="text-summer-sky">Java Core</span>
+                Вы остановились на модуле <span
+                  class="text-summer-sky">{{ modules?.[firstUnfinishedModuleId]?.name }}</span>
               </div>
               <div>
                 <!-- TODO: ссылка на последнюю главу -->
-                <v-btn color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none">
+                <v-btn
+                    :to="{name: 'module', params: { id: route.params.id, mid: firstUnfinishedModuleId }}"
+                    color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none">
                   Продолжить обучение
                 </v-btn>
               </div>
@@ -83,11 +104,11 @@ onMounted(() => {
     </div>
 
     <div class="mb-5 timeline">
-      <v-card v-for="module in modules"
+      <v-card v-for="(module, index) in modules"
               elevation="0"
               color="#F6F8F9"
               class="module-card"
-              :class="{ done: module?.lessonsCompleted == module?.lessonsTotal}">
+              :class="{ done: (module?.resources?.test?.review?.passed)}">
         <v-card-text>
           <div class="module-card-content">
             <div class="module-card-title">{{ module?.name }}</div>
@@ -198,7 +219,6 @@ onMounted(() => {
   justify-content: space-between;
 }
 
-
 .arrow-forward {
   width: 34px;
   height: 15px;
@@ -231,7 +251,6 @@ onMounted(() => {
   line-height: 29px;
   letter-spacing: 0;
 }
-
 
 .module-title {
   font-size: 36px;
@@ -296,7 +315,6 @@ onMounted(() => {
   flex-grow: 1;
   align-items: center;
 }
-
 
 .time-schedule {
   display: flex;
