@@ -30,7 +30,6 @@ coursesStore.userCourses[route.params.id].modules[route.params.mid].resources.ho
 function uploadSubmission(event) {
   let file = event?.target?.files?.[0];
   if (file) {
-    /* TODO: загрузка файла */
     homework.value?.tools?.uploadHomework(file);
   }
 }
