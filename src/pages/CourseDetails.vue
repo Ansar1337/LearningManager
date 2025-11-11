@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {formatDate, formatLongEstimate} from "@/helpers/Formatters.js";
@@ -81,12 +81,10 @@ onMounted(() => {
 
             <div class="card-content-continue">
               <div class="last-lesson">
-                <!-- TODO: ссылка на последнюю главу -->
                 Вы остановились на модуле <span
                   class="text-summer-sky">{{ modules?.[firstUnfinishedModuleId]?.name }}</span>
               </div>
               <div>
-                <!-- TODO: ссылка на последнюю главу -->
                 <v-btn
                     :to="{name: 'module', params: { id: route.params.id, mid: firstUnfinishedModuleId }}"
                     color="#2D9CDB" class="start-btn bg-summer-sky text-white mt-2 text-none">
@@ -104,7 +102,7 @@ onMounted(() => {
     </div>
 
     <div class="mb-5 timeline">
-      <v-card v-for="(module, index) in modules"
+      <v-card v-for="(module) in modules"
               elevation="0"
               color="#F6F8F9"
               class="module-card"

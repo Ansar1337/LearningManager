@@ -45,9 +45,6 @@ function startTest() {
         tab.value++;
       });
 }
-
-/* TODO: перезапуск квеста ведет к ошибке */
-
 </script>
 
 <template>
