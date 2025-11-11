@@ -1,6 +1,6 @@
 <script setup>
 import {useCoursesStore} from "@/stores/CoursesStore.js";
-import {useRoute} from "vue-router";
+import {onBeforeRouteUpdate, useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 import {formatLongEstimate} from "@/helpers/Formatters.js";
 import FeedbackDialog from "@/components/dialogs/FeedbackDialog.vue";
@@ -17,42 +17,50 @@ const completeness = ref({
   total: 0
 });
 
-coursesStore.userCourses[route.params.id].modules[route.params.mid].then(res => {
-  moduleInfo.value = res;
-  return res.resources;
-}).then(res => {
-  moduleResources.value = res;
-  let maxPoints = 0;
-  Promise.all([
-    res.articles.value.then(r => {
-      const completedChapters = r.reduce((acc, item) => {
-        return (acc + (+item.completed.value));
-      }, 0);
+onBeforeRouteUpdate((to) => {
+  // guard for navigation from notification messages
+  fetchData(to);
+})
 
-      maxPoints += r.length;
-      completeness.value.articles = completedChapters / r.length * 100;
-      completeness.value.total += completedChapters;
-    }),
+function fetchData(route) {
+  coursesStore.userCourses[route.params.id].modules[route.params.mid].then(res => {
+    moduleInfo.value = res;
+    return res.resources;
+  }).then(res => {
+    moduleResources.value = res;
+    let maxPoints = 0;
+    Promise.all([
+      res.articles.value.then(r => {
+        const completedChapters = r.reduce((acc, item) => {
+          return (acc + (+item.completed.value));
+        }, 0);
 
-    res.homework.value.status.then(r => {
-      maxPoints += 1;
-      if (r === "Done") {
-        completeness.value.homework = 1;
-        completeness.value.total += 1;
-      }
-    }),
+        maxPoints += r.length;
+        completeness.value.articles = completedChapters / r.length * 100;
+        completeness.value.total += completedChapters;
+      }),
 
-    res.test.value.review.then(r => {
-      maxPoints += 1;
-      if (r?.passed) {
-        completeness.value.test = 1;
-        completeness.value.total += 1;
-      }
-    })]).then(_ => {
-    completeness.value.total = completeness.value.total / maxPoints * 100;
+      res.homework.value.status.then(r => {
+        maxPoints += 1;
+        if (r === "Done") {
+          completeness.value.homework = 1;
+          completeness.value.total += 1;
+        }
+      }),
+
+      res.test.value.review.then(r => {
+        maxPoints += 1;
+        if (r?.passed) {
+          completeness.value.test = 1;
+          completeness.value.total += 1;
+        }
+      })]).then(_ => {
+      completeness.value.total = completeness.value.total / maxPoints * 100;
+    });
   });
+}
 
-});
+fetchData(route);
 
 const showFeedbackDialog = ref(false);
 

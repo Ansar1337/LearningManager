@@ -2,9 +2,21 @@
 import {ref} from "vue";
 import {useUserStore} from "@/stores/UserStore.js";
 import AuthDialog from "@/components/dialogs/AuthDialog.vue";
+import {useCoursesStore} from "@/stores/CoursesStore.js";
+import {useRouter} from "vue-router";
 
 const userStore = useUserStore();
+const courses = useCoursesStore();
+const router = useRouter();
 const showLoginDialog = ref(false);
+const messages = ref([]);
+
+courses.unreadMessages.then(result => messages.value = result);
+
+function navigateToModule(message) {
+  // TODO: mark as read
+  router.push({name: 'module', params: {id: message.course, mid: message.module}})
+}
 </script>
 
 <template>
@@ -20,7 +32,20 @@ const showLoginDialog = ref(false);
         <v-btn color="#2D9CDB" class="header-btn" text="Войти" @click="showLoginDialog = true" elevation="0"/>
       </div>
       <div v-else class="user-panel">
-        <v-btn color="#F6F8F9" elevation="0" class="bell-btn">
+        <v-btn color="#F6F8F9" elevation="0" class="bell-btn" :class="{ active: messages.length > 0}">
+          <v-menu activator="parent" max-height="300" v-if="messages.length > 0">
+            <v-list>
+              <v-list-item v-for="message in messages" @click="navigateToModule(message)">
+                <div class="notification-menu-content">
+                  {{ courses?.availableCourses[message.course]?.title }}
+                  >
+                  {{ courses?.userCourses[message.course]?.modules[message.module]?.name }}
+                  :
+                  {{ message?.type === 'deadline' ? ' срок выполнения подходит к концу' : ' новое сообщение' }}
+                </div>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-btn>
         <v-btn color="#F6F8F9" class="header-btn text-none" :to="{name: 'myEducation'}" text="Моё обучение"
                elevation="0"/>
@@ -50,6 +75,18 @@ const showLoginDialog = ref(false);
 </template>
 
 <style scoped>
+.notification-menu-content {
+  min-width: 300px;
+  min-height: 30px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.notification-menu-content:hover {
+  background-color: #BDBDBD;
+  border-radius: 6px;
+}
+
 /* header */
 .header-title {
   font-size: 24px;
@@ -82,6 +119,10 @@ const showLoginDialog = ref(false);
   background-image: url("../assets/images/btn-bell.png");
   background-repeat: no-repeat;
   background-size: 100%;
+}
+
+.bell-btn.active {
+  background-image: url("../assets/images/btn-bell-active.png");
 }
 
 .list-item-space {
