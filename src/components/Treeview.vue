@@ -10,7 +10,7 @@ let selectedItem = defineModel('selectedItem', {default: null})
 // модифицируем объект, чтобы можно было управлять состояниями списков
 for (let item of props.items) {
   if (item?.type === 'group')
-    item.hidden = ref(true);
+    item.hidden = ref(false);
 }
 
 function select(item) {
@@ -37,7 +37,7 @@ function select(item) {
 
 <style scoped>
 .treeview {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 20px;
   letter-spacing: 0;
   padding-left: 20px;
@@ -49,6 +49,7 @@ function select(item) {
 
 .treeview * li {
   cursor: pointer;
+  padding-top: 5px;
 }
 
 .parent-close {

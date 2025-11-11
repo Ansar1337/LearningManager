@@ -3,20 +3,20 @@
 return [
     [
         "id" => 0,
-        "name" => "Группа тем",
+        "name" => "General information",
         "type" => "group",
         "completed" => true,
         "content" => [
             [
                 "id" => 0,
-                "name" => "Тема 1",
+                "name" => "Kotlin advantages",
                 "type" => "article",
                 "completed" => true,
                 "content" => ""
             ],
             [
                 "id" => 1,
-                "name" => "Тема 2",
+                "name" => "Kotlin compilation",
                 "type" => "article",
                 "completed" => true,
                 "content" => ""
@@ -25,20 +25,20 @@ return [
     ],
     [
         "id" => 1,
-        "name" => "Группа тем 2",
+        "name" => "First program",
         "type" => "group",
         "completed" => false,
         "content" => [
             [
                 "id" => 0,
-                "name" => "Тема 1",
+                "name" => "Hello World!",
                 "type" => "article",
                 "completed" => true,
                 "content" => ""
             ],
             [
                 "id" => 1,
-                "name" => "Тема 2",
+                "name" => "Numbers type",
                 "type" => "article",
                 "completed" => false,
                 "content" => ""

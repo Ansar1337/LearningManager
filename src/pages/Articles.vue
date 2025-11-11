@@ -21,7 +21,15 @@ let articles = ref([]);
 let selectedArticle = ref();
 
 coursesStore.userCourses[route.params.id].modules[route.params.mid].then(result => module.value = result);
-coursesStore.userCourses[route.params.id].modules[route.params.mid].resources.articles.then(result => articles.value = result);
+coursesStore.userCourses[route.params.id].modules[route.params.mid].resources.articles.then(result => {
+  articles.value = result;
+  for (let article of result) {
+    if (article.type === 'group')
+      selectedArticle.value = result[0].content[0];
+    else
+      selectedArticle.value = result[0];
+  }
+});
 </script>
 
 <template>
@@ -61,6 +69,7 @@ coursesStore.userCourses[route.params.id].modules[route.params.mid].resources.ar
 
 .articles-content {
   min-width: 375px;
+  max-width: min(70%, 1000px);
 }
 
 .main-content {
