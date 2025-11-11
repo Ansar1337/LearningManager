@@ -28,6 +28,7 @@ function getCompleteness(id) {
   return coursesStore.userCourses.find(uc => parseInt(uc.id) === parseInt(id)).completeness;
 }
 
+const assetsUrl = new URL('@/assets', import.meta.url).href;
 </script>
 
 <template>
@@ -43,8 +44,8 @@ function getCompleteness(id) {
             <v-card-text class="card-content">
 
               <div class="logo-holder">
-                <!-- TODO: нет больших картинок для языков -->
-                <img src="../assets/images/java-big-logo.png" alt="language logo" class="card-image">
+                <img :src="`${assetsUrl}/images/${course?.bigIcon || 'java-logo.png'}`" alt="language logo"
+                     class="card-image">
               </div>
 
               <div class="card-content-info">
