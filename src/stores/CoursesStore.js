@@ -87,7 +87,7 @@ export const useCoursesStore = defineStore('courses', () => {
 
                     switch (treeNode.type) {
                         case "group": {
-                            treeNode.content = treeNode.content ?? [];
+                            treeNode.content = reactive(treeNode.content ?? []);
                             for (let i = 0; i < treeNode.content.length; i++) {
                                 addComputableFields(treeNode.content[i], path.concat(treeNode.id));
                             }
@@ -105,14 +105,12 @@ export const useCoursesStore = defineStore('courses', () => {
                         }
                     }
 
-                    treeNode.completed = ref(treeNode.completed);
-
-                    watch(treeNode.completed, (status) => {
+                    watch(() => treeNode.completed, (status) => {
                         doRequest("coursesManager", "markMaterialAsCompleted", {
                             courseId, moduleId, articlePath: (path.concat(treeNode.id).join(",")), status
                         }).then(
                             () => {
-                                treeNode.completed.value = status;
+                                treeNode.completed = status;
                                 loadUserCourses();
                             }
                         );
