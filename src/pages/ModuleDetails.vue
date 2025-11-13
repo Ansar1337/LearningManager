@@ -31,26 +31,29 @@ function fetchData(route) {
     let maxPoints = 0;
     Promise.all([
       res.articles.value.then(r => {
-        const completedChapters = r.reduce((acc, item) => {
-          return (acc + (+item.completed.value));
-        }, 0);
+        const completedChapters =
+            Array.isArray(r)
+                ? r.reduce((acc, item) => {
+                  return (acc + (+item.completed.value));
+                }, 0)
+                : 0;
 
         maxPoints += r.length;
         completeness.value.articles = completedChapters / r.length * 100;
         completeness.value.total += completedChapters;
       }),
 
-      res.homework.value.status.then(r => {
+      res.homework.value.then(r => {
         maxPoints += 1;
-        if (r === "Done") {
+        if (r.status === "Done") {
           completeness.value.homework = 1;
           completeness.value.total += 1;
         }
       }),
 
-      res.test.value.review.then(r => {
+      res.test.value.then(r => {
         maxPoints += 1;
-        if (r?.passed) {
+        if (r?.review?.passed) {
           completeness.value.test = 1;
           completeness.value.total += 1;
         }
@@ -78,8 +81,6 @@ onMounted(() => {
     <div class="mt-5">
       <Breadcrumbs></Breadcrumbs>
     </div>
-
-    <!-- TODO: адаптировать под экраны иконки законченности задания -->
     <div class="task-row">
       <div class="task-column">
         <div class="title task-title">{{ moduleInfo?.name }}</div>
@@ -133,7 +134,7 @@ onMounted(() => {
 
 
       <router-link :to="{name: 'test', params: { id: route.params.id, mid: route.params.mid }}"
-                   :class="'link-none ' + ((moduleResources?.test?.review?.passed) ? ('done') : ('')) ">
+                   :class="'link-none ' + ((moduleResources?.test?.review?.passed === true) ? ('done') : ('')) ">
         <div class="task-row">
           <div class="task-column">
             <div class="article-text task-title">
@@ -141,11 +142,11 @@ onMounted(() => {
               Тест по теме
             </div>
             <div
-                v-if="(!(moduleResources?.test?.review?.passed)) && (moduleResources?.test?.currentTry > moduleResources?.test?.triesLimit)"
+                v-if="((moduleResources?.test?.review?.passed === false)) && (moduleResources?.test?.currentTry > moduleResources?.test?.triesLimit)"
                 class="completeness-marker failed">
             </div>
             <div v-else
-                 :class="'completeness-marker ' + ((moduleResources?.test?.review?.passed) ? ('complete') : ('uncompleted'))">
+                 :class="'completeness-marker ' + ((moduleResources?.test?.review?.passed === true) ? ('complete') : ('uncompleted'))">
             </div>
           </div>
           <div class="time-text">~{{ formatLongEstimate(moduleInfo?.estimatedTime?.test) }}</div>

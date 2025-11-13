@@ -2,6 +2,7 @@
 import {useRoute, useRouter} from 'vue-router';
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {reactive, ref} from "vue";
+import {useUserStore} from "@/stores/UserStore.js";
 
 const props = defineProps({
   withMainPage: Boolean
@@ -10,6 +11,7 @@ const props = defineProps({
 const route = useRoute();
 const router = useRouter();
 
+const userStore = useUserStore();
 const coursesStore = useCoursesStore();
 
 const courses = ref();
@@ -41,17 +43,18 @@ function isNumberString(str) {
 }
 
 Promise.all([
-  coursesStore.availableCourses.then(data => {
-    courses.value = data;
-  }),
+      coursesStore.availableCourses.then(data => {
+        courses.value = data;
+      }),
 
-  coursesStore.userCourses?.then(data => {
-    userCourses.value = data;
-  }) ?? Promise.resolve(),
+      ((userStore.session.loggedIn) ? (coursesStore?.userCourses?.then(data => {
+        userCourses.value = data;
+      })) : Promise.resolve()),
 
-  coursesStore.userCourses?.[route.params.id ?? 0]?.modules?.then(data => {
-    modules.value = data;
-  }) ?? Promise.resolve()]
+      ((userStore.session.loggedIn) ? (coursesStore?.userCourses?.[route.params.id ?? 0]?.modules?.then(data => {
+        modules.value = data;
+      })) : Promise.resolve())
+    ]
 ).then(_ => {
 
   function buildCustomName(label, id) {

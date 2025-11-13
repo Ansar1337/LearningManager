@@ -193,6 +193,10 @@ function getWrappedObject(cleanValue, namespace = [], refreshWith = () => {
                     //если свойство есть, то просто проксируем вызов к оригиналу
                     // return Reflect.get(target, prop, receiver);
                     if (prop in target) {
+                        if (target[prop] instanceof Function) {
+                            return target[prop];
+                        }
+
                         if ((typeof target[prop] === "object") && ("value" in target[prop])) {
                             return getWrappedValue(target[prop].value, namespace, refreshWith, cachedValues);
                         } else {
@@ -200,6 +204,11 @@ function getWrappedObject(cleanValue, namespace = [], refreshWith = () => {
                         }
                     } else if ("value" in target) {
                         if (prop in target.value) {
+
+                            if (target.value[prop] instanceof Function) {
+                                return target.value[prop];
+                            }
+
                             if ((typeof target.value[prop] === "object") && ("value" in target.value[prop])) {
                                 return getWrappedValue(target.value[prop].value ?? undefined, namespace, refreshWith, cachedValues);
                             } else {
@@ -215,6 +224,10 @@ function getWrappedObject(cleanValue, namespace = [], refreshWith = () => {
             } else {
                 //если target - не промис, обращаемся напрямую, тоже с развертыванием value на разных уровнях
                 if (prop in target) {
+                    if (target[prop] instanceof Function) {
+                        return target[prop];
+                    }
+
                     if ((typeof target[prop] === "object") && ("value" in target[prop])) {
                         return getWrappedValue(target[prop].value, namespace, refreshWith, cachedValues);
                     } else {
@@ -222,6 +235,11 @@ function getWrappedObject(cleanValue, namespace = [], refreshWith = () => {
                     }
                 } else if ("value" in target) {
                     if (prop in target.value) {
+
+                        if (target.value[prop] instanceof Function) {
+                            return target.value[prop];
+                        }
+
                         if ((typeof target.value[prop] === "object") && ("value" in target.value[prop])) {
                             return getWrappedValue(target.value[prop].value ?? undefined, namespace, refreshWith, cachedValues);
                         } else {
@@ -292,7 +310,7 @@ export function getComputableNode(updateRate, populateWithFunc, ...populateWithA
             }
         }
 
-        return realStorage.data
+        return getWrappedValue(realStorage.data, realStorage.data?.__namespace, fullFiller.bind(this, true), realStorage.data?.__cachedValues);
     }
 
     const result = computed(() => fullFiller());

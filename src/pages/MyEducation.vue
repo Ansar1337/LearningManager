@@ -25,7 +25,7 @@ function isUserCourse(id) {
 }
 
 function getCompleteness(id) {
-  return coursesStore.userCourses.find(uc => parseInt(uc.id) === parseInt(id)).completeness;
+  return Number(coursesStore.userCourses.find(uc => parseInt(uc.id) === parseInt(id)).completeness);
 }
 
 const assetsUrl = new URL('@/assets', import.meta.url).href;
@@ -58,7 +58,7 @@ const assetsUrl = new URL('@/assets', import.meta.url).href;
                   </div>
                 </div>
                 <div v-if="isUserCourse(course.id)" class="card-content-progress">
-                  <v-progress-circular color="#6FCF97" :model-value="getCompleteness(course.id)" :size="55"
+                  <v-progress-circular color="#6FCF97" :model-value="getCompleteness(Number(course.id))" :size="55"
                                        :width="10"/>
                 </div>
                 <div class="card-content-open-button">

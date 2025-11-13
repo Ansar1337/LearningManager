@@ -28,15 +28,17 @@ coursesStore.userCourses[route.params.id].modules.then(data => {
     const module = data[i];
 
     Promise.all([
-      module.resources.test.value.review.then(review => {
-        module.performance += review.score ?? 0;
-        if ((!review.passed) && (firstUnfinishedModuleId.value < 0)) {
+      ((module.resources.test.value instanceof Promise) ? module.resources.test.value.then(test => {
+        module.performance += test.review.score ?? 0;
+        if ((!test.review.passed) && (firstUnfinishedModuleId.value < 0)) {
           firstUnfinishedModuleId.value = module.id;
         }
-      }),
-      module.resources.homework.value.then(homework => {
+      }) : Promise.resolve()),
+
+      ((module.resources.homework.value instanceof Promise) ? module.resources.homework.value.then(homework => {
         module.performance += homework.score ?? 0;
-      })
+      }) : Promise.resolve()),
+
     ]).then(_ => {
       module.performance /= 2;
     });
@@ -106,7 +108,7 @@ onMounted(() => {
               elevation="0"
               color="#F6F8F9"
               class="module-card"
-              :class="{ done: (module?.resources?.test?.review?.passed)}">
+              :class="{ done: (module?.resources?.test?.review?.passed === true)}">
         <v-card-text>
           <div class="module-card-content">
             <div class="module-card-title">{{ module?.name }}</div>
@@ -217,6 +219,7 @@ onMounted(() => {
   justify-content: space-between;
 }
 
+
 .arrow-forward {
   width: 34px;
   height: 15px;
@@ -249,6 +252,7 @@ onMounted(() => {
   line-height: 29px;
   letter-spacing: 0;
 }
+
 
 .module-title {
   font-size: 36px;
@@ -313,6 +317,7 @@ onMounted(() => {
   flex-grow: 1;
   align-items: center;
 }
+
 
 .time-schedule {
   display: flex;
