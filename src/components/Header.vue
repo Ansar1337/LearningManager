@@ -14,7 +14,7 @@ const messages = ref([]);
 courses.unreadMessages.then(result => messages.value = result);
 
 function navigateToModule(message) {
-  // TODO: mark as read
+  message.watched = true;
   router.push({name: 'module', params: {id: message.course, mid: message.module}})
 }
 </script>

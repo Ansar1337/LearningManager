@@ -23,7 +23,7 @@ function select(item) {
     <ul>
       <template v-for="item in props.items">
         <li v-if="item?.type === 'article'" class="child">
-          <div @click="() => select(item)">{{ item?.name }}</div>
+          <div :class="{ 'complete-item': item.completed }" @click="() => select(item)">{{ item?.name }}</div>
         </li>
         <li v-else :class="{ 'parent-close': item.hidden, 'parent-open': !item.hidden }">
           <div @click="item.hidden = !item.hidden">{{ item?.name }}</div>
@@ -36,6 +36,10 @@ function select(item) {
 </template>
 
 <style scoped>
+.complete-item {
+  border-bottom: 1px solid #6FCF97;
+}
+
 .treeview {
   font-size: 18px;
   line-height: 20px;

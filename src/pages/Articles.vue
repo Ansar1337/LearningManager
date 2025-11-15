@@ -1,6 +1,6 @@
 <script setup>
 import Breadcrumbs from "@/components/Breadcrumbs.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {useCoursesStore} from "@/stores/CoursesStore.js";
 import {useRoute} from "vue-router";
 import Treeview from "@/components/Treeview.vue";
@@ -19,17 +19,31 @@ let route = useRoute();
 let module = ref();
 let articles = ref([]);
 let selectedArticle = ref();
+let nextArticle = ref();
+let nodes;
+
+watch(selectedArticle, (newValue) => {
+  newValue.completed = true;
+  nextArticle = nodes[nodes.indexOf(newValue) + 1];
+})
 
 coursesStore.userCourses[route.params.id].modules[route.params.mid].then(result => module.value = result);
 coursesStore.userCourses[route.params.id].modules[route.params.mid].resources.articles.then(result => {
   articles.value = result;
-  for (let article of result) {
-    if (article.type === 'group')
-      selectedArticle.value = result[0].content[0];
-    else
-      selectedArticle.value = result[0];
-  }
+  nodes = [];
+  collectToPlainArray(result, nodes);
+  selectedArticle.value = nodes[0];
+  nextArticle.value = nodes[1];
 });
+
+function collectToPlainArray(articles, result = []) {
+  for (let article of articles) {
+    if (article.type === 'group')
+      collectToPlainArray(article.content, result);
+    else
+      result.push(article);
+  }
+}
 </script>
 
 <template>
@@ -53,12 +67,40 @@ coursesStore.userCourses[route.params.id].modules[route.params.mid].resources.ar
         <div v-if="selectedArticle?.content?.status !== 'error'" v-html="selectedArticle?.content">
         </div>
         <div v-else>Ошибка при получении статьи</div>
+
+        <div @click="selectedArticle = nextArticle" v-if="nextArticle" class="next-chapter">
+          <div class="next-chapter-tip">Next chapter</div>
+          <div class="next-chapter-title">{{ nextArticle?.name }}</div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.next-chapter-tip {
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0;
+  color: #828282;
+}
+
+.next-chapter-title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 29px;
+  letter-spacing: 0;
+  color: #2D9CDB;
+  cursor: pointer;
+}
+
+.next-chapter {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  padding-top: 20px;
+}
+
 .articles-container {
   display: flex;
   gap: 40px;
