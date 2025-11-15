@@ -21,7 +21,8 @@ onMounted(() => {
 
 let module = ref();
 let homework = ref();
-let userName = userStore?.session?.userName;
+let userName = ref(userStore?.session?.userName);
+let userId = ref(userStore?.session?.userId);
 let message = defineModel('message', {default: ""})
 
 coursesStore.userCourses[route.params.id].modules[route.params.mid].then(result => module.value = result);
@@ -40,9 +41,16 @@ function downloadFile(hash) {
   }
 }
 
-function addComment() {
+function addComment(e) {
   if (message.value) {
-    homework.value?.tools?.addComment(message.value);
+    homework.value?.tools?.addComment(message.value).then(_ => {
+      const messageContainer = document.getElementById("messages-container");
+      messageContainer.scrollTo({
+        top: messageContainer.scrollHeight,
+        left: 0,
+        behavior: 'smooth'
+      })
+    });
     message.value = "";
   }
 }
@@ -89,17 +97,17 @@ function addComment() {
       Chat with the Instructor
     </div>
     <div class="chat">
-      <div class="messages-container">
-        <div v-for="message in homework?.comments" class="message-container"
-             :class="{'message-container-right': message?.sender === userName}">
+      <div class="messages-container" id="messages-container">
+        <div v-for="(message, index) in homework?.comments" :key="index" class="message-container"
+             :class="{'message-container-right':message?.senderId === userId}">
           <div class="username">
-            {{ message?.sender }}
+            {{ message?.senderName }}
           </div>
           <div class="message-time">
             {{ formatDatetime(message?.dateTime) }}
           </div>
           <div class="message-text"
-               :class="{'message-text-right': message?.sender === userName, 'message-text-left': message?.sender !== userName}">
+               :class="{'message-text-right': message?.senderId === userId, 'message-text-left': message?.senderId !== userId}">
             {{ message?.message }}
           </div>
         </div>

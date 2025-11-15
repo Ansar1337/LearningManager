@@ -390,7 +390,8 @@ if ($_POST["action"] ?? false) {
             $homework = initHomework($mockFilePath);
 
             $comment = [
-                "sender" => $_SESSION["userId"], //userId в системе
+                "senderId" => $_SESSION["userId"], //userId в системе
+                "senderName" => $_SESSION["userName"], //userId в системе
                 "dateTime" => gmdate("Y-m-d\TH:i:s\Z"),
                 "message" => $messageList,
                 "unread" => false,

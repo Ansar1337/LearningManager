@@ -139,17 +139,18 @@ export const useCoursesStore = defineStore('courses', () => {
         });
 
         if (response.status === "success") {
+            response.data = reactive(response.data ?? []);
 
             response.data.comments.forEach((item) => {
                 item.unread = ref(item.unread);
-                watch(item.unread, () => {
+                watch(() => item.unread, () => {
                     markCommentAsRead(courseId, moduleId, item.id);
                 })
             });
 
             response.data.tools = {
-                addComment(message) {
-                    doRequest("coursesManager", "addHomeworkComment", {
+                async addComment(message) {
+                    return doRequest("coursesManager", "addHomeworkComment", {
                         courseId, moduleId, message
                     }).then(res => {
                         if (res.status === "success") {
@@ -159,8 +160,8 @@ export const useCoursesStore = defineStore('courses', () => {
                     });
                 },
 
-                uploadHomework(file) {
-                    doRequest("coursesManager", "addHomeworkSubmission", {
+                async uploadHomework(file) {
+                    return doRequest("coursesManager", "addHomeworkSubmission", {
                         courseId, moduleId, file
                     }).then(res => {
                         if (res.status === "success") {
@@ -170,8 +171,8 @@ export const useCoursesStore = defineStore('courses', () => {
                     });
                 },
 
-                downloadHomework(fileHash) {
-                    doRequest("coursesManager", "downloadHomeworkFile", {
+                async downloadHomework(fileHash) {
+                    return doRequest("coursesManager", "downloadHomeworkFile", {
                         courseId, moduleId, fileHash
                     }).then(console.log);
                 },

@@ -12,7 +12,8 @@
       "id": "INT // идентификатор курса",
       "title": "STRING // наименование курса",
       "description": "STRING // краткое описание курса",
-      "icon": "STRING // имя файла-иконки курса",
+      "icon": "URL // путь к иконке курса",
+      "bigIcon": "URL, // Путь к хайрез иконке курса",   
       "details": {
         "dateStart": "DateSTRING // дата начала курса",
         "dateEnd": "DateSTRING // дата конца курса",
