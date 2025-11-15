@@ -24,8 +24,7 @@
    ```
    npm run build
    ```
-5. The frontend application will work over the backend server.
-
+   
    API reference can be found [here](./src/backend/help.md).
    API test dashboard can be found at `/api` page of the project.
 
@@ -65,20 +64,20 @@ This repo also includes a backend part, so it's possible to launch it locally:
     1. [x] Login
     2. [x] Registration
     3. [x] Feedback form
-2. [ ] Header menus/buttons
+2. [x] Header menus/buttons
     1. [x] Login
-    2. [ ] Notifications
+    2. [x] Notifications
     3. [x] User's menu
     4. [x] Logout
 3. [x] Homepage
-4. [ ] Courses' description page
+4. [x] Courses' description page
 5. [ ] User's cabinet mainpage
     1. [x] "My learning" page
-    2. [ ] My learning -> Course details page
-    3. [ ] My learning -> Course details -> Module page
-    4. [ ] My learning -> Course details -> Module page -> Lections page
-    5. [ ] My learning -> Course details -> Module page -> Homework page
-    6. [ ] My learning -> Course details -> Module page -> Test page
+    2. [x] My learning -> Course details page
+    3. [x] My learning -> Course details -> Module page
+    4. [x] My learning -> Course details -> Module page -> Lections page
+    5. [x] My learning -> Course details -> Module page -> Homework page
+    6. [x] My learning -> Course details -> Module page -> Test page
     7. [x] Profile settings -> Personal data page
     8. [x] Profile settings -> Credentials page
     9. [x] Profile settings -> Email page
@@ -117,4 +116,3 @@ This repo also includes a backend part, so it's possible to launch it locally:
     3. [x] Profile data
         1. [x] Feed data
         2. [x] Update data
-    
