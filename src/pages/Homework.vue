@@ -24,13 +24,13 @@ let homework = ref();
 let userName = ref(userStore?.session?.userName);
 let userId = ref(userStore?.session?.userId);
 let message = defineModel('message', {default: ""})
+let isActive = ref(false);
 
 coursesStore.userCourses[route.params.id].modules[route.params.mid].then(result => module.value = result);
 coursesStore.userCourses[route.params.id].modules[route.params.mid].resources.homework.then(result => homework.value = result);
 
 function uploadSubmission(event) {
-  let file = event?.target?.files?.[0];
-  if (file) {
+  for (let file of event?.target?.files || []) {
     homework.value?.tools?.uploadHomework(file);
   }
 }
@@ -54,6 +54,25 @@ function addComment(e) {
     message.value = "";
   }
 }
+
+function dragOver(e) {
+  isActive.value = true;
+  e.preventDefault();
+}
+
+function dragLeave(e) {
+  isActive.value = false;
+  e.preventDefault();
+}
+
+function drop(e) {
+  isActive.value = false;
+  for (let file of e?.dataTransfer?.files || []) {
+    homework.value?.tools?.uploadHomework(file);
+  }
+  e.preventDefault();
+}
+
 </script>
 
 <template>
@@ -88,8 +107,9 @@ function addComment(e) {
         </div>
       </div>
     </div>
-    <div @click="$refs.file.click()" class="title-file-input">
-      <input type="file" ref="file" style="display: none" @change="uploadSubmission"/>
+    <div @click="$refs.file.click()" @drop="drop" @dragover="dragOver" @dragleave="dragLeave" draggable="true"
+         class="title-file-input" :class="{active: isActive}">
+      <input type="file" ref="file" multiple style="display: none" @change="uploadSubmission"/>
       <div class="file-input-text">Upload File</div>
       <div class="icon-downward"></div>
     </div>
@@ -268,6 +288,10 @@ function addComment(e) {
   border: 4px dashed #BDBDBD;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.title-file-input.active {
+  border-color: #6FCF97;
 }
 
 .file-input-text {
