@@ -34,7 +34,7 @@ function fetchData(route) {
         const completedChapters =
             Array.isArray(r)
                 ? r.reduce((acc, item) => {
-                  return (acc + (+item.completed.value));
+                  return (acc + (+item.completed));
                 }, 0)
                 : 0;
 

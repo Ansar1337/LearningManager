@@ -185,6 +185,10 @@ if ($_POST["action"] ?? false) {
                 return $result;
             };
 
+            $treeWalker($moduleTree);
+
+            write_to_cache($mockFilePath, $moduleTree, 3600);
+
             $result["status"] = "success";
             $result["data"] = $moduleTree;
 

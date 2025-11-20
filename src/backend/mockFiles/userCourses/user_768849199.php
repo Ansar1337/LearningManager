@@ -3,17 +3,17 @@
 return [
     [
         "id" => 0,
-        "completeness" => 100,
+        "completeness" => 0,
         "modules" => []
     ],
     [
         "id" => 1,
-        "completeness" => 90,
+        "completeness" => 0,
         "modules" => []
     ],
     [
         "id" => 2,
-        "completeness" => 60,
+        "completeness" => 0,
         "modules" => []
     ]
 ];
