@@ -55,6 +55,24 @@ function addComment(e) {
   }
 }
 
+/*
+  Drag'n'Drop, реализуется стандартным API браузера:
+  https://developer.mozilla.org/ru/docs/Web/API/HTML_Drag_and_Drop_API
+
+  Для реализации нужны следующие события из списка:
+  dragover - перетаскиваемый элемент находится над областью сброса
+  dragleave - перетаскиваемый элемент покинул область сброса
+  drop - пользователь сбросил элемент
+
+  События dragover и dragleave в данном случае нужны для визуального оформления,
+  рамка меняется на зеленый цвет, подсказывая пользователю область сброса.
+
+  Событие drop позволяет из объекта события получить список сброшенных элементов, если это файлы,
+  то они находятся в event.dataTransfer.files.
+
+  Стоит не забывать останавливать событие по умолчанию event.preventDefault() т.к.
+  для браузеров таким событием является скачивание или открытие файла в новой вкладке.
+* */
 function dragOver(e) {
   isActive.value = true;
   e.preventDefault();
@@ -107,8 +125,8 @@ function drop(e) {
         </div>
       </div>
     </div>
-    <div @click="$refs.file.click()" @drop="drop" @dragover="dragOver" @dragleave="dragLeave" draggable="true"
-         class="title-file-input" :class="{active: isActive}">
+    <div @click="$refs.file.click()" @drop="drop" @dragover="dragOver" @dragleave="dragLeave" class="title-file-input"
+         :class="{active: isActive}">
       <input type="file" ref="file" multiple style="display: none" @change="uploadSubmission"/>
       <div class="file-input-text">Upload File</div>
       <div class="icon-downward"></div>
