@@ -71,7 +71,7 @@ This repo also includes a backend part, so it's possible to launch it locally:
     4. [x] Logout
 3. [x] Homepage
 4. [x] Courses' description page
-5. [ ] User's cabinet mainpage
+5. [x] User's cabinet mainpage
     1. [x] "My learning" page
     2. [x] My learning -> Course details page
     3. [x] My learning -> Course details -> Module page
@@ -81,7 +81,7 @@ This repo also includes a backend part, so it's possible to launch it locally:
     7. [x] Profile settings -> Personal data page
     8. [x] Profile settings -> Credentials page
     9. [x] Profile settings -> Email page
-    10. [ ] Performance Page
+    10. [x] Performance Page
 
 ### API+StateManagement [DONE]:
 
